@@ -20,6 +20,9 @@
       .flow{fill:none;stroke:#1f2933;stroke-width:2;marker-end:url(#arrow)}
       .note{fill:#ffffff;stroke:#8b98a1;stroke-width:1.3;stroke-dasharray:4 3}
       .notetext{font-size:12px;fill:#46545e}
+      .phase{fill:#ffffff;fill-opacity:.68;stroke:#c5cdd4;stroke-width:1.2;stroke-dasharray:5 4}
+      .phasetitle{font-size:14px;font-weight:bold;fill:#46545e}
+      .phaseid{font-size:12px;font-weight:bold;fill:#75828b}
       .tag{font-size:12px;font-weight:bold;fill:#6b4f14}
     </style>
   </defs>
@@ -39,6 +42,10 @@
   <text x="615" y="128" class="lanetext" text-anchor="middle">Itqan App</text>
   <text x="1060" y="128" class="lanetext" text-anchor="middle">Recitation and AI Services</text>
   <text x="1475" y="128" class="lanetext" text-anchor="middle">Data Store</text>
+
+  <rect x="58" y="158" width="1584" height="565" rx="8" class="phase"/><text x="1320" y="185" class="phaseid">PHASE 01</text><text x="1320" y="207" class="phasetitle">Prepare the learner session</text>
+  <rect x="58" y="748" width="1584" height="935" rx="8" class="phase"/><text x="1320" y="775" class="phaseid">PHASE 02</text><text x="1320" y="797" class="phasetitle">Capture, analyse, and correct recitation</text>
+  <rect x="58" y="1708" width="1584" height="592" rx="8" class="phase"/><text x="1320" y="1735" class="phaseid">PHASE 03</text><text x="1320" y="1757" class="phasetitle">Close the session and preserve learning progress</text>
 
   <circle cx="220" cy="180" r="13" class="event"/>
   <rect x="115" y="215" width="210" height="52" rx="7" class="action"/><text x="220" y="247" class="label">Open recitation practice</text>
