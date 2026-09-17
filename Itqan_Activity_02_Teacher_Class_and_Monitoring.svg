@@ -1,12 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1700" height="2100" viewBox="0 0 1700 2100">
   <defs>
-    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#1f2933"/></marker>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#222"/></marker>
     <style>
-      text{font-family:Arial,sans-serif;fill:#1f2933}
-      .title{font-size:28px;font-weight:bold}.subtitle{font-size:14px;fill:#52616b}
-      .lane{fill:#f6f8fa;stroke:#9aa8b2;stroke-width:1.5}.lanehead{fill:#e8edf1;stroke:#9aa8b2;stroke-width:1.5}.lanetext{font-size:17px;font-weight:bold}
-      .action{fill:#fff;stroke:#1f2933;stroke-width:2}.system{fill:#edf5ff;stroke:#2f6fab;stroke-width:2}.service{fill:#f6f1ff;stroke:#7656a6;stroke-width:2}.data{fill:#eff8f1;stroke:#3c8a57;stroke-width:2}.decision{fill:#fff9e8;stroke:#9a6b15;stroke-width:2}
-      .event{fill:#1f2933;stroke:#1f2933}.end{fill:#fff;stroke:#1f2933;stroke-width:3}.label{font-size:15px;text-anchor:middle}.small{font-size:12px;fill:#52616b;text-anchor:middle}.flow{fill:none;stroke:#1f2933;stroke-width:2;marker-end:url(#arrow)}.tag{font-size:12px;font-weight:bold;fill:#6b4f14}.note{fill:#fff;stroke:#8b98a1;stroke-width:1.3;stroke-dasharray:4 3}.notetext{font-size:12px;fill:#46545e}.phase{fill:#fff;fill-opacity:.68;stroke:#c5cdd4;stroke-width:1.2;stroke-dasharray:5 4}.phasetitle{font-size:14px;font-weight:bold;fill:#46545e}.phaseid{font-size:12px;font-weight:bold;fill:#75828b}
+      text{font-family:Arial,sans-serif;fill:#222}
+      .title{font-size:28px;font-weight:bold}.subtitle{font-size:14px;fill:#444}
+      .lane{fill:#fff;stroke:#c7ccd1;stroke-width:1.5}.lanehead{fill:#f4f6f8;stroke:#c7ccd1;stroke-width:1.5}.lanetext{font-size:17px;font-weight:bold}
+      .action{fill:#fbfbfc;stroke:#222;stroke-width:2}.system{fill:#fbfbfc;stroke:#222;stroke-width:2}.service{fill:#eef0f3;stroke:#222;stroke-width:2}.data{fill:#eef0f3;stroke:#222;stroke-width:2}.decision{fill:#fff;stroke:#555;stroke-width:2}
+      .event{fill:#222;stroke:#222}.end{fill:#fff;stroke:#222;stroke-width:3}.label{font-size:15px;text-anchor:middle}.small{font-size:12px;fill:#444;text-anchor:middle}.flow{fill:none;stroke:#222;stroke-width:1.8;marker-end:url(#arrow)}.tag{font-size:12px;font-weight:bold;fill:#555}.note{fill:#fff;stroke:#999;stroke-width:1.3}.notetext{font-size:12px;fill:#444}.phase{fill:#f4f6f8;fill-opacity:.72;stroke:#c7ccd1;stroke-width:1.5;stroke-dasharray:3 3}.phasetitle{font-size:14px;font-weight:bold;fill:#444}.phaseid{font-size:12px;font-weight:bold;fill:#555}
     </style>
   </defs>
 
