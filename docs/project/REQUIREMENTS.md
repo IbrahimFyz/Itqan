@@ -52,7 +52,7 @@ The project aims to:
 
 The initial scope of Itqan is focused on Juz Amma, which consists of 37 Surahs and 564 verses. The system is designed to support Quran readers during their recitation practice by providing AI-powered voice interaction, recitation analysis, error identification, and feedback.
 
-The system scope includes:
+### The system scope includes:
 
 - Allowing users to select and recite Surahs from Juz Amma.
 - Receiving the user's recitation through the microphone.
@@ -62,6 +62,7 @@ The system scope includes:
 - Providing audio-based assistance when appropriate.
 - Supporting the three AI interaction modes: Al-Mujawwid, Al-Mushajji, and Al-Mu'allim.
 - Supporting user progress and practice-related information.
+- Providing teacher-oriented functionality for monitoring learners' recitation activity and performance.
 - Providing a system experience suitable for anyone who reads the Quran.
 
 ### Boundaries
@@ -152,114 +153,211 @@ Therefore, the main gap addressed by Itqan is the need for an interactive AI-bas
 ## A. Account & User Management
 
 ### FR-01 — Create Account
+
+**Priority:** Must Have
+
 The system shall allow new users to create an account by providing the required registration information.
 
 ### FR-02 — User Login
+
+**Priority:** Must Have
+
 The system shall allow registered users to log in using their account credentials.
 
 ### FR-03 — Manage User Profile
+
+**Priority:** Should Have
+
 The system shall allow users to view and manage their profile information.
 
 ## B. Quran & Surah Selection
 
 ### FR-04 — Browse Juz Amma
+
+**Priority:** Must Have
+
 The system shall allow users to browse the Surahs available within Juz Amma.
 
 ### FR-05 — Select Surah
+
+**Priority:** Must Have
+
 The system shall allow users to select a Surah from Juz Amma before selecting an AI interaction mode and starting a recitation session.
 
 ### FR-06 — Display Surah Verses
+
+**Priority:** Must Have
+
 The system shall display the verses of the selected Surah to the user during the recitation session.
 
 ## C. AI Mode Selection
 
 ### FR-07 — Select AI Mode
+
+**Priority:** Must Have
+
 The system shall allow users to select an AI interaction mode after selecting a Surah and before starting a recitation session.
 
 ### FR-08 — Al-Mujawwid Mode
+
+**Priority:** Must Have
+
 The system shall provide the Al-Mujawwid mode to analyze the user's Quran recitation and provide feedback on detected pronunciation and Tajweed errors.
 
 ### FR-09 — Al-Mushajji Mode
+
+**Priority:** Should Have
+
 The system shall provide the Al-Mushajji mode to support users through motivational and encouraging interactions during their recitation practice.
 
 ### FR-10 — Al-Mu'allim Mode
-The system shall provide the Al-Mu'allim mode to allow teachers to create and manage classes and monitor students' recitation practice and performance.
+
+**Priority:** Should Have
+
+The system shall provide the Al-Mu'allim mode to support teacher-oriented functionality for monitoring learners' recitation activity, completion, mastery scores, and overall progress, as well as class management and student communication.
 
 ## D. Recitation Session
 
 ### FR-11 — Start Recitation Session
+
+**Priority:** Must Have
+
 The system shall allow users to start a recitation session for the selected Surah and AI mode.
 
 ### FR-12 — Capture Recitation Audio
+
+**Priority:** Must Have
+
 The system shall capture the user's Quran recitation through the device microphone during an active recitation session.
 
 ### FR-13 — Analyze Recitation
+
+**Priority:** Must Have
+
 The system shall analyze the user's recitation during an active recitation session.
 
 ### FR-14 — Detect Recitation Errors
+
+**Priority:** Must Have
+
 The system shall identify relevant pronunciation and Tajweed errors detected in the user's recitation.
 
 ### FR-15 — Identify Error Location
+
+**Priority:** Must Have
+
 The system shall identify the location of a detected recitation error within the selected Quranic content.
 
 ### FR-16 — Provide Recitation Feedback
+
+**Priority:** Must Have
+
 The system shall provide the user with feedback for detected recitation errors to help the user recognize and correct them.
 
 ### FR-17 — Provide Audio Assistance
+
+**Priority:** Should Have
+
 The system shall provide audio-based assistance for detected recitation errors when appropriate.
 
 ### FR-18 — Continue Recitation
+
+**Priority:** Must Have
+
 The system shall allow users to continue their recitation after receiving feedback during an active session.
 
 ### FR-19 — End Recitation Session
+
+**Priority:** Must Have
+
 The system shall allow users to end an active recitation session.
 
 ## E. Results & Progress
 
 ### FR-20 — Display Session Results
+
+**Priority:** Must Have
+
 The system shall display the user's recitation result as a mastery percentage out of 100% and identify the words in which recitation errors were detected.
 
 ### FR-21 — Track User Progress
+
+**Priority:** Should Have
+
 The system shall track the number of Surahs that the user has completed with full mastery and calculate the user's average mastery percentage out of 100%.
 
 ### FR-22 — Track Practice Streaks
+
+**Priority:** Could Have
+
 The system shall track the user's consecutive days of practice and display the user's current practice streak.
+
+## F. Teacher Functions
+
+### FR-23 — Teacher Dashboard
+
+**Priority:** Must Have
+
+The system shall provide teachers with a dashboard to view students' recitation activity, completion status, mastery scores, and overall progress.
+
+### FR-24 — Manage Class
+
+**Priority:** Should Have
+
+The system shall allow teachers to create and manage classes and add students to a class.
+
+### FR-25 — Send Student Messages
+
+**Priority:** Could Have
+
+The system shall allow teachers to send messages to students based on their recitation activity and performance.
 
 ---
 
 # 11. Non-Functional Requirements
 
 ### NFR-01 — Accuracy
+
 The system shall provide a high level of accuracy in analyzing Quran recitation and identifying relevant pronunciation and Tajweed errors. The accuracy of the system shall be evaluated using defined testing criteria during the system evaluation phase.
 
 ### NFR-02 — Performance
+
 The system shall provide timely responses to user interactions and recitation analysis without causing delays that significantly affect the user's recitation experience.
 
 ### NFR-03 — Real-Time Interaction
+
 The system shall support real-time or near-real-time processing of recitation audio and provide feedback during an active recitation session without requiring the user to pause after every verse or word.
 
 ### NFR-04 — Usability
+
 The system shall provide a clear and user-friendly interface that enables users to select a Surah, select an AI mode, start a recitation session, and access session results with minimal complexity.
 
 ### NFR-05 — Reliability
+
 The system shall operate reliably during recitation sessions and shall preserve relevant user and session data without unintended loss in the event of an unexpected interruption.
 
 ### NFR-06 — Security
+
 The system shall protect user accounts, personal information, and system data from unauthorized access through appropriate security mechanisms.
 
 ### NFR-07 — Privacy
+
 The system shall protect users' personal information and recitation-related data and shall handle the collection, storage, and retention of recitation audio in accordance with applicable privacy requirements and user consent where required.
 
 ### NFR-08 — Scalability
+
 The system shall be designed to support future expansion, including additional Surahs and system functionalities, without requiring a complete redesign of the system.
 
 ### NFR-09 — Maintainability
+
 The system shall be designed in a modular and organized manner that facilitates maintenance, updates, troubleshooting, and future enhancements.
 
 ### NFR-10 — Compatibility
+
 The system shall be compatible with the target mobile platform(s) and shall support the device microphone and other essential functionalities required for Quran recitation sessions.
 
 ### NFR-11 — Language Support
+
 The system shall support Arabic as the primary language for Quranic content and recitation analysis and shall support both Arabic and English for the user interface.
 
 ---
@@ -290,6 +388,16 @@ The system shall support Arabic as the primary language for Quranic content and 
 | FR-20 | Display Session Results | Must Have |
 | FR-21 | Track User Progress | Should Have |
 | FR-22 | Track Practice Streaks | Could Have |
+| FR-23 | Teacher Dashboard | Must Have |
+| FR-24 | Manage Class | Should Have |
+| FR-25 | Send Student Messages | Could Have |
+
+**Priority Summary:**
+
+- Must Have: 17 requirements
+- Should Have: 6 requirements
+- Could Have: 2 requirements
+- Won't Have: 0 requirements
 
 ---
 
@@ -300,38 +408,39 @@ The system shall support Arabic as the primary language for Quranic content and 
 | FR-01 | Create Account | Must Have | Register |
 | FR-02 | User Login | Must Have | Login |
 | FR-03 | Manage User Profile | Should Have | Manage Profile |
-| FR-04 | Browse Juz Amma | Must Have | Browse Quran |
+| FR-04 | Browse Juz Amma | Must Have | Browse Juz Amma |
 | FR-05 | Select Surah | Must Have | Select Surah |
-| FR-06 | Display Surah Verses | Must Have | View Surah |
+| FR-06 | Display Surah Verses | Must Have | View Surah Verses |
 | FR-07 | Select AI Mode | Must Have | Select AI Mode |
-| FR-08 | Al-Mujawwid Mode | Must Have | Recitation Coaching |
-| FR-09 | Al-Mushajji Mode | Should Have | Motivational Coaching |
-| FR-10 | Al-Mu'allim Mode | Should Have | Manage Class / Monitor Students |
-| FR-11 | Start Recitation Session | Must Have | Start Recitation |
-| FR-12 | Capture Recitation Audio | Must Have | Record Recitation |
+| FR-08 | Al-Mujawwid Mode | Must Have | Al-Mujawwid |
+| FR-09 | Al-Mushajji Mode | Should Have | Al-Mushajji |
+| FR-10 | Al-Mu'allim Mode | Should Have | Realized through FR-23, FR-24, and FR-25 (Umbrella Requirement) |
+| FR-11 | Start Recitation Session | Must Have | Start Recitation Session |
+| FR-12 | Capture Recitation Audio | Must Have | Capture Recitation Audio |
 | FR-13 | Analyze Recitation | Must Have | Analyze Recitation |
-| FR-14 | Detect Recitation Errors | Must Have | Detect Errors |
-| FR-15 | Identify Error Location | Must Have | Identify Error |
+| FR-14 | Detect Recitation Errors | Must Have | Detect Recitation Errors |
+| FR-15 | Identify Error Location | Must Have | Identify Error Location |
 | FR-16 | Provide Recitation Feedback | Must Have | Provide Feedback |
-| FR-17 | Provide Audio Assistance | Should Have | Audio Correction Assistance |
-| FR-18 | Continue Recitation | Must Have | Continue Session |
-| FR-19 | End Recitation Session | Must Have | End Session |
-| FR-20 | Display Session Results | Must Have | View Results |
-| FR-21 | Track User Progress | Should Have | View Progress |
-| FR-22 | Track Practice Streaks | Could Have | View Streak |
-
----
+| FR-17 | Provide Audio Assistance | Should Have | Receive Audio Assistance |
+| FR-18 | Continue Recitation | Must Have | Continue Recitation |
+| FR-19 | End Recitation Session | Must Have | End Recitation Session |
+| FR-20 | Display Session Results | Must Have | View Session Results |
+| FR-21 | Track User Progress | Should Have | View User Progress |
+| FR-22 | Track Practice Streaks | Could Have | View Practice Streak |
+| FR-23 | Teacher Dashboard | Must Have | View Teacher Dashboard, View Students, View Student Recitation Activity, View Student Completion, View Student Score |
+| FR-24 | Manage Class | Should Have | Create Class, Manage Class, Add Students to Class |
+| FR-25 | Send Student Messages | Could Have | Send Student Messages |
 
 # 14. Business Model Canvas
 
 | Element | Itqan |
 |---|---|
-| **Customer Segments** | Quran Readers / Learners, Teachers |
-| **Value Propositions** | AI-powered Quran recitation coaching, real-time feedback, pronunciation and Tajweed error detection, motivational and teacher-oriented modes |
-| **Channels** | Standalone mobile application |
-| **Customer Relationships** | Personalized AI interaction, progress tracking, motivational support |
-| **Key Activities** | Quran recitation analysis, error detection, feedback generation, progress tracking |
-| **Key Resources** | AI models, Quranic content, recitation analysis components, application infrastructure |
-| **Key Partners** | Potential future integration partners with Quran applications |
-| **Cost Structure** | Application development, AI processing/infrastructure, maintenance, and future improvements |
-| **Revenue Streams** | Not defined yet |
+| Customer Segments | Quran Readers / Learners, Teachers |
+| Value Propositions | AI-powered Quran recitation coaching, real-time feedback, pronunciation and Tajweed error detection, motivational and teacher-oriented modes |
+| Channels | Standalone mobile application |
+| Customer Relationships | Personalized AI interaction, progress tracking, motivational support |
+| Key Activities | Quran recitation analysis, error detection, feedback generation, progress tracking, teacher-oriented monitoring |
+| Key Resources | AI models, Quranic content, recitation analysis components, application infrastructure |
+| Key Partners | Potential future integration partners with Quran applications |
+| Cost Structure | Application development, AI processing/infrastructure, maintenance, and future improvements |
+| Revenue Streams | Not defined yet |
