@@ -1,0 +1,814 @@
+---
+title: Itqan Complete UML Class Diagram
+config:
+  theme: neutral
+---
+classDiagram
+direction LR
+
+class User {
+  <<entity>>
+  +UUID userId
+  +String email
+  -String passwordHash
+  +String displayName
+  +LanguageCode preferredLanguage
+  +AccountStatus accountStatus
+  +DateTime createdAt
+  +DateTime updatedAt
+  +DateTime lastLoginAt
+  +changeDisplayName(String) void
+  +changePreferredLanguage(LanguageCode) void
+  +activate() void
+  +suspend() void
+  +markDeleted() void
+  +hasRole(String) Boolean
+}
+class Role {
+  <<entity>>
+  +Integer roleId
+  +String roleCode
+  +String nameAr
+  +String nameEn
+  +matches(String) Boolean
+}
+class UserRole {
+  <<entity>>
+  +UUID userId
+  +Integer roleId
+  +DateTime assignedAt
+}
+class LearnerProfile {
+  <<entity>>
+  +UUID learnerId
+  +String learningGoal
+  +String experienceLevel
+  +Boolean remindersEnabled
+  +updateLearningGoal(String) void
+  +setExperienceLevel(String) void
+  +setReminders(Boolean) void
+}
+class TeacherProfile {
+  <<entity>>
+  +UUID teacherId
+  +String biography
+  +String qualification
+  +updateBiography(String) void
+  +updateQualification(String) void
+}
+class LanguageCode {
+  <<enumeration>>
+  AR
+  EN
+}
+class AccountStatus {
+  <<enumeration>>
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+class Juz {
+  <<entity>>
+  +Integer juzId
+  +Integer juzNumber
+  +String nameAr
+  +String nameEn
+  +List~Surah~ surahs
+  +getOrderedSurahs() List~Surah~
+}
+class Surah {
+  <<entity>>
+  +Integer surahId
+  +Integer juzId
+  +String nameAr
+  +String nameEn
+  +Integer revelationOrder
+  +String revelationType
+  +Integer verseCount
+  +Integer displayOrder
+  +List~Verse~ verses
+  +getVerse(Integer) Verse
+  +containsVerse(Integer) Boolean
+}
+class Verse {
+  <<entity>>
+  +Integer verseId
+  +Integer surahId
+  +Integer verseNumber
+  +String uthmaniText
+  +String normalizedText
+  +Integer pageNumber
+  +Integer hizbNumber
+  +List~VerseWord~ words
+  +getWord(Integer) VerseWord
+  +getDisplayText() String
+}
+class VerseWord {
+  <<value object>>
+  +Integer wordId
+  +Integer verseId
+  +Integer wordPosition
+  +String uthmaniText
+  +String normalizedText
+  +matchesNormalized(String) Boolean
+}
+class TajweedRule {
+  <<entity>>
+  +Integer tajweedRuleId
+  +String ruleCode
+  +String nameAr
+  +String nameEn
+  +String descriptionAr
+  +String descriptionEn
+  +Boolean supported
+  +isAvailableForAnalysis() Boolean
+}
+
+class AIMode {
+  <<entity>>
+  +Integer aiModeId
+  +String modeCode
+  +String nameAr
+  +String nameEn
+  +String description
+  +Boolean active
+  +isSelectable() Boolean
+}
+class AIModeCode {
+  <<enumeration>>
+  AL_MUJAWWID
+  AL_MUSHAJJI
+  AL_MUALLIM
+}
+class RecitationSession {
+  <<entity>>
+  +UUID sessionId
+  +UUID learnerId
+  +Integer surahId
+  +Integer aiModeId
+  +DateTime startedAt
+  +DateTime endedAt
+  +SessionStatus status
+  +Decimal completionPercentage
+  +Decimal masteryScore
+  +Integer totalDurationSeconds
+  +Integer totalPauseCount
+  +Integer errorCount
+  +String failureReason
+  +start(DateTime) void
+  +addSegment(RecitationSegment) void
+  +recordPause(PauseEvent) void
+  +complete(DateTime, Decimal) void
+  +abandon(DateTime) void
+  +fail(String, DateTime) void
+  +calculateCompletion() Decimal
+  +canAcceptAudio() Boolean
+}
+class AudioRecording {
+  <<entity>>
+  +UUID recordingId
+  +UUID sessionId
+  +String storageUri
+  +String format
+  +Integer durationSeconds
+  +Integer sampleRateHz
+  +Integer fileSizeBytes
+  +Boolean consentGranted
+  +DateTime recordedAt
+  +DateTime retentionExpiresAt
+  +DateTime deletedAt
+  +registerStorage(String) void
+  +scheduleRetention(DateTime) void
+  +markDeleted(DateTime) void
+  +isRetained(DateTime) Boolean
+}
+class RecitationSegment {
+  <<entity>>
+  +UUID segmentId
+  +UUID sessionId
+  +Integer verseId
+  +Integer segmentOrder
+  +Integer audioStartMs
+  +Integer audioEndMs
+  +String recognizedText
+  +Decimal confidenceScore
+  +Decimal fluencyScore
+  +SegmentStatus status
+  +attachRecognizedText(String, Decimal) void
+  +markProcessing() void
+  +attachAnalysis(RecitationAnalysis) void
+  +fail() void
+  +durationMs() Integer
+}
+class RecitationAnalysis {
+  <<entity>>
+  +UUID analysisId
+  +UUID segmentId
+  +AnalysisStatus status
+  +String modelName
+  +String modelVersion
+  +Integer processingTimeMs
+  +DateTime analyzedAt
+  +Decimal overallConfidence
+  +String failureReason
+  +start() void
+  +addError(RecitationError) void
+  +complete(Decimal) void
+  +fail(String) void
+  +acceptedErrors() List~RecitationError~
+}
+class PauseEvent {
+  <<entity>>
+  +UUID pauseEventId
+  +UUID sessionId
+  +UUID segmentId
+  +Integer startedAtMs
+  +Integer durationMs
+  +PauseType pauseType
+  +Boolean promptTriggered
+  +Integer promptDelayMs
+  +requiresPrompt(Integer) Boolean
+  +markPromptTriggered(Integer) void
+}
+class SessionStatus {
+  <<enumeration>>
+  ACTIVE
+  COMPLETED
+  ABANDONED
+  FAILED
+}
+class SegmentStatus {
+  <<enumeration>>
+  CAPTURED
+  PROCESSING
+  ANALYZED
+  FAILED
+}
+class AnalysisStatus {
+  <<enumeration>>
+  PENDING
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+class PauseType {
+  <<enumeration>>
+  NATURAL
+  HESITATION
+  FORGOTTEN
+  TECHNICAL
+}
+
+class ErrorType {
+  <<entity>>
+  +Integer errorTypeId
+  +Integer tajweedRuleId
+  +String errorCode
+  +ErrorCategory category
+  +String nameAr
+  +String nameEn
+  +String severity
+  +String description
+  +isTajweedError() Boolean
+}
+class RecitationError {
+  <<entity>>
+  +UUID recitationErrorId
+  +UUID analysisId
+  +Integer errorTypeId
+  +Integer wordId
+  +String detectedText
+  +String expectedText
+  +Integer audioStartMs
+  +Integer audioEndMs
+  +Decimal confidenceScore
+  +ReviewStatus reviewStatus
+  +DateTime detectedAt
+  +addFeedback(ErrorFeedback) void
+  +accept() void
+  +reject() void
+  +correct() void
+  +hasExactWordLocation() Boolean
+}
+class ErrorFeedback {
+  <<entity>>
+  +UUID feedbackId
+  +UUID recitationErrorId
+  +FeedbackType feedbackType
+  +LanguageCode languageCode
+  +String feedbackText
+  +String correctionText
+  +DateTime createdAt
+  +isForLanguage(LanguageCode) Boolean
+}
+class AudioAssistance {
+  <<entity>>
+  +UUID assistanceId
+  +UUID recitationErrorId
+  +UUID pauseEventId
+  +Integer verseId
+  +String audioUri
+  +AssistanceType assistanceType
+  +DateTime playedAt
+  +markPlayed(DateTime) void
+  +validateSingleTrigger() Boolean
+}
+class ErrorCategory {
+  <<enumeration>>
+  PRONUNCIATION
+  TAJWEED
+  OMISSION
+  INSERTION
+  SUBSTITUTION
+  FLUENCY
+}
+class ReviewStatus {
+  <<enumeration>>
+  UNREVIEWED
+  ACCEPTED
+  REJECTED
+  CORRECTED
+}
+class FeedbackType {
+  <<enumeration>>
+  TEXT
+  VISUAL
+  INSTRUCTION
+}
+class AssistanceType {
+  <<enumeration>>
+  CORRECTION
+  CONTINUATION
+  EXAMPLE
+}
+
+class LearnerSurahProgress {
+  <<entity>>
+  +UUID learnerId
+  +Integer surahId
+  +Integer attemptCount
+  +Integer completedSessionCount
+  +Decimal bestMasteryScore
+  +Decimal averageMasteryScore
+  +Decimal latestMasteryScore
+  +Boolean fullyMastered
+  +DateTime firstPracticedAt
+  +DateTime lastPracticedAt
+  +DateTime masteredAt
+  +recordAttempt(RecitationSession) void
+  +recalculateAverage(List~MasteryScoreHistory~) void
+  +markMastered(DateTime) void
+  +isMasteryImproving(List~MasteryScoreHistory~) Boolean
+}
+class MasteryScoreHistory {
+  <<entity>>
+  +UUID masteryHistoryId
+  +UUID learnerId
+  +Integer surahId
+  +UUID sessionId
+  +Decimal tajweedScore
+  +Decimal pronunciationScore
+  +Decimal fluencyScore
+  +Decimal pauseScore
+  +Decimal finalMasteryScore
+  +DateTime calculatedAt
+  +String formulaVersion
+  +validateScoreRange() Boolean
+}
+class DailyPractice {
+  <<entity>>
+  +UUID learnerId
+  +Date practiceDate
+  +Integer sessionCount
+  +Integer completedSessionCount
+  +Integer totalPracticeSeconds
+  +Integer versesPracticed
+  +recordSession(RecitationSession) void
+}
+class PracticeStreak {
+  <<entity>>
+  +UUID learnerId
+  +Integer currentStreakDays
+  +Integer longestStreakDays
+  +Date currentStreakStartedOn
+  +Date lastPracticeDate
+  +DateTime updatedAt
+  +recordPractice(Date) void
+  +resetIfBroken(Date) void
+}
+
+class LearningClass {
+  <<entity>>
+  +UUID classId
+  +UUID teacherId
+  +String className
+  +String description
+  +String joinCode
+  +ClassStatus classStatus
+  +DateTime createdAt
+  +DateTime updatedAt
+  +inviteLearner(UUID) ClassEnrollment
+  +activateEnrollment(UUID) void
+  +removeLearner(UUID) void
+  +archive() void
+  +hasActiveLearner(UUID) Boolean
+  +addAssignment(ClassAssignment) void
+}
+class ClassEnrollment {
+  <<entity>>
+  +UUID enrollmentId
+  +UUID classId
+  +UUID learnerId
+  +EnrollmentStatus enrollmentStatus
+  +DateTime enrolledAt
+  +DateTime endedAt
+  +accept(DateTime) void
+  +leave(DateTime) void
+  +remove(DateTime) void
+  +isActive() Boolean
+}
+class ClassAssignment {
+  <<proposed>>
+  <<entity>>
+  +UUID assignmentId
+  +UUID classId
+  +Integer surahId
+  +UUID createdBy
+  +String title
+  +String instructions
+  +Decimal targetMasteryScore
+  +DateTime dueAt
+  +DateTime createdAt
+  +isDue(DateTime) Boolean
+  +meetsTarget(Decimal) Boolean
+}
+class AssignmentProgress {
+  <<proposed>>
+  <<entity>>
+  +UUID assignmentId
+  +UUID learnerId
+  +UUID bestSessionId
+  +AssignmentStatus assignmentStatus
+  +Decimal bestMasteryScore
+  +DateTime completedAt
+  +DateTime updatedAt
+  +recordAttempt(RecitationSession) void
+  +markCompleted(DateTime) void
+}
+class TeacherMessage {
+  <<entity>>
+  +UUID messageId
+  +UUID teacherId
+  +UUID learnerId
+  +UUID classId
+  +UUID sessionId
+  +String messageText
+  +DateTime sentAt
+  +DateTime readAt
+  +markRead(DateTime) void
+  +referencesSession() Boolean
+}
+class StudentPerformanceSnapshot {
+  <<proposed>>
+  <<entity>>
+  +UUID snapshotId
+  +UUID classId
+  +UUID learnerId
+  +DateTime generatedAt
+  +Integer completedSurahCount
+  +Decimal averageMasteryScore
+  +Integer totalSessions
+  +Integer totalPracticeSeconds
+  +Integer currentStreakDays
+  +isCurrent(DateTime, Integer) Boolean
+}
+class ClassStatus {
+  <<enumeration>>
+  ACTIVE
+  ARCHIVED
+  CLOSED
+}
+class EnrollmentStatus {
+  <<enumeration>>
+  INVITED
+  ACTIVE
+  LEFT
+  REMOVED
+}
+class AssignmentStatus {
+  <<enumeration>>
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  OVERDUE
+}
+
+class Challenge {
+  <<proposed>>
+  <<entity>>
+  +UUID challengeId
+  +String titleAr
+  +String titleEn
+  +String descriptionAr
+  +String descriptionEn
+  +String challengeType
+  +Integer targetValue
+  +DateTime startsAt
+  +DateTime endsAt
+  +Boolean active
+  +isAvailable(DateTime) Boolean
+  +isCompletedBy(Integer) Boolean
+}
+class LearnerChallenge {
+  <<proposed>>
+  <<entity>>
+  +UUID learnerId
+  +UUID challengeId
+  +Integer progressValue
+  +String challengeStatus
+  +DateTime joinedAt
+  +DateTime completedAt
+  +incrementProgress(Integer) void
+  +complete(DateTime) void
+}
+class Reward {
+  <<proposed>>
+  <<entity>>
+  +UUID rewardId
+  +String rewardCode
+  +String nameAr
+  +String nameEn
+  +String description
+  +String rewardType
+  +matches(String) Boolean
+}
+class LearnerReward {
+  <<proposed>>
+  <<entity>>
+  +UUID learnerId
+  +UUID rewardId
+  +UUID challengeId
+  +DateTime awardedAt
+  +wasAwardedByChallenge() Boolean
+}
+
+class AuthenticationService {
+  <<service>>
+  +register(String, String, String, List~Role~) User
+  +authenticate(String, String) User
+  +changeProfile(UUID, ProfileData) User
+}
+class QuranCatalogService {
+  <<service>>
+  +browseJuzAmma() List~Surah~
+  +getSurah(Integer) Surah
+  +getVerse(Integer) Verse
+}
+class RecitationService {
+  <<service>>
+  +startSession(UUID, Integer, Integer) RecitationSession
+  +captureSegment(UUID, Integer) RecitationSegment
+  +recordPause(UUID, PauseEvent) PauseEvent
+  +endSession(UUID) RecitationSession
+  +abandonSession(UUID) RecitationSession
+}
+class AnalysisService {
+  <<service>>
+  +analyzeSegment(UUID) RecitationAnalysis
+  +reanalyzeSegment(UUID) RecitationAnalysis
+  +getSupportedTajweedRules() List~TajweedRule~
+}
+class FeedbackService {
+  <<service>>
+  +buildFeedback(UUID, LanguageCode) List~ErrorFeedback~
+  +provideAudioAssistance(UUID) AudioAssistance
+}
+class ProgressService {
+  <<service>>
+  +updateFromCompletedSession(UUID) LearnerSurahProgress
+  +getLearnerProgress(UUID) List~LearnerSurahProgress~
+  +updateDailyPractice(UUID) DailyPractice
+  +updateStreak(UUID, Date) PracticeStreak
+}
+class ClassService {
+  <<service>>
+  +createClass(UUID, String) LearningClass
+  +inviteLearner(UUID, UUID) ClassEnrollment
+  +acceptInvitation(UUID, UUID) ClassEnrollment
+  +removeLearner(UUID, UUID) void
+  +createAssignment(UUID, AssignmentData) ClassAssignment
+}
+class TeacherMonitoringService {
+  <<service>>
+  +getClassProgress(UUID, UUID) List~LearnerSurahProgress~
+  +getLearnerPerformance(UUID, UUID, UUID) StudentPerformanceSnapshot
+}
+class MessagingService {
+  <<service>>
+  +sendMessage(UUID, UUID, UUID, String, UUID) TeacherMessage
+  +markRead(UUID, UUID) TeacherMessage
+}
+class GamificationService {
+  <<proposed>>
+  <<service>>
+  +joinChallenge(UUID, UUID) LearnerChallenge
+  +recordProgress(UUID, UUID, Integer) LearnerChallenge
+  +awardReward(UUID, UUID, UUID) LearnerReward
+}
+
+class UserRepository {
+  <<repository>>
+  +findById(UUID) User
+  +findByEmail(String) User
+  +save(User) User
+  +saveLearnerProfile(LearnerProfile) LearnerProfile
+  +saveTeacherProfile(TeacherProfile) TeacherProfile
+}
+class QuranRepository {
+  <<repository>>
+  +findJuz(Integer) Juz
+  +findSurah(Integer) Surah
+  +findVerse(Integer) Verse
+  +listJuzAmmaSurahs() List~Surah~
+  +listSupportedTajweedRules() List~TajweedRule~
+}
+class RecitationRepository {
+  <<repository>>
+  +findSession(UUID) RecitationSession
+  +saveSession(RecitationSession) RecitationSession
+  +saveRecording(AudioRecording) AudioRecording
+  +saveSegment(RecitationSegment) RecitationSegment
+  +saveAnalysis(RecitationAnalysis) RecitationAnalysis
+}
+class ProgressRepository {
+  <<repository>>
+  +findSurahProgress(UUID, Integer) LearnerSurahProgress
+  +saveSurahProgress(LearnerSurahProgress) LearnerSurahProgress
+  +listMasteryHistory(UUID, Integer) List~MasteryScoreHistory~
+  +saveMasteryHistory(MasteryScoreHistory) MasteryScoreHistory
+  +saveDailyPractice(DailyPractice) DailyPractice
+  +saveStreak(PracticeStreak) PracticeStreak
+}
+class ClassRepository {
+  <<repository>>
+  +findClass(UUID) LearningClass
+  +saveClass(LearningClass) LearningClass
+  +findActiveEnrollment(UUID, UUID) ClassEnrollment
+  +saveEnrollment(ClassEnrollment) ClassEnrollment
+  +saveMessage(TeacherMessage) TeacherMessage
+}
+class GamificationRepository {
+  <<proposed>>
+  <<repository>>
+  +findChallenge(UUID) Challenge
+  +saveLearnerChallenge(LearnerChallenge) LearnerChallenge
+  +findReward(UUID) Reward
+  +saveLearnerReward(LearnerReward) LearnerReward
+}
+
+class AudioCapturePort {
+  <<external>>
+  +startCapture(UUID) void
+  +readSegment() AudioData
+  +stopCapture() AudioData
+}
+class AudioStoragePort {
+  <<external>>
+  +store(AudioData, Boolean) AudioRecording
+  +load(UUID) AudioData
+  +delete(UUID) void
+}
+class AIAnalysisPort {
+  <<external>>
+  +analyze(AudioData, Verse) AnalysisResult
+  +supportedRules() List~TajweedRule~
+}
+class AudioData {
+  <<value object>>
+  +Binary content
+  +String format
+  +Integer durationMs
+}
+class AnalysisResult {
+  <<value object>>
+  +String recognizedText
+  +Decimal confidence
+  +List~RecitationError~ errors
+}
+class ProfileData {
+  <<value object>>
+  +String displayName
+  +LanguageCode language
+}
+class AssignmentData {
+  <<value object>>
+  +Integer surahId
+  +String title
+  +String instructions
+  +Decimal targetScore
+  +DateTime dueAt
+}
+
+User "1" *-- "0..1" LearnerProfile : learner profile
+User "1" *-- "0..1" TeacherProfile : teacher profile
+User "1" -- "0..*" UserRole : receives
+Role "1" -- "0..*" UserRole : assigned as
+User --> LanguageCode
+User --> AccountStatus
+Juz "1" *-- "1..*" Surah : contains
+Surah "1" *-- "1..*" Verse : contains
+Verse "1" *-- "1..*" VerseWord : contains
+ErrorType "0..*" --> "0..1" TajweedRule : classifies by
+AIMode --> AIModeCode
+LearnerProfile "1" -- "0..*" RecitationSession : performs
+Surah "1" -- "0..*" RecitationSession : selected for
+AIMode "1" -- "0..*" RecitationSession : configures
+RecitationSession "1" *-- "0..1" AudioRecording : records
+RecitationSession "1" *-- "0..*" RecitationSegment : contains
+RecitationSession "1" *-- "0..*" PauseEvent : detects
+Verse "1" -- "0..*" RecitationSegment : recited as
+RecitationSegment "1" *-- "0..1" RecitationAnalysis : produces
+RecitationSegment "0..1" -- "0..*" PauseEvent : locates
+RecitationAnalysis "1" *-- "0..*" RecitationError : identifies
+ErrorType "1" -- "0..*" RecitationError : categorizes
+VerseWord "0..1" -- "0..*" RecitationError : locates
+RecitationError "1" *-- "0..*" ErrorFeedback : receives
+RecitationError "0..1" -- "0..*" AudioAssistance : triggers
+PauseEvent "0..1" -- "0..*" AudioAssistance : triggers
+Verse "1" -- "0..*" AudioAssistance : supplies
+RecitationSession --> SessionStatus
+RecitationSegment --> SegmentStatus
+RecitationAnalysis --> AnalysisStatus
+PauseEvent --> PauseType
+ErrorType --> ErrorCategory
+RecitationError --> ReviewStatus
+ErrorFeedback --> FeedbackType
+AudioAssistance --> AssistanceType
+LearnerProfile "1" -- "0..*" LearnerSurahProgress : tracks
+Surah "1" -- "0..*" LearnerSurahProgress : summarizes
+LearnerProfile "1" -- "0..*" MasteryScoreHistory : earns
+Surah "1" -- "0..*" MasteryScoreHistory : measures
+RecitationSession "1" -- "0..1" MasteryScoreHistory : produces
+LearnerProfile "1" -- "0..*" DailyPractice : logs
+LearnerProfile "1" -- "0..1" PracticeStreak : maintains
+TeacherProfile "1" -- "0..*" LearningClass : owns
+LearningClass "1" *-- "0..*" ClassEnrollment : enrolls
+LearnerProfile "1" -- "0..*" ClassEnrollment : joins
+LearningClass "1" *-- "0..*" ClassAssignment : assigns
+Surah "1" -- "0..*" ClassAssignment : targets
+TeacherProfile "1" -- "0..*" ClassAssignment : creates
+ClassAssignment "1" *-- "0..*" AssignmentProgress : tracks
+LearnerProfile "1" -- "0..*" AssignmentProgress : completes
+RecitationSession "0..1" -- "0..*" AssignmentProgress : evidences
+TeacherProfile "1" -- "0..*" TeacherMessage : sends
+LearnerProfile "1" -- "0..*" TeacherMessage : receives
+LearningClass "0..1" -- "0..*" TeacherMessage : contextualizes
+RecitationSession "0..1" -- "0..*" TeacherMessage : references
+LearningClass "1" -- "0..*" StudentPerformanceSnapshot : summarizes
+LearnerProfile "1" -- "0..*" StudentPerformanceSnapshot : measured in
+LearningClass --> ClassStatus
+ClassEnrollment --> EnrollmentStatus
+AssignmentProgress --> AssignmentStatus
+LearnerProfile "1" -- "0..*" LearnerChallenge : joins
+Challenge "1" -- "0..*" LearnerChallenge : tracks
+LearnerProfile "1" -- "0..*" LearnerReward : earns
+Reward "1" -- "0..*" LearnerReward : awards
+Challenge "0..1" -- "0..*" LearnerReward : produces
+
+AuthenticationService ..> UserRepository
+AuthenticationService ..> User
+QuranCatalogService ..> QuranRepository
+QuranCatalogService ..> Surah
+RecitationService ..> RecitationRepository
+RecitationService ..> QuranRepository
+RecitationService ..> AudioCapturePort
+RecitationService ..> AudioStoragePort
+RecitationService ..> RecitationSession
+AnalysisService ..> RecitationRepository
+AnalysisService ..> QuranRepository
+AnalysisService ..> AIAnalysisPort
+AnalysisService ..> RecitationAnalysis
+FeedbackService ..> RecitationRepository
+FeedbackService ..> QuranRepository
+FeedbackService ..> AudioStoragePort
+FeedbackService ..> ErrorFeedback
+ProgressService ..> RecitationRepository
+ProgressService ..> ProgressRepository
+ProgressService ..> LearnerSurahProgress
+ClassService ..> UserRepository
+ClassService ..> ClassRepository
+ClassService ..> LearningClass
+TeacherMonitoringService ..> ClassRepository
+TeacherMonitoringService ..> ProgressRepository
+TeacherMonitoringService ..> RecitationRepository
+MessagingService ..> ClassRepository
+MessagingService ..> TeacherMessage
+GamificationService ..> GamificationRepository
+GamificationService ..> Challenge
+AudioCapturePort ..> AudioData
+AudioStoragePort ..> AudioData
+AudioStoragePort ..> AudioRecording
+AIAnalysisPort ..> AudioData
+AIAnalysisPort ..> Verse
+AIAnalysisPort ..> AnalysisResult
