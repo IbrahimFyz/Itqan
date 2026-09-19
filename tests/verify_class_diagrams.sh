@@ -111,8 +111,8 @@ REWARD Reward
 LEARNER_REWARD LearnerReward
 ENTITY_MAP
 
-for source in docs/database/itqan-erd.mmd docs/database/RELATIONAL_SCHEMA.md "$diagram_dir"/*.mmd; do
-  if rg -qi 'AUDIO_RECORDING|AudioRecording|AudioStoragePort|storageUri|retentionExpiresAt|deletedAt' "$source"; then
+for source in docs/database/itqan-erd.mmd docs/database/RELATIONAL_SCHEMA.md docs/database/ERD_REQUIREMENTS_TRACEABILITY.md "$diagram_dir"/*.mmd "$diagram_dir"/CLASS_DIAGRAM_NOTES.md; do
+  if rg -qi 'AUDIO_RECORDING|AudioRecording|AudioStoragePort|storageUri|storage_uri|retentionExpiresAt|retention_expires_at|deletedAt|deleted_at' "$source"; then
     echo "Persisted learner-audio storage is forbidden: $source"
     exit 1
   fi
