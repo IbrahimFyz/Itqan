@@ -12,13 +12,13 @@ class LearnerSurahProgress {
   +Integer surahId
   +Integer attemptCount
   +Integer completedSessionCount
-  +Decimal bestMasteryScore
-  +Decimal averageMasteryScore
-  +Decimal latestMasteryScore
+  +Decimal? bestMasteryScore
+  +Decimal? averageMasteryScore
+  +Decimal? latestMasteryScore
   +Boolean fullyMastered
-  +DateTime firstPracticedAt
-  +DateTime lastPracticedAt
-  +DateTime masteredAt
+  +DateTime? firstPracticedAt
+  +DateTime? lastPracticedAt
+  +DateTime? masteredAt
   +recordAttempt(RecitationSession) void
   +recalculateAverage(List~MasteryScoreHistory~) void
   +markMastered(DateTime) void
@@ -30,13 +30,13 @@ class MasteryScoreHistory {
   +UUID learnerId
   +Integer surahId
   +UUID sessionId
-  +Decimal tajweedScore
-  +Decimal pronunciationScore
-  +Decimal fluencyScore
-  +Decimal pauseScore
+  +Decimal? tajweedScore
+  +Decimal? pronunciationScore
+  +Decimal? fluencyScore
+  +Decimal? pauseScore
   +Decimal finalMasteryScore
   +DateTime calculatedAt
-  +String formulaVersion
+  +String? formulaVersion
   +validateScoreRange() Boolean
 }
 class DailyPractice {
@@ -54,18 +54,19 @@ class PracticeStreak {
   +UUID learnerId
   +Integer currentStreakDays
   +Integer longestStreakDays
-  +Date currentStreakStartedOn
-  +Date lastPracticeDate
+  +Date? currentStreakStartedOn
+  +Date? lastPracticeDate
   +DateTime updatedAt
   +recordPractice(Date) void
   +resetIfBroken(Date) void
 }
 class LearningClass {
+  <<proposed: addAssignment>>
   <<entity>>
   +UUID classId
   +UUID teacherId
   +String className
-  +String description
+  +String? description
   +String joinCode
   +ClassStatus classStatus
   +DateTime createdAt
@@ -83,8 +84,8 @@ class ClassEnrollment {
   +UUID classId
   +UUID learnerId
   +EnrollmentStatus enrollmentStatus
-  +DateTime enrolledAt
-  +DateTime endedAt
+  +DateTime? enrolledAt
+  +DateTime? endedAt
   +accept(DateTime) void
   +leave(DateTime) void
   +remove(DateTime) void
@@ -98,9 +99,9 @@ class ClassAssignment {
   +Integer surahId
   +UUID createdBy
   +String title
-  +String instructions
-  +Decimal targetMasteryScore
-  +DateTime dueAt
+  +String? instructions
+  +Decimal? targetMasteryScore
+  +DateTime? dueAt
   +DateTime createdAt
   +isDue(DateTime) Boolean
   +meetsTarget(Decimal) Boolean
@@ -110,10 +111,10 @@ class AssignmentProgress {
   <<entity>>
   +UUID assignmentId
   +UUID learnerId
-  +UUID bestSessionId
+  +UUID? bestSessionId
   +AssignmentStatus assignmentStatus
-  +Decimal bestMasteryScore
-  +DateTime completedAt
+  +Decimal? bestMasteryScore
+  +DateTime? completedAt
   +DateTime updatedAt
   +recordAttempt(RecitationSession) void
   +markCompleted(DateTime) void
@@ -123,11 +124,11 @@ class TeacherMessage {
   +UUID messageId
   +UUID teacherId
   +UUID learnerId
-  +UUID classId
-  +UUID sessionId
+  +UUID? classId
+  +UUID? sessionId
   +String messageText
   +DateTime sentAt
-  +DateTime readAt
+  +DateTime? readAt
   +markRead(DateTime) void
   +referencesSession() Boolean
 }
@@ -139,7 +140,7 @@ class StudentPerformanceSnapshot {
   +UUID learnerId
   +DateTime generatedAt
   +Integer completedSurahCount
-  +Decimal averageMasteryScore
+  +Decimal? averageMasteryScore
   +Integer totalSessions
   +Integer totalPracticeSeconds
   +Integer currentStreakDays
@@ -148,15 +149,15 @@ class StudentPerformanceSnapshot {
 class LearnerProfile {
   <<entity>>
   +UUID learnerId
-  +String learningGoal
-  +String experienceLevel
+  +String? learningGoal
+  +String? experienceLevel
   +Boolean remindersEnabled
 }
 class TeacherProfile {
   <<entity>>
   +UUID teacherId
-  +String biography
-  +String qualification
+  +String? biography
+  +String? qualification
 }
 class Surah {
   <<entity>>
@@ -170,8 +171,8 @@ class RecitationSession {
   +UUID learnerId
   +Integer surahId
   +SessionStatus status
-  +Decimal masteryScore
-  +DateTime endedAt
+  +Decimal? masteryScore
+  +DateTime? endedAt
 }
 class ClassStatus {
   <<enumeration>>
@@ -187,6 +188,7 @@ class EnrollmentStatus {
   REMOVED
 }
 class AssignmentStatus {
+  <<proposed>>
   <<enumeration>>
   NOT_STARTED
   IN_PROGRESS
@@ -201,6 +203,7 @@ class ProgressService {
   +updateStreak(UUID, Date) PracticeStreak
 }
 class ClassService {
+  <<proposed: createAssignment>>
   <<service>>
   +createClass(UUID, String) LearningClass
   +inviteLearner(UUID, UUID) ClassEnrollment
@@ -209,18 +212,19 @@ class ClassService {
   +createAssignment(UUID, AssignmentData) ClassAssignment
 }
 class TeacherMonitoringService {
+  <<proposed: getLearnerPerformance>>
   <<service>>
   +getClassProgress(UUID, UUID) List~LearnerSurahProgress~
   +getLearnerPerformance(UUID, UUID, UUID) StudentPerformanceSnapshot
 }
 class MessagingService {
   <<service>>
-  +sendMessage(UUID, UUID, UUID, String, UUID) TeacherMessage
+  +sendMessage(UUID, UUID, UUID, String, UUID?) TeacherMessage
   +markRead(UUID, UUID) TeacherMessage
 }
 class ProgressRepository {
   <<repository>>
-  +findSurahProgress(UUID, Integer) LearnerSurahProgress
+  +findSurahProgress(UUID, Integer) LearnerSurahProgress?
   +saveSurahProgress(LearnerSurahProgress) LearnerSurahProgress
   +listMasteryHistory(UUID, Integer) List~MasteryScoreHistory~
   +saveMasteryHistory(MasteryScoreHistory) MasteryScoreHistory
@@ -229,11 +233,20 @@ class ProgressRepository {
 }
 class ClassRepository {
   <<repository>>
-  +findClass(UUID) LearningClass
+  +findClass(UUID) LearningClass?
   +saveClass(LearningClass) LearningClass
-  +findActiveEnrollment(UUID, UUID) ClassEnrollment
+  +findActiveEnrollment(UUID, UUID) ClassEnrollment?
   +saveEnrollment(ClassEnrollment) ClassEnrollment
   +saveMessage(TeacherMessage) TeacherMessage
+}
+class AssignmentData {
+  <<proposed>>
+  <<value object>>
+  +Integer surahId
+  +String title
+  +String? instructions
+  +Decimal? targetScore
+  +DateTime? dueAt
 }
 
 LearnerProfile "1" -- "0..*" LearnerSurahProgress : tracks
@@ -265,6 +278,7 @@ ProgressService ..> ProgressRepository
 ProgressService ..> LearnerSurahProgress
 ClassService ..> ClassRepository
 ClassService ..> LearningClass
+ClassService ..> AssignmentData
 TeacherMonitoringService ..> ClassRepository
 TeacherMonitoringService ..> ProgressRepository
 MessagingService ..> ClassRepository

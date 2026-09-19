@@ -62,6 +62,7 @@ The core identity, Quran, recitation, analysis, feedback, progress, class, enrol
 These elements remain **proposed** and are marked `<<proposed>>`:
 
 - `ClassAssignment` and `AssignmentProgress`;
+- `AssignmentData`, `AssignmentStatus`, and assignment-creating operations;
 - `StudentPerformanceSnapshot` as a stored dashboard cache;
 - `Challenge`, `LearnerChallenge`, `Reward`, and `LearnerReward`;
 - `GamificationService` and `GamificationRepository`.
@@ -123,6 +124,8 @@ HTTP status codes, framework exceptions, retry strategies, and UI messages belon
 - `gamification-classes-proposed.mmd`
 
 If a detail view and the complete diagram ever differ, correct the detail view to match the complete model.
+
+The SVGs preserve every specified member and are intended for zoomable digital use or tiled/large-format printing. Do not shrink a whole detailed view onto one A4 page; crop or tile it across landscape pages so the class text remains readable.
 
 ## Verification and rendering
 

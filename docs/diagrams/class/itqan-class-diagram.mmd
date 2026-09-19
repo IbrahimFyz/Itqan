@@ -16,7 +16,7 @@ class User {
   +AccountStatus accountStatus
   +DateTime createdAt
   +DateTime updatedAt
-  +DateTime lastLoginAt
+  +DateTime? lastLoginAt
   +changeDisplayName(String) void
   +changePreferredLanguage(LanguageCode) void
   +activate() void
@@ -41,8 +41,8 @@ class UserRole {
 class LearnerProfile {
   <<entity>>
   +UUID learnerId
-  +String learningGoal
-  +String experienceLevel
+  +String? learningGoal
+  +String? experienceLevel
   +Boolean remindersEnabled
   +updateLearningGoal(String) void
   +setExperienceLevel(String) void
@@ -51,8 +51,8 @@ class LearnerProfile {
 class TeacherProfile {
   <<entity>>
   +UUID teacherId
-  +String biography
-  +String qualification
+  +String? biography
+  +String? qualification
   +updateBiography(String) void
   +updateQualification(String) void
 }
@@ -83,8 +83,8 @@ class Surah {
   +Integer juzId
   +String nameAr
   +String nameEn
-  +Integer revelationOrder
-  +String revelationType
+  +Integer? revelationOrder
+  +String? revelationType
   +Integer verseCount
   +Integer displayOrder
   +List~Verse~ verses
@@ -98,8 +98,8 @@ class Verse {
   +Integer verseNumber
   +String uthmaniText
   +String normalizedText
-  +Integer pageNumber
-  +Integer hizbNumber
+  +Integer? pageNumber
+  +Integer? hizbNumber
   +List~VerseWord~ words
   +getWord(Integer) VerseWord
   +getDisplayText() String
@@ -148,14 +148,14 @@ class RecitationSession {
   +Integer surahId
   +Integer aiModeId
   +DateTime startedAt
-  +DateTime endedAt
+  +DateTime? endedAt
   +SessionStatus status
   +Decimal completionPercentage
-  +Decimal masteryScore
-  +Integer totalDurationSeconds
+  +Decimal? masteryScore
+  +Integer? totalDurationSeconds
   +Integer totalPauseCount
   +Integer errorCount
-  +String failureReason
+  +String? failureReason
   +start(DateTime) void
   +addSegment(RecitationSegment) void
   +recordPause(PauseEvent) void
@@ -169,15 +169,15 @@ class AudioRecording {
   <<entity>>
   +UUID recordingId
   +UUID sessionId
-  +String storageUri
+  +String? storageUri
   +String format
-  +Integer durationSeconds
-  +Integer sampleRateHz
-  +Integer fileSizeBytes
+  +Integer? durationSeconds
+  +Integer? sampleRateHz
+  +Integer? fileSizeBytes
   +Boolean consentGranted
   +DateTime recordedAt
-  +DateTime retentionExpiresAt
-  +DateTime deletedAt
+  +DateTime? retentionExpiresAt
+  +DateTime? deletedAt
   +registerStorage(String) void
   +scheduleRetention(DateTime) void
   +markDeleted(DateTime) void
@@ -191,9 +191,9 @@ class RecitationSegment {
   +Integer segmentOrder
   +Integer audioStartMs
   +Integer audioEndMs
-  +String recognizedText
-  +Decimal confidenceScore
-  +Decimal fluencyScore
+  +String? recognizedText
+  +Decimal? confidenceScore
+  +Decimal? fluencyScore
   +SegmentStatus status
   +attachRecognizedText(String, Decimal) void
   +markProcessing() void
@@ -206,12 +206,12 @@ class RecitationAnalysis {
   +UUID analysisId
   +UUID segmentId
   +AnalysisStatus status
-  +String modelName
-  +String modelVersion
-  +Integer processingTimeMs
-  +DateTime analyzedAt
-  +Decimal overallConfidence
-  +String failureReason
+  +String? modelName
+  +String? modelVersion
+  +Integer? processingTimeMs
+  +DateTime? analyzedAt
+  +Decimal? overallConfidence
+  +String? failureReason
   +start() void
   +addError(RecitationError) void
   +complete(Decimal) void
@@ -222,12 +222,12 @@ class PauseEvent {
   <<entity>>
   +UUID pauseEventId
   +UUID sessionId
-  +UUID segmentId
+  +UUID? segmentId
   +Integer startedAtMs
   +Integer durationMs
   +PauseType pauseType
   +Boolean promptTriggered
-  +Integer promptDelayMs
+  +Integer? promptDelayMs
   +requiresPrompt(Integer) Boolean
   +markPromptTriggered(Integer) void
 }
@@ -263,7 +263,7 @@ class PauseType {
 class ErrorType {
   <<entity>>
   +Integer errorTypeId
-  +Integer tajweedRuleId
+  +Integer? tajweedRuleId
   +String errorCode
   +ErrorCategory category
   +String nameAr
@@ -277,11 +277,11 @@ class RecitationError {
   +UUID recitationErrorId
   +UUID analysisId
   +Integer errorTypeId
-  +Integer wordId
-  +String detectedText
-  +String expectedText
-  +Integer audioStartMs
-  +Integer audioEndMs
+  +Integer? wordId
+  +String? detectedText
+  +String? expectedText
+  +Integer? audioStartMs
+  +Integer? audioEndMs
   +Decimal confidenceScore
   +ReviewStatus reviewStatus
   +DateTime detectedAt
@@ -298,19 +298,19 @@ class ErrorFeedback {
   +FeedbackType feedbackType
   +LanguageCode languageCode
   +String feedbackText
-  +String correctionText
+  +String? correctionText
   +DateTime createdAt
   +isForLanguage(LanguageCode) Boolean
 }
 class AudioAssistance {
   <<entity>>
   +UUID assistanceId
-  +UUID recitationErrorId
-  +UUID pauseEventId
+  +UUID? recitationErrorId
+  +UUID? pauseEventId
   +Integer verseId
   +String audioUri
   +AssistanceType assistanceType
-  +DateTime playedAt
+  +DateTime? playedAt
   +markPlayed(DateTime) void
   +validateSingleTrigger() Boolean
 }
@@ -349,13 +349,13 @@ class LearnerSurahProgress {
   +Integer surahId
   +Integer attemptCount
   +Integer completedSessionCount
-  +Decimal bestMasteryScore
-  +Decimal averageMasteryScore
-  +Decimal latestMasteryScore
+  +Decimal? bestMasteryScore
+  +Decimal? averageMasteryScore
+  +Decimal? latestMasteryScore
   +Boolean fullyMastered
-  +DateTime firstPracticedAt
-  +DateTime lastPracticedAt
-  +DateTime masteredAt
+  +DateTime? firstPracticedAt
+  +DateTime? lastPracticedAt
+  +DateTime? masteredAt
   +recordAttempt(RecitationSession) void
   +recalculateAverage(List~MasteryScoreHistory~) void
   +markMastered(DateTime) void
@@ -367,13 +367,13 @@ class MasteryScoreHistory {
   +UUID learnerId
   +Integer surahId
   +UUID sessionId
-  +Decimal tajweedScore
-  +Decimal pronunciationScore
-  +Decimal fluencyScore
-  +Decimal pauseScore
+  +Decimal? tajweedScore
+  +Decimal? pronunciationScore
+  +Decimal? fluencyScore
+  +Decimal? pauseScore
   +Decimal finalMasteryScore
   +DateTime calculatedAt
-  +String formulaVersion
+  +String? formulaVersion
   +validateScoreRange() Boolean
 }
 class DailyPractice {
@@ -391,19 +391,20 @@ class PracticeStreak {
   +UUID learnerId
   +Integer currentStreakDays
   +Integer longestStreakDays
-  +Date currentStreakStartedOn
-  +Date lastPracticeDate
+  +Date? currentStreakStartedOn
+  +Date? lastPracticeDate
   +DateTime updatedAt
   +recordPractice(Date) void
   +resetIfBroken(Date) void
 }
 
 class LearningClass {
+  <<proposed: addAssignment>>
   <<entity>>
   +UUID classId
   +UUID teacherId
   +String className
-  +String description
+  +String? description
   +String joinCode
   +ClassStatus classStatus
   +DateTime createdAt
@@ -421,8 +422,8 @@ class ClassEnrollment {
   +UUID classId
   +UUID learnerId
   +EnrollmentStatus enrollmentStatus
-  +DateTime enrolledAt
-  +DateTime endedAt
+  +DateTime? enrolledAt
+  +DateTime? endedAt
   +accept(DateTime) void
   +leave(DateTime) void
   +remove(DateTime) void
@@ -436,9 +437,9 @@ class ClassAssignment {
   +Integer surahId
   +UUID createdBy
   +String title
-  +String instructions
-  +Decimal targetMasteryScore
-  +DateTime dueAt
+  +String? instructions
+  +Decimal? targetMasteryScore
+  +DateTime? dueAt
   +DateTime createdAt
   +isDue(DateTime) Boolean
   +meetsTarget(Decimal) Boolean
@@ -448,10 +449,10 @@ class AssignmentProgress {
   <<entity>>
   +UUID assignmentId
   +UUID learnerId
-  +UUID bestSessionId
+  +UUID? bestSessionId
   +AssignmentStatus assignmentStatus
-  +Decimal bestMasteryScore
-  +DateTime completedAt
+  +Decimal? bestMasteryScore
+  +DateTime? completedAt
   +DateTime updatedAt
   +recordAttempt(RecitationSession) void
   +markCompleted(DateTime) void
@@ -461,11 +462,11 @@ class TeacherMessage {
   +UUID messageId
   +UUID teacherId
   +UUID learnerId
-  +UUID classId
-  +UUID sessionId
+  +UUID? classId
+  +UUID? sessionId
   +String messageText
   +DateTime sentAt
-  +DateTime readAt
+  +DateTime? readAt
   +markRead(DateTime) void
   +referencesSession() Boolean
 }
@@ -477,7 +478,7 @@ class StudentPerformanceSnapshot {
   +UUID learnerId
   +DateTime generatedAt
   +Integer completedSurahCount
-  +Decimal averageMasteryScore
+  +Decimal? averageMasteryScore
   +Integer totalSessions
   +Integer totalPracticeSeconds
   +Integer currentStreakDays
@@ -497,6 +498,7 @@ class EnrollmentStatus {
   REMOVED
 }
 class AssignmentStatus {
+  <<proposed>>
   <<enumeration>>
   NOT_STARTED
   IN_PROGRESS
@@ -514,8 +516,8 @@ class Challenge {
   +String descriptionEn
   +String challengeType
   +Integer targetValue
-  +DateTime startsAt
-  +DateTime endsAt
+  +DateTime? startsAt
+  +DateTime? endsAt
   +Boolean active
   +isAvailable(DateTime) Boolean
   +isCompletedBy(Integer) Boolean
@@ -528,7 +530,7 @@ class LearnerChallenge {
   +Integer progressValue
   +String challengeStatus
   +DateTime joinedAt
-  +DateTime completedAt
+  +DateTime? completedAt
   +incrementProgress(Integer) void
   +complete(DateTime) void
 }
@@ -548,7 +550,7 @@ class LearnerReward {
   <<entity>>
   +UUID learnerId
   +UUID rewardId
-  +UUID challengeId
+  +UUID? challengeId
   +DateTime awardedAt
   +wasAwardedByChallenge() Boolean
 }
@@ -592,6 +594,7 @@ class ProgressService {
   +updateStreak(UUID, Date) PracticeStreak
 }
 class ClassService {
+  <<proposed: createAssignment>>
   <<service>>
   +createClass(UUID, String) LearningClass
   +inviteLearner(UUID, UUID) ClassEnrollment
@@ -600,13 +603,14 @@ class ClassService {
   +createAssignment(UUID, AssignmentData) ClassAssignment
 }
 class TeacherMonitoringService {
+  <<proposed: getLearnerPerformance>>
   <<service>>
   +getClassProgress(UUID, UUID) List~LearnerSurahProgress~
   +getLearnerPerformance(UUID, UUID, UUID) StudentPerformanceSnapshot
 }
 class MessagingService {
   <<service>>
-  +sendMessage(UUID, UUID, UUID, String, UUID) TeacherMessage
+  +sendMessage(UUID, UUID, UUID, String, UUID?) TeacherMessage
   +markRead(UUID, UUID) TeacherMessage
 }
 class GamificationService {
@@ -614,28 +618,28 @@ class GamificationService {
   <<service>>
   +joinChallenge(UUID, UUID) LearnerChallenge
   +recordProgress(UUID, UUID, Integer) LearnerChallenge
-  +awardReward(UUID, UUID, UUID) LearnerReward
+  +awardReward(UUID, UUID, UUID?) LearnerReward
 }
 
 class UserRepository {
   <<repository>>
-  +findById(UUID) User
-  +findByEmail(String) User
+  +findById(UUID) User?
+  +findByEmail(String) User?
   +save(User) User
   +saveLearnerProfile(LearnerProfile) LearnerProfile
   +saveTeacherProfile(TeacherProfile) TeacherProfile
 }
 class QuranRepository {
   <<repository>>
-  +findJuz(Integer) Juz
-  +findSurah(Integer) Surah
-  +findVerse(Integer) Verse
+  +findJuz(Integer) Juz?
+  +findSurah(Integer) Surah?
+  +findVerse(Integer) Verse?
   +listJuzAmmaSurahs() List~Surah~
   +listSupportedTajweedRules() List~TajweedRule~
 }
 class RecitationRepository {
   <<repository>>
-  +findSession(UUID) RecitationSession
+  +findSession(UUID) RecitationSession?
   +saveSession(RecitationSession) RecitationSession
   +saveRecording(AudioRecording) AudioRecording
   +saveSegment(RecitationSegment) RecitationSegment
@@ -643,7 +647,7 @@ class RecitationRepository {
 }
 class ProgressRepository {
   <<repository>>
-  +findSurahProgress(UUID, Integer) LearnerSurahProgress
+  +findSurahProgress(UUID, Integer) LearnerSurahProgress?
   +saveSurahProgress(LearnerSurahProgress) LearnerSurahProgress
   +listMasteryHistory(UUID, Integer) List~MasteryScoreHistory~
   +saveMasteryHistory(MasteryScoreHistory) MasteryScoreHistory
@@ -652,18 +656,18 @@ class ProgressRepository {
 }
 class ClassRepository {
   <<repository>>
-  +findClass(UUID) LearningClass
+  +findClass(UUID) LearningClass?
   +saveClass(LearningClass) LearningClass
-  +findActiveEnrollment(UUID, UUID) ClassEnrollment
+  +findActiveEnrollment(UUID, UUID) ClassEnrollment?
   +saveEnrollment(ClassEnrollment) ClassEnrollment
   +saveMessage(TeacherMessage) TeacherMessage
 }
 class GamificationRepository {
   <<proposed>>
   <<repository>>
-  +findChallenge(UUID) Challenge
+  +findChallenge(UUID) Challenge?
   +saveLearnerChallenge(LearnerChallenge) LearnerChallenge
-  +findReward(UUID) Reward
+  +findReward(UUID) Reward?
   +saveLearnerReward(LearnerReward) LearnerReward
 }
 
@@ -702,12 +706,13 @@ class ProfileData {
   +LanguageCode language
 }
 class AssignmentData {
+  <<proposed>>
   <<value object>>
   +Integer surahId
   +String title
-  +String instructions
-  +Decimal targetScore
-  +DateTime dueAt
+  +String? instructions
+  +Decimal? targetScore
+  +DateTime? dueAt
 }
 
 User "1" *-- "0..1" LearnerProfile : learner profile

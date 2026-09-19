@@ -28,6 +28,29 @@ for name in ClassAssignment AssignmentProgress StudentPerformanceSnapshot Challe
   rg -A4 "class $name" "$complete" | rg -qi 'proposed' || { echo "Missing proposed marker: $name"; exit 1; }
 done
 
+for signature in \
+  '+UUID? recitationErrorId' \
+  '+UUID? pauseEventId' \
+  '+findById(UUID) User?' \
+  '+findByEmail(String) User?' \
+  '+findSession(UUID) RecitationSession?' \
+  '+findSurahProgress(UUID, Integer) LearnerSurahProgress?' \
+  '+findClass(UUID) LearningClass?' \
+  '+findActiveEnrollment(UUID, UUID) ClassEnrollment?'; do
+  rg -Fq "$signature" "$complete" || { echo "Missing nullable UML signature: $signature"; exit 1; }
+done
+
+for signature in \
+  '<<proposed: addAssignment>>' \
+  '<<proposed: createAssignment>>' \
+  '<<proposed: getLearnerPerformance>>'; do
+  rg -Fq "$signature" "$complete" || { echo "Missing proposed operation marker: $signature"; exit 1; }
+done
+
+for name in AssignmentStatus AssignmentData; do
+  rg -A4 "class $name" "$complete" | rg -qi 'proposed' || { echo "Missing proposed supporting type marker: $name"; exit 1; }
+done
+
 check_view() {
   view="$1"
   shift
