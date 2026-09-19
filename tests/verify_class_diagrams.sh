@@ -6,12 +6,16 @@ complete="$diagram_dir/itqan-class-diagram.mmd"
 
 test -f "$complete"
 
-for name in User Role UserRole LearnerProfile TeacherProfile Juz Surah Verse VerseWord TajweedRule AIMode RecitationSession AudioRecording RecitationSegment RecitationAnalysis PauseEvent ErrorType RecitationError ErrorFeedback AudioAssistance LearnerSurahProgress MasteryScoreHistory DailyPractice PracticeStreak LearningClass ClassEnrollment ClassAssignment AssignmentProgress TeacherMessage StudentPerformanceSnapshot Challenge LearnerChallenge Reward LearnerReward; do
+for name in User Role UserRole LearnerProfile TeacherProfile Juz Surah Verse VerseWord TajweedRule AIMode RecitationSession RecitationSegment RecitationAnalysis PauseEvent ErrorType RecitationError ErrorFeedback AudioAssistance LearnerSurahProgress MasteryScoreHistory DailyPractice PracticeStreak LearningClass ClassEnrollment ClassAssignment AssignmentProgress TeacherMessage StudentPerformanceSnapshot Challenge LearnerChallenge Reward LearnerReward; do
   rg -q "class $name([ {]|$)" "$complete" || { echo "Missing class: $name"; exit 1; }
 done
 
-for name in AuthenticationService QuranCatalogService RecitationService AnalysisService FeedbackService ProgressService ClassService TeacherMonitoringService MessagingService GamificationService UserRepository QuranRepository RecitationRepository ProgressRepository ClassRepository GamificationRepository AudioCapturePort AudioStoragePort AIAnalysisPort; do
+for name in AuthenticationService QuranCatalogService RecitationService AnalysisService FeedbackService ProgressService ClassService TeacherMonitoringService MessagingService GamificationService UserRepository QuranRepository RecitationRepository ProgressRepository ClassRepository GamificationRepository AudioCapturePort AIAnalysisPort; do
   rg -q "class $name([ {]|$)" "$complete" || { echo "Missing boundary: $name"; exit 1; }
+done
+
+for name in RecitationSession RecitationSegment RecitationAnalysis RecitationError AudioCapturePort AIAnalysisPort AudioData; do
+  rg -q "class $name([ {]|$)" "$complete" || { echo "Missing transient-audio model element: $name"; exit 1; }
 done
 
 if rg -ni '\b(Admin|Flutter|FastAPI|SQLAlchemy|ORM|HttpController)\b' "$diagram_dir"/*.mmd; then
@@ -61,7 +65,7 @@ check_view() {
 }
 
 check_view "$diagram_dir/identity-quran-classes.mmd" User Role UserRole LearnerProfile TeacherProfile Juz Surah Verse VerseWord TajweedRule AuthenticationService QuranCatalogService
-check_view "$diagram_dir/recitation-feedback-classes.mmd" RecitationSession AudioRecording RecitationSegment RecitationAnalysis PauseEvent RecitationError ErrorFeedback AudioAssistance RecitationService AnalysisService FeedbackService
+check_view "$diagram_dir/recitation-feedback-classes.mmd" RecitationSession RecitationSegment RecitationAnalysis PauseEvent RecitationError ErrorFeedback AudioAssistance RecitationService AnalysisService FeedbackService
 check_view "$diagram_dir/progress-teacher-classes.mmd" LearnerSurahProgress MasteryScoreHistory DailyPractice PracticeStreak LearningClass ClassEnrollment ClassAssignment AssignmentProgress TeacherMessage StudentPerformanceSnapshot ProgressService ClassService TeacherMonitoringService MessagingService
 check_view "$diagram_dir/gamification-classes-proposed.mmd" Challenge LearnerChallenge Reward LearnerReward GamificationService GamificationRepository
 
@@ -84,7 +88,6 @@ VERSE_WORD VerseWord
 TAJWEED_RULE TajweedRule
 AI_MODE AIMode
 RECITATION_SESSION RecitationSession
-AUDIO_RECORDING AudioRecording
 RECITATION_SEGMENT RecitationSegment
 RECITATION_ANALYSIS RecitationAnalysis
 PAUSE_EVENT PauseEvent
