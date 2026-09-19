@@ -86,6 +86,7 @@ LEARNER_REWARD LearnerReward
 ENTITY_MAP
 
 for source in "$diagram_dir"/*.mmd; do
+  rg -q '^direction TB$' "$source" || { echo "Diagram is not using the verified landscape-producing direction: $source"; exit 1; }
   output="/tmp/$(basename "${source%.mmd}").svg"
   npx -y @mermaid-js/mermaid-cli -i "$source" -o "$output" -b white
   test -s "$output"
