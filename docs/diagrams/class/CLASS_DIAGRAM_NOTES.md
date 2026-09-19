@@ -6,13 +6,13 @@ The class diagram describes the static software design of Itqan: domain state, b
 
 ## Class diagram versus ERD
 
-The ERD answers **what data is stored**. It shows tables, keys, attributes, and relational cardinalities. The class diagram answers **which objects collaborate and what they do**. It preserves all 34 persisted ERD entities and adds:
+The ERD answers **what data is stored**. It shows tables, keys, attributes, and relational cardinalities. The class diagram answers **which objects collaborate and what they do**. It preserves all 33 persisted ERD entities and adds:
 
 - domain methods and lifecycle rules;
 - enumerations and value objects;
 - application services that coordinate use cases;
 - repository interfaces that isolate persistence;
-- external ports for microphone capture, audio storage, and AI analysis.
+- external ports for microphone capture and AI analysis.
 
 Services, repositories, external ports, enumerations, and transport value objects are not additional database tables.
 
@@ -50,7 +50,6 @@ Repositories define persistence operations for aggregate groups without selectin
 ### External ports
 
 - `AudioCapturePort` isolates the device microphone.
-- `AudioStoragePort` isolates retained recording storage and deletion.
 - `AIAnalysisPort` isolates speech/Tajweed analysis.
 
 Concrete implementations are intentionally absent until the team approves the technology stack.
@@ -87,7 +86,7 @@ Their presence shows a possible design without converting unresolved mechanics i
 
 1. `RecitationService` validates the learner, selected `Surah`, and `AIMode`.
 2. It creates an active `RecitationSession` and starts `AudioCapturePort`.
-3. Audio becomes ordered `RecitationSegment` instances and may be retained through `AudioStoragePort` according to consent.
+3. Audio is held as transient `AudioData`, becomes ordered `RecitationSegment` results, and is discarded after analysis.
 4. `AnalysisService` sends a segment and expected `Verse` to `AIAnalysisPort`.
 5. The result becomes `RecitationAnalysis`, `RecitationError`, `ErrorFeedback`, and optional `AudioAssistance` objects.
 6. When the session completes, `ProgressService` updates `LearnerSurahProgress`, `MasteryScoreHistory`, `DailyPractice`, and `PracticeStreak`.
@@ -104,11 +103,11 @@ Their presence shows a possible design without converting unresolved mechanics i
 - duplicate account email or class join code;
 - learner operations without a learner role or teacher operations without a teacher role;
 - teacher access without class ownership and active learner enrollment;
-- recording, analysis, or completion against a non-active session;
+- analysis or completion against a non-active session;
 - analysis before audio and segment capture;
 - confidence values outside 0–1 or scores outside 0–100;
 - `AudioAssistance` linked to both an error and pause, or to neither;
-- retained audio without required consent;
+- persisted learner audio in any application storage;
 - analysis using an unsupported Tajweed rule;
 - progress updates from incomplete sessions.
 
@@ -144,4 +143,4 @@ npx -y @mermaid-js/mermaid-cli \
   -b white -w 5600 -H 3600
 ```
 
-The verification script checks required classes, proposed labels, forbidden implementation-specific classes, learner/teacher profile modeling, all five Mermaid renders, and the explicit 34-entity ERD-to-UML mapping.
+The verification script checks required classes, proposed labels, forbidden implementation-specific classes, learner/teacher profile modeling, all five Mermaid renders, and the explicit 33-entity ERD-to-UML mapping.

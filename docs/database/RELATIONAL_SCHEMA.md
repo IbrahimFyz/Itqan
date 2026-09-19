@@ -91,12 +91,6 @@ Fixed modes are `al_mujawwid`, `al_mushajji`, and `al_muallim`.
 
 Stores one learner attempt for one Surah and selected AI mode. Status is `active`, `completed`, `abandoned`, or `failed`. Completed sessions require `ended_at`; active sessions must not have it. The schema stores the mastery result, not an unapproved formula.
 
-### AUDIO_RECORDING
-
-`AUDIO_RECORDING(recording_id UUID PK, session_id UUID UK FK→RECITATION_SESSION.session_id, storage_uri TEXT NULL, format VARCHAR(20), duration_seconds INTEGER NULL, sample_rate_hz INTEGER NULL, file_size_bytes BIGINT NULL, consent_granted BOOLEAN, recorded_at TIMESTAMPTZ, retention_expires_at TIMESTAMPTZ NULL, deleted_at TIMESTAMPTZ NULL)`
-
-Stores metadata and a URI, not audio bytes. Retention deletion clears `storage_uri` and records `deleted_at` while preserving session results.
-
 ### RECITATION_SEGMENT
 
 `RECITATION_SEGMENT(segment_id UUID PK, session_id UUID FK→RECITATION_SESSION.session_id, verse_id INTEGER FK→VERSE.verse_id, segment_order SMALLINT, audio_start_ms INTEGER, audio_end_ms INTEGER, recognized_text TEXT NULL, confidence_score NUMERIC(5,4) NULL, fluency_score NUMERIC(5,2) NULL, segment_status VARCHAR(20))`
@@ -237,7 +231,6 @@ Composite primary key `(learner_id, reward_id)`. `challenge_id` records the sour
 
 - Quran reference rows and lookup rows use restrictive deletion while referenced.
 - User accounts use logical deletion through `USER.account_status`; historical academic evidence is retained according to the final privacy policy.
-- Expired or withdrawn audio is removed from external storage, `storage_uri` is cleared, and `deleted_at` is recorded.
 - Session-owned detail may cascade only during an authorized privacy purge; normal account deactivation must not destroy progress evidence.
 - Teachers may access learner progress, sessions, snapshots, and messages only through an active `CLASS_ENROLLMENT` associated with a class they own.
-- Sensitive fields, storage URIs, and account credentials require authorization and encryption controls outside this logical schema.
+- Sensitive fields and account credentials require authorization and encryption controls outside this logical schema.

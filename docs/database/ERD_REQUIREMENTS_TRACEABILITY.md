@@ -17,12 +17,12 @@ This matrix connects the functional requirements in `docs/project/REQUIREMENTS.m
 | FR-09 | Al-Mushajji Mode | `AI_MODE`, `CHALLENGE`, `LEARNER_CHALLENGE`, `REWARD`, `LEARNER_REWARD` | Mode selection and proposed motivation state | Gamification entities are proposed because mechanics remain unresolved. |
 | FR-10 | Al-Mu'allim Mode | `AI_MODE`, `LEARNING_CLASS`, `CLASS_ENROLLMENT`, `LEARNER_SURAH_PROGRESS`, `TEACHER_MESSAGE` | Teacher context, learners, progress, and communication | Dashboard behavior is detailed in FR-23–FR-25. |
 | FR-11 | Start Recitation Session | `RECITATION_SESSION` | Start time, selected Surah/mode, and active status | Microphone activation is device behavior. |
-| FR-12 | Capture Recitation Audio | `AUDIO_RECORDING`, `RECITATION_SESSION` | Consent, format, duration, storage URI, and retention metadata | Audio bytes remain outside the relational database. |
+| FR-12 | Capture Recitation Audio | `RECITATION_SESSION` | Active-session metadata only | Learner audio is processed in memory and discarded after analysis. |
 | FR-13 | Analyze Recitation | `RECITATION_SEGMENT`, `RECITATION_ANALYSIS` | Segment boundaries, recognized text, model traceability, status, and confidence | Analysis execution is AI-service behavior. |
 | FR-14 | Detect Recitation Errors | `RECITATION_ANALYSIS`, `RECITATION_ERROR`, `ERROR_TYPE`, `TAJWEED_RULE` | Detected error, category, rule, confidence, and review state | Detection algorithms remain outside the schema. |
-| FR-15 | Identify Error Location | `VERSE`, `VERSE_WORD`, `RECITATION_SEGMENT`, `RECITATION_ERROR` | Verse, word, and audio-offset location | Supports exact Quran and recording positions. |
+| FR-15 | Identify Error Location | `VERSE`, `VERSE_WORD`, `RECITATION_SEGMENT`, `RECITATION_ERROR` | Verse, word, and audio-offset location | Supports exact locations within recitation results. |
 | FR-16 | Provide Recitation Feedback | `RECITATION_ERROR`, `ERROR_FEEDBACK` | Localized explanation and correction text | Feedback presentation is application behavior. |
-| FR-17 | Provide Audio Assistance | `AUDIO_ASSISTANCE`, `RECITATION_ERROR`, `PAUSE_EVENT`, `VERSE` | Assistance source, type, URI, and playback time | Audio generation/playback is service and device behavior. |
+| FR-17 | Provide Audio Assistance | `AUDIO_ASSISTANCE`, `RECITATION_ERROR`, `PAUSE_EVENT`, `VERSE` | Bundled reference source, type, and playback time | Corrective reference playback is service and device behavior. |
 | FR-18 | Continue Recitation | `RECITATION_SESSION`, `RECITATION_SEGMENT`, `PAUSE_EVENT` | Ordered segments and prompt/pause history | Resume control is application behavior. |
 | FR-19 | End Recitation Session | `RECITATION_SESSION` | End time, final status, duration, completion, and counts | Session finalization is application behavior. |
 | FR-20 | Display Session Results | `RECITATION_SESSION`, `RECITATION_ERROR`, `VERSE_WORD`, `MASTERY_SCORE_HISTORY` | Mastery result and words containing errors | Result rendering is UI behavior. |
@@ -48,7 +48,6 @@ This matrix connects the functional requirements in `docs/project/REQUIREMENTS.m
 | `TAJWEED_RULE` | FR-08, FR-14 | Supporting reference catalog; supported subset unresolved. |
 | `AI_MODE` | FR-07, FR-08, FR-09, FR-10, FR-11 | Confirmed three-mode catalog and session selection. |
 | `RECITATION_SESSION` | FR-05, FR-07, FR-11, FR-12, FR-18, FR-19, FR-20, FR-21 | Confirmed attempt lifecycle and summary results. |
-| `AUDIO_RECORDING` | FR-12 | Confirmed audio metadata, consent, and retention record. |
 | `RECITATION_SEGMENT` | FR-13, FR-15, FR-18 | Supporting ordered verse/audio processing unit. |
 | `RECITATION_ANALYSIS` | FR-08, FR-13, FR-14 | Confirmed analysis result and evaluation traceability. |
 | `PAUSE_EVENT` | FR-17, FR-18 | Confirmed smart-prompting and pause evidence. |

@@ -165,24 +165,6 @@ class RecitationSession {
   +calculateCompletion() Decimal
   +canAcceptAudio() Boolean
 }
-class AudioRecording {
-  <<entity>>
-  +UUID recordingId
-  +UUID sessionId
-  +String? storageUri
-  +String format
-  +Integer? durationSeconds
-  +Integer? sampleRateHz
-  +Integer? fileSizeBytes
-  +Boolean consentGranted
-  +DateTime recordedAt
-  +DateTime? retentionExpiresAt
-  +DateTime? deletedAt
-  +registerStorage(String) void
-  +scheduleRetention(DateTime) void
-  +markDeleted(DateTime) void
-  +isRetained(DateTime) Boolean
-}
 class RecitationSegment {
   <<entity>>
   +UUID segmentId
@@ -641,7 +623,6 @@ class RecitationRepository {
   <<repository>>
   +findSession(UUID) RecitationSession?
   +saveSession(RecitationSession) RecitationSession
-  +saveRecording(AudioRecording) AudioRecording
   +saveSegment(RecitationSegment) RecitationSegment
   +saveAnalysis(RecitationAnalysis) RecitationAnalysis
 }
@@ -676,12 +657,6 @@ class AudioCapturePort {
   +startCapture(UUID) void
   +readSegment() AudioData
   +stopCapture() AudioData
-}
-class AudioStoragePort {
-  <<external>>
-  +store(AudioData, Boolean) AudioRecording
-  +load(UUID) AudioData
-  +delete(UUID) void
 }
 class AIAnalysisPort {
   <<external>>
@@ -729,7 +704,6 @@ AIMode --> AIModeCode
 LearnerProfile "1" -- "0..*" RecitationSession : performs
 Surah "1" -- "0..*" RecitationSession : selected for
 AIMode "1" -- "0..*" RecitationSession : configures
-RecitationSession "1" *-- "0..1" AudioRecording : records
 RecitationSession "1" *-- "0..*" RecitationSegment : contains
 RecitationSession "1" *-- "0..*" PauseEvent : detects
 Verse "1" -- "0..*" RecitationSegment : recited as
@@ -788,7 +762,6 @@ QuranCatalogService ..> Surah
 RecitationService ..> RecitationRepository
 RecitationService ..> QuranRepository
 RecitationService ..> AudioCapturePort
-RecitationService ..> AudioStoragePort
 RecitationService ..> RecitationSession
 AnalysisService ..> RecitationRepository
 AnalysisService ..> QuranRepository
@@ -796,7 +769,6 @@ AnalysisService ..> AIAnalysisPort
 AnalysisService ..> RecitationAnalysis
 FeedbackService ..> RecitationRepository
 FeedbackService ..> QuranRepository
-FeedbackService ..> AudioStoragePort
 FeedbackService ..> ErrorFeedback
 ProgressService ..> RecitationRepository
 ProgressService ..> ProgressRepository
@@ -812,8 +784,6 @@ MessagingService ..> TeacherMessage
 GamificationService ..> GamificationRepository
 GamificationService ..> Challenge
 AudioCapturePort ..> AudioData
-AudioStoragePort ..> AudioData
-AudioStoragePort ..> AudioRecording
 AIAnalysisPort ..> AudioData
 AIAnalysisPort ..> Verse
 AIAnalysisPort ..> AnalysisResult

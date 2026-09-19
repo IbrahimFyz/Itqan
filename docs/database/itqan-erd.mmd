@@ -106,19 +106,6 @@ erDiagram
         integer error_count
         text failure_reason
     }
-    AUDIO_RECORDING {
-        uuid recording_id PK
-        uuid session_id FK, UK
-        text storage_uri
-        varchar format
-        integer duration_seconds
-        integer sample_rate_hz
-        bigint file_size_bytes
-        boolean consent_granted
-        datetime recorded_at
-        datetime retention_expires_at
-        datetime deleted_at
-    }
     RECITATION_SEGMENT {
         uuid segment_id PK
         uuid session_id FK
@@ -354,7 +341,6 @@ erDiagram
     LEARNER_PROFILE ||--o{ RECITATION_SESSION : performs
     SURAH ||--o{ RECITATION_SESSION : selected_for
     AI_MODE ||--o{ RECITATION_SESSION : configures
-    RECITATION_SESSION ||--o| AUDIO_RECORDING : records
     RECITATION_SESSION ||--o{ RECITATION_SEGMENT : contains
     VERSE ||--o{ RECITATION_SEGMENT : recited_as
     RECITATION_SEGMENT ||--o| RECITATION_ANALYSIS : analyzed_by
