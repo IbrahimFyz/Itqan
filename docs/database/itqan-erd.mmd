@@ -1,0 +1,396 @@
+---
+title: Itqan Complete Entity Relationship Diagram
+config:
+  theme: neutral
+---
+erDiagram
+    %% IDENTITY AND ACCESS
+    USER {
+        uuid user_id PK
+        varchar email UK
+        text password_hash
+        varchar display_name
+        varchar preferred_language
+        varchar account_status
+        datetime created_at
+        datetime updated_at
+        datetime last_login_at
+    }
+    ROLE {
+        smallint role_id PK
+        varchar role_code UK
+        varchar role_name_ar
+        varchar role_name_en
+    }
+    USER_ROLE {
+        uuid user_id PK, FK
+        smallint role_id PK, FK
+        datetime assigned_at
+    }
+    LEARNER_PROFILE {
+        uuid learner_id PK, FK
+        text learning_goal
+        varchar experience_level
+        boolean reminders_enabled
+    }
+    TEACHER_PROFILE {
+        uuid teacher_id PK, FK
+        text biography
+        text qualification
+    }
+
+    %% QURAN CONTENT AND TAJWEED REFERENCE DATA
+    JUZ {
+        smallint juz_id PK
+        smallint juz_number UK
+        varchar name_ar
+        varchar name_en
+    }
+    SURAH {
+        smallint surah_id PK
+        smallint juz_id FK
+        varchar name_ar
+        varchar name_en
+        smallint revelation_order
+        varchar revelation_type
+        smallint verse_count
+        smallint display_order UK
+    }
+    VERSE {
+        integer verse_id PK
+        smallint surah_id FK
+        smallint verse_number
+        text uthmani_text
+        text normalized_text
+        smallint page_number
+        smallint hizb_number
+    }
+    VERSE_WORD {
+        bigint word_id PK
+        integer verse_id FK
+        smallint word_position
+        varchar uthmani_text
+        varchar normalized_text
+    }
+    TAJWEED_RULE {
+        smallint tajweed_rule_id PK
+        varchar rule_code UK
+        varchar name_ar
+        varchar name_en
+        text description_ar
+        text description_en
+        boolean is_supported
+    }
+
+    %% AI MODES AND RECITATION SESSIONS
+    AI_MODE {
+        smallint ai_mode_id PK
+        varchar mode_code UK
+        varchar name_ar
+        varchar name_en
+        text description
+        boolean is_active
+    }
+    RECITATION_SESSION {
+        uuid session_id PK
+        uuid learner_id FK
+        smallint surah_id FK
+        smallint ai_mode_id FK
+        datetime started_at
+        datetime ended_at
+        varchar session_status
+        decimal completion_percentage
+        decimal mastery_score
+        integer total_duration_seconds
+        integer total_pause_count
+        integer error_count
+        text failure_reason
+    }
+    AUDIO_RECORDING {
+        uuid recording_id PK
+        uuid session_id FK, UK
+        text storage_uri
+        varchar format
+        integer duration_seconds
+        integer sample_rate_hz
+        bigint file_size_bytes
+        boolean consent_granted
+        datetime recorded_at
+        datetime retention_expires_at
+        datetime deleted_at
+    }
+    RECITATION_SEGMENT {
+        uuid segment_id PK
+        uuid session_id FK
+        integer verse_id FK
+        smallint segment_order
+        integer audio_start_ms
+        integer audio_end_ms
+        text recognized_text
+        decimal confidence_score
+        decimal fluency_score
+        varchar segment_status
+    }
+    RECITATION_ANALYSIS {
+        uuid analysis_id PK
+        uuid segment_id FK, UK
+        varchar analysis_status
+        varchar model_name
+        varchar model_version
+        integer processing_time_ms
+        datetime analyzed_at
+        decimal overall_confidence
+        text failure_reason
+    }
+    PAUSE_EVENT {
+        uuid pause_event_id PK
+        uuid session_id FK
+        uuid segment_id FK
+        integer started_at_ms
+        integer duration_ms
+        varchar pause_type
+        boolean prompt_triggered
+        integer prompt_delay_ms
+    }
+
+    %% ERROR DETECTION AND FEEDBACK
+    ERROR_TYPE {
+        smallint error_type_id PK
+        smallint tajweed_rule_id FK
+        varchar error_code UK
+        varchar category
+        varchar name_ar
+        varchar name_en
+        varchar severity
+        text description
+    }
+    RECITATION_ERROR {
+        uuid recitation_error_id PK
+        uuid analysis_id FK
+        smallint error_type_id FK
+        bigint word_id FK
+        text detected_text
+        text expected_text
+        integer audio_start_ms
+        integer audio_end_ms
+        decimal confidence_score
+        varchar review_status
+        datetime detected_at
+    }
+    ERROR_FEEDBACK {
+        uuid feedback_id PK
+        uuid recitation_error_id FK
+        varchar feedback_type
+        varchar language_code
+        text feedback_text
+        text correction_text
+        datetime created_at
+    }
+    AUDIO_ASSISTANCE {
+        uuid assistance_id PK
+        uuid recitation_error_id FK
+        uuid pause_event_id FK
+        integer verse_id FK
+        text audio_uri
+        varchar assistance_type
+        datetime played_at
+    }
+
+    %% PROGRESS AND PRACTICE HISTORY
+    LEARNER_SURAH_PROGRESS {
+        uuid learner_id PK, FK
+        smallint surah_id PK, FK
+        integer attempt_count
+        integer completed_session_count
+        decimal best_mastery_score
+        decimal average_mastery_score
+        decimal latest_mastery_score
+        boolean is_fully_mastered
+        datetime first_practiced_at
+        datetime last_practiced_at
+        datetime mastered_at
+    }
+    MASTERY_SCORE_HISTORY {
+        uuid mastery_history_id PK
+        uuid learner_id FK
+        smallint surah_id FK
+        uuid session_id FK, UK
+        decimal tajweed_score
+        decimal pronunciation_score
+        decimal fluency_score
+        decimal pause_score
+        decimal final_mastery_score
+        datetime calculated_at
+        varchar formula_version
+    }
+    DAILY_PRACTICE {
+        uuid learner_id PK, FK
+        date practice_date PK
+        integer session_count
+        integer completed_session_count
+        integer total_practice_seconds
+        integer verses_practiced
+    }
+    PRACTICE_STREAK {
+        uuid learner_id PK, FK
+        integer current_streak_days
+        integer longest_streak_days
+        date current_streak_started_on
+        date last_practice_date
+        datetime updated_at
+    }
+
+    %% TEACHER, CLASS, AND COMMUNICATION FUNCTIONS
+    LEARNING_CLASS {
+        uuid class_id PK
+        uuid teacher_id FK
+        varchar class_name
+        text description
+        varchar join_code UK
+        varchar class_status
+        datetime created_at
+        datetime updated_at
+    }
+    CLASS_ENROLLMENT {
+        uuid enrollment_id PK
+        uuid class_id FK
+        uuid learner_id FK
+        varchar enrollment_status
+        datetime enrolled_at
+        datetime ended_at
+    }
+    %% PROPOSED DETAIL
+    CLASS_ASSIGNMENT {
+        uuid assignment_id PK "PROPOSED"
+        uuid class_id FK
+        smallint surah_id FK
+        uuid created_by FK
+        varchar title
+        text instructions
+        decimal target_mastery_score
+        datetime due_at
+        datetime created_at
+    }
+    %% PROPOSED DETAIL
+    ASSIGNMENT_PROGRESS {
+        uuid assignment_id PK, FK "PROPOSED"
+        uuid learner_id PK, FK
+        uuid best_session_id FK
+        varchar assignment_status
+        decimal best_mastery_score
+        datetime completed_at
+        datetime updated_at
+    }
+    TEACHER_MESSAGE {
+        uuid message_id PK
+        uuid teacher_id FK
+        uuid learner_id FK
+        uuid class_id FK
+        uuid session_id FK
+        text message_text
+        datetime sent_at
+        datetime read_at
+    }
+    %% PROPOSED REPORTING CACHE
+    STUDENT_PERFORMANCE_SNAPSHOT {
+        uuid snapshot_id PK "PROPOSED"
+        uuid class_id FK
+        uuid learner_id FK
+        datetime generated_at
+        smallint completed_surah_count
+        decimal average_mastery_score
+        integer total_sessions
+        integer total_practice_seconds
+        integer current_streak_days
+    }
+
+    %% PROPOSED AL-MUSHAJJI GAMIFICATION
+    CHALLENGE {
+        uuid challenge_id PK "PROPOSED"
+        varchar title_ar
+        varchar title_en
+        text description_ar
+        text description_en
+        varchar challenge_type
+        integer target_value
+        datetime starts_at
+        datetime ends_at
+        boolean is_active
+    }
+    %% PROPOSED AL-MUSHAJJI GAMIFICATION
+    LEARNER_CHALLENGE {
+        uuid learner_id PK, FK "PROPOSED"
+        uuid challenge_id PK, FK
+        integer progress_value
+        varchar challenge_status
+        datetime joined_at
+        datetime completed_at
+    }
+    %% PROPOSED AL-MUSHAJJI GAMIFICATION
+    REWARD {
+        uuid reward_id PK "PROPOSED"
+        varchar reward_code UK
+        varchar name_ar
+        varchar name_en
+        text description
+        varchar reward_type
+    }
+    %% PROPOSED AL-MUSHAJJI GAMIFICATION
+    LEARNER_REWARD {
+        uuid learner_id PK, FK "PROPOSED"
+        uuid reward_id PK, FK
+        uuid challenge_id FK
+        datetime awarded_at
+    }
+
+    USER ||--o{ USER_ROLE : has
+    ROLE ||--o{ USER_ROLE : assigns
+    USER ||--o| LEARNER_PROFILE : extends
+    USER ||--o| TEACHER_PROFILE : extends
+    JUZ ||--|{ SURAH : contains
+    SURAH ||--|{ VERSE : contains
+    VERSE ||--|{ VERSE_WORD : contains
+    TAJWEED_RULE o|--o{ ERROR_TYPE : classifies
+    LEARNER_PROFILE ||--o{ RECITATION_SESSION : performs
+    SURAH ||--o{ RECITATION_SESSION : selected_for
+    AI_MODE ||--o{ RECITATION_SESSION : configures
+    RECITATION_SESSION ||--o| AUDIO_RECORDING : records
+    RECITATION_SESSION ||--o{ RECITATION_SEGMENT : contains
+    VERSE ||--o{ RECITATION_SEGMENT : recited_as
+    RECITATION_SEGMENT ||--o| RECITATION_ANALYSIS : analyzed_by
+    RECITATION_SESSION ||--o{ PAUSE_EVENT : detects
+    RECITATION_SEGMENT o|--o{ PAUSE_EVENT : locates
+    RECITATION_ANALYSIS ||--o{ RECITATION_ERROR : identifies
+    ERROR_TYPE ||--o{ RECITATION_ERROR : categorizes
+    VERSE_WORD o|--o{ RECITATION_ERROR : locates
+    RECITATION_ERROR ||--o{ ERROR_FEEDBACK : receives
+    RECITATION_ERROR o|--o{ AUDIO_ASSISTANCE : triggers
+    PAUSE_EVENT o|--o{ AUDIO_ASSISTANCE : triggers
+    VERSE ||--o{ AUDIO_ASSISTANCE : supplies
+    LEARNER_PROFILE ||--o{ LEARNER_SURAH_PROGRESS : tracks
+    SURAH ||--o{ LEARNER_SURAH_PROGRESS : summarizes
+    LEARNER_PROFILE ||--o{ MASTERY_SCORE_HISTORY : earns
+    SURAH ||--o{ MASTERY_SCORE_HISTORY : measures
+    RECITATION_SESSION ||--o| MASTERY_SCORE_HISTORY : produces
+    LEARNER_PROFILE ||--o{ DAILY_PRACTICE : logs
+    LEARNER_PROFILE ||--o| PRACTICE_STREAK : maintains
+    TEACHER_PROFILE ||--o{ LEARNING_CLASS : owns
+    LEARNING_CLASS ||--o{ CLASS_ENROLLMENT : has
+    LEARNER_PROFILE ||--o{ CLASS_ENROLLMENT : joins
+    LEARNING_CLASS ||--o{ CLASS_ASSIGNMENT : receives
+    SURAH ||--o{ CLASS_ASSIGNMENT : targets
+    TEACHER_PROFILE ||--o{ CLASS_ASSIGNMENT : creates
+    CLASS_ASSIGNMENT ||--o{ ASSIGNMENT_PROGRESS : tracks
+    LEARNER_PROFILE ||--o{ ASSIGNMENT_PROGRESS : completes
+    RECITATION_SESSION o|--o{ ASSIGNMENT_PROGRESS : evidences
+    TEACHER_PROFILE ||--o{ TEACHER_MESSAGE : sends
+    LEARNER_PROFILE ||--o{ TEACHER_MESSAGE : receives
+    LEARNING_CLASS o|--o{ TEACHER_MESSAGE : contextualizes
+    RECITATION_SESSION o|--o{ TEACHER_MESSAGE : references
+    LEARNING_CLASS ||--o{ STUDENT_PERFORMANCE_SNAPSHOT : summarizes
+    LEARNER_PROFILE ||--o{ STUDENT_PERFORMANCE_SNAPSHOT : measured_in
+    LEARNER_PROFILE ||--o{ LEARNER_CHALLENGE : joins
+    CHALLENGE ||--o{ LEARNER_CHALLENGE : enrolls
+    LEARNER_PROFILE ||--o{ LEARNER_REWARD : earns
+    REWARD ||--o{ LEARNER_REWARD : awards
+    CHALLENGE o|--o{ LEARNER_REWARD : produces
