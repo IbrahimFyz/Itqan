@@ -47,3 +47,11 @@ Use this file to record significant project decisions.
 - **Status:** 🟢 Confirmed Principle
 - **Decision:** Features may be added, modified, or removed as the project evolves, provided changes are justified and documented.
 - **Affected artifacts:** Requirements, diagrams, implementation, testing, report.
+
+### 2026-09-16 — Development Methodology
+- **Status:** 🟡 Proposed
+- **Decision:** Use an iterative Agile software development life cycle with academic phase gates. The approach supports small, reviewable iterations while preventing downstream artifacts from being finalized before their required inputs are sufficiently stable.
+- **Reason:** Itqan has evolving requirements, AI feasibility uncertainty, UI prototyping needs, cross-artifact dependencies, and formal IS498 deliverables that require documented review points.
+- **Source/Evidence:** Official IS498/IS499 Graduation Project Handbook; current project context, open questions, dependency rules, and GitHub workflow.
+- **Affected artifacts:** Project plan, Gantt chart, resource schedule, risk register, requirements, diagrams, UI/UX, architecture, test plan, IS498 report, and IS499 implementation workflow.
+- **Notes:** This is not a claim of strict Scrum. Iteration duration, review frequency, formal roles, and gate approval criteria require team and advisor review before confirmation.

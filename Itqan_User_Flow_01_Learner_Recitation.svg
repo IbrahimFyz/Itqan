@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400" height="1750" viewBox="0 0 2400 1750">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#202b35"/></marker>
+    <style>
+      text{font-family:Arial,sans-serif;fill:#202b35}.title{font-size:30px;font-weight:bold}.sub{font-size:14px;fill:#52616b}.zone{fill:#f6f8fa;stroke:#bcc7cf;stroke-width:1.5;stroke-dasharray:5 4}.zonehead{font-size:18px;font-weight:bold}.screen{fill:#fff;stroke:#202b35;stroke-width:2}.primary{fill:#edf5ff;stroke:#2f6fab;stroke-width:2}.session{fill:#f5f0ff;stroke:#7555a5;stroke-width:2}.result{fill:#eff8f1;stroke:#3c8a57;stroke-width:2}.decision{fill:#fff9e8;stroke:#9a6b15;stroke-width:2}.label{font-size:16px;font-weight:bold;text-anchor:middle}.detail{font-size:12.5px;fill:#52616b;text-anchor:middle}.flow{fill:none;stroke:#202b35;stroke-width:2;marker-end:url(#arrow)}.tag{font-size:12px;font-weight:bold;fill:#6b4f14}.note{fill:#fff;stroke:#87949e;stroke-width:1.2;stroke-dasharray:4 3}.notetxt{font-size:12px;fill:#46545e}
+    </style>
+  </defs>
+  <text x="1200" y="42" text-anchor="middle" class="title">ITQAN — User Flow 01: Learner Recitation Journey</text>
+  <text x="1200" y="66" text-anchor="middle" class="sub">Screen-to-screen flow for the approved learner experience from access through session results</text>
+
+  <rect x="45" y="105" width="2310" height="335" rx="10" class="zone"/><text x="70" y="96" class="zonehead">Account and Entry</text>
+  <rect x="45" y="490" width="2310" height="365" rx="10" class="zone"/><text x="70" y="481" class="zonehead">Surah and Mode Preparation</text>
+  <rect x="45" y="905" width="2310" height="670" rx="10" class="zone"/><text x="70" y="896" class="zonehead">Recitation Session, Results, and Progress</text>
+
+  <rect x="105" y="195" width="210" height="80" rx="10" class="screen"/><text x="210" y="225" class="label">Welcome screen</text><text x="210" y="247" class="detail">open Itqan</text>
+  <path d="M360 190 L425 235 L360 280 L295 235 Z" class="decision"/><text x="360" y="231" class="label">New</text><text x="360" y="248" class="label">user?</text><path d="M315 235 L360 235" class="flow"/>
+  <rect x="470" y="195" width="210" height="80" rx="10" class="primary"/><text x="575" y="225" class="label">Register screen</text><text x="575" y="247" class="detail">FR-01</text><path d="M360 190 L360 150 L575 150 L575 195" class="flow"/><text x="427" y="142" class="tag">Yes</text>
+  <rect x="760" y="195" width="210" height="80" rx="10" class="primary"/><text x="865" y="225" class="label">Login screen</text><text x="865" y="247" class="detail">FR-02</text><path d="M680 235 L760 235" class="flow"/><path d="M405 235 L405 310 L865 310 L865 275" class="flow"/><text x="650" y="302" class="tag">No</text>
+  <rect x="1050" y="195" width="210" height="80" rx="10" class="primary"/><text x="1155" y="225" class="label">Learner home</text><text x="1155" y="247" class="detail">practice and progress entry</text><path d="M970 235 L1050 235" class="flow"/>
+  <rect x="1340" y="195" width="210" height="80" rx="10" class="screen"/><text x="1445" y="225" class="label">Profile screen</text><text x="1445" y="247" class="detail">optional: manage profile, FR-03</text><path d="M1260 235 L1340 235" class="flow"/><path d="M1445 275 L1445 330 L1155 330 L1155 275" class="flow"/>
+
+  <rect x="105" y="610" width="210" height="85" rx="10" class="primary"/><text x="210" y="641" class="label">Juz Amma library</text><text x="210" y="663" class="detail">browse available Surahs, FR-04</text><path d="M1155 275 L1155 520 L210 520 L210 610" class="flow"/>
+  <rect x="405" y="610" width="210" height="85" rx="10" class="primary"/><text x="510" y="641" class="label">Surah details</text><text x="510" y="663" class="detail">select Surah and view verses</text><path d="M315 652 L405 652" class="flow"/>
+  <rect x="705" y="610" width="210" height="85" rx="10" class="primary"/><text x="810" y="641" class="label">AI mode selection</text><text x="810" y="663" class="detail">Al-Mujawwid or Al-Mushajji</text><path d="M615 652 L705 652" class="flow"/>
+  <rect x="1005" y="610" width="210" height="85" rx="10" class="primary"/><text x="1110" y="641" class="label">Session ready</text><text x="1110" y="663" class="detail">selected Surah and mode</text><path d="M915 652 L1005 652" class="flow"/>
+  <path d="M1320 607 L1385 652 L1320 697 L1255 652 Z" class="decision"/><text x="1320" y="648" class="label">Microphone</text><text x="1320" y="665" class="label">available?</text><path d="M1215 652 L1255 652" class="flow"/>
+  <rect x="1445" y="610" width="210" height="85" rx="10" class="screen"/><text x="1550" y="641" class="label">Permission guidance</text><text x="1550" y="663" class="detail">explain audio capture requirement</text><path d="M1320 697 L1320 770 L1550 770 L1550 695" class="flow"/><text x="1350" y="750" class="tag">No</text><path d="M1550 610 L1550 545 L1110 545 L1110 610" class="flow"/>
+
+  <rect x="105" y="1050" width="225" height="100" rx="10" class="session"/><text x="217" y="1082" class="label">Live recitation screen</text><text x="217" y="1104" class="detail">verse display, recording state, end control</text><path d="M1320 607 L1320 1015 L217 1015 L217 1050" class="flow"/><text x="1348" y="817" class="tag">Yes</text>
+  <rect x="425" y="1050" width="225" height="100" rx="10" class="session"/><text x="537" y="1082" class="label">Analysis in progress</text><text x="537" y="1104" class="detail">capture and analyse recitation</text><path d="M330 1100 L425 1100" class="flow"/>
+  <path d="M750 1055 L825 1100 L750 1145 L675 1100 Z" class="decision"/><text x="750" y="1096" class="label">Relevant error</text><text x="750" y="1113" class="label">detected?</text><path d="M650 1100 L675 1100" class="flow"/>
+  <rect x="925" y="1050" width="225" height="100" rx="10" class="session"/><text x="1037" y="1082" class="label">Feedback panel</text><text x="1037" y="1104" class="detail">error location and correction</text><path d="M825 1100 L925 1100" class="flow"/><text x="857" y="1089" class="tag">Yes</text>
+  <path d="M1250 1055 L1325 1100 L1250 1145 L1175 1100 Z" class="decision"/><text x="1250" y="1096" class="label">Audio help</text><text x="1250" y="1113" class="label">appropriate?</text><path d="M1150 1100 L1175 1100" class="flow"/>
+  <rect x="1425" y="1050" width="225" height="100" rx="10" class="session"/><text x="1537" y="1082" class="label">Audio assistance</text><text x="1537" y="1104" class="detail">optional correction support, FR-17</text><path d="M1325 1100 L1425 1100" class="flow"/><text x="1357" y="1089" class="tag">Yes</text>
+  <rect x="925" y="1265" width="225" height="95" rx="10" class="session"/><text x="1037" y="1296" class="label">Continue or end control</text><text x="1037" y="1318" class="detail">learner decision, FR-18 and FR-19</text><path d="M1250 1145 L1250 1235 L1037 1235 L1037 1265" class="flow"/><text x="1278" y="1207" class="tag">No</text><path d="M1537 1150 L1537 1235 L1037 1235 L1037 1265" class="flow"/><path d="M675 1100 L600 1100 L600 1235 L1037 1235" class="flow"/><text x="612" y="1089" class="tag">No</text>
+  <path d="M1037 1400 L1112 1445 L1037 1490 L962 1445 Z" class="decision"/><text x="1037" y="1441" class="label">Continue</text><text x="1037" y="1458" class="label">reciting?</text><path d="M1037 1360 L1037 1400" class="flow"/>
+  <path d="M962 1445 L830 1445 L830 1000 L217 1000 L217 1050" class="flow"/><text x="870" y="1434" class="tag">Yes</text>
+  <rect x="1280" y="1400" width="225" height="95" rx="10" class="result"/><text x="1392" y="1431" class="label">Session results</text><text x="1392" y="1453" class="detail">mastery percentage and detected words</text><path d="M1112 1445 L1280 1445" class="flow"/><text x="1162" y="1434" class="tag">No</text>
+  <rect x="1600" y="1400" width="225" height="95" rx="10" class="result"/><text x="1712" y="1431" class="label">Progress screen</text><text x="1712" y="1453" class="detail">completed Surahs, average, streak</text><path d="M1505 1445 L1600 1445" class="flow"/>
+  <rect x="1915" y="1400" width="225" height="95" rx="10" class="primary"/><text x="2027" y="1431" class="label">Learner home</text><text x="2027" y="1453" class="detail">start another practice session</text><path d="M1825 1445 L1915 1445" class="flow"/>
+
+  <rect x="85" y="1640" width="2230" height="55" rx="6" class="note"/><text x="105" y="1664" class="notetxt">Traceability: FR-01 to FR-09 cover access and preparation; FR-11 to FR-19 cover the active session; FR-20 to FR-22 cover results and progress. Smart Prompting is not shown because it is not yet a functional requirement.</text>
+</svg>
