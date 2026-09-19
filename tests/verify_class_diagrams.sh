@@ -42,6 +42,49 @@ check_view "$diagram_dir/recitation-feedback-classes.mmd" RecitationSession Audi
 check_view "$diagram_dir/progress-teacher-classes.mmd" LearnerSurahProgress MasteryScoreHistory DailyPractice PracticeStreak LearningClass ClassEnrollment ClassAssignment AssignmentProgress TeacherMessage StudentPerformanceSnapshot ProgressService ClassService TeacherMonitoringService MessagingService
 check_view "$diagram_dir/gamification-classes-proposed.mmd" Challenge LearnerChallenge Reward LearnerReward GamificationService GamificationRepository
 
+erd="docs/database/itqan-erd.mmd"
+test -f "$erd"
+
+while read -r erd_name uml_name; do
+  rg -q "^[[:space:]]+${erd_name}[[:space:]]+\{" "$erd" || { echo "Missing ERD entity: $erd_name"; exit 1; }
+  rg -q "class ${uml_name}([ {]|$)" "$complete" || { echo "Missing UML class for ERD entity: $erd_name"; exit 1; }
+done <<'ENTITY_MAP'
+USER User
+ROLE Role
+USER_ROLE UserRole
+LEARNER_PROFILE LearnerProfile
+TEACHER_PROFILE TeacherProfile
+JUZ Juz
+SURAH Surah
+VERSE Verse
+VERSE_WORD VerseWord
+TAJWEED_RULE TajweedRule
+AI_MODE AIMode
+RECITATION_SESSION RecitationSession
+AUDIO_RECORDING AudioRecording
+RECITATION_SEGMENT RecitationSegment
+RECITATION_ANALYSIS RecitationAnalysis
+PAUSE_EVENT PauseEvent
+ERROR_TYPE ErrorType
+RECITATION_ERROR RecitationError
+ERROR_FEEDBACK ErrorFeedback
+AUDIO_ASSISTANCE AudioAssistance
+LEARNER_SURAH_PROGRESS LearnerSurahProgress
+MASTERY_SCORE_HISTORY MasteryScoreHistory
+DAILY_PRACTICE DailyPractice
+PRACTICE_STREAK PracticeStreak
+LEARNING_CLASS LearningClass
+CLASS_ENROLLMENT ClassEnrollment
+CLASS_ASSIGNMENT ClassAssignment
+ASSIGNMENT_PROGRESS AssignmentProgress
+TEACHER_MESSAGE TeacherMessage
+STUDENT_PERFORMANCE_SNAPSHOT StudentPerformanceSnapshot
+CHALLENGE Challenge
+LEARNER_CHALLENGE LearnerChallenge
+REWARD Reward
+LEARNER_REWARD LearnerReward
+ENTITY_MAP
+
 for source in "$diagram_dir"/*.mmd; do
   output="/tmp/$(basename "${source%.mmd}").svg"
   npx -y @mermaid-js/mermaid-cli -i "$source" -o "$output" -b white
