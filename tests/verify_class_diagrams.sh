@@ -108,6 +108,13 @@ REWARD Reward
 LEARNER_REWARD LearnerReward
 ENTITY_MAP
 
+for source in docs/database/itqan-erd.mmd docs/database/RELATIONAL_SCHEMA.md "$diagram_dir"/*.mmd; do
+  if rg -qi 'AUDIO_RECORDING|AudioRecording|AudioStoragePort|storageUri|retentionExpiresAt|deletedAt' "$source"; then
+    echo "Persisted learner-audio storage is forbidden: $source"
+    exit 1
+  fi
+done
+
 for source in "$diagram_dir"/*.mmd; do
   rg -q '^direction TB$' "$source" || { echo "Diagram is not using the verified landscape-producing direction: $source"; exit 1; }
   output="/tmp/$(basename "${source%.mmd}").svg"
