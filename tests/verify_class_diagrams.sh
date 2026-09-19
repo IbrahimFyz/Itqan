@@ -28,6 +28,20 @@ for name in ClassAssignment AssignmentProgress StudentPerformanceSnapshot Challe
   rg -A4 "class $name" "$complete" | rg -qi 'proposed' || { echo "Missing proposed marker: $name"; exit 1; }
 done
 
+check_view() {
+  view="$1"
+  shift
+  test -f "$view" || { echo "Missing view: $view"; exit 1; }
+  for name in "$@"; do
+    rg -q "class $name([ {]|$)" "$view" || { echo "Missing $name in $view"; exit 1; }
+  done
+}
+
+check_view "$diagram_dir/identity-quran-classes.mmd" User Role UserRole LearnerProfile TeacherProfile Juz Surah Verse VerseWord TajweedRule AuthenticationService QuranCatalogService
+check_view "$diagram_dir/recitation-feedback-classes.mmd" RecitationSession AudioRecording RecitationSegment RecitationAnalysis PauseEvent RecitationError ErrorFeedback AudioAssistance RecitationService AnalysisService FeedbackService
+check_view "$diagram_dir/progress-teacher-classes.mmd" LearnerSurahProgress MasteryScoreHistory DailyPractice PracticeStreak LearningClass ClassEnrollment ClassAssignment AssignmentProgress TeacherMessage StudentPerformanceSnapshot ProgressService ClassService TeacherMonitoringService MessagingService
+check_view "$diagram_dir/gamification-classes-proposed.mmd" Challenge LearnerChallenge Reward LearnerReward GamificationService GamificationRepository
+
 for source in "$diagram_dir"/*.mmd; do
   output="/tmp/$(basename "${source%.mmd}").svg"
   npx -y @mermaid-js/mermaid-cli -i "$source" -o "$output" -b white

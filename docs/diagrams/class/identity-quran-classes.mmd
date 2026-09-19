@@ -1,0 +1,172 @@
+---
+title: Itqan Identity and Quran Classes
+config:
+  theme: neutral
+---
+classDiagram
+direction LR
+
+class User {
+  <<entity>>
+  +UUID userId
+  +String email
+  -String passwordHash
+  +String displayName
+  +LanguageCode preferredLanguage
+  +AccountStatus accountStatus
+  +DateTime createdAt
+  +DateTime updatedAt
+  +DateTime lastLoginAt
+  +changeDisplayName(String) void
+  +changePreferredLanguage(LanguageCode) void
+  +activate() void
+  +suspend() void
+  +markDeleted() void
+  +hasRole(String) Boolean
+}
+class Role {
+  <<entity>>
+  +Integer roleId
+  +String roleCode
+  +String nameAr
+  +String nameEn
+  +matches(String) Boolean
+}
+class UserRole {
+  <<entity>>
+  +UUID userId
+  +Integer roleId
+  +DateTime assignedAt
+}
+class LearnerProfile {
+  <<entity>>
+  +UUID learnerId
+  +String learningGoal
+  +String experienceLevel
+  +Boolean remindersEnabled
+  +updateLearningGoal(String) void
+  +setExperienceLevel(String) void
+  +setReminders(Boolean) void
+}
+class TeacherProfile {
+  <<entity>>
+  +UUID teacherId
+  +String biography
+  +String qualification
+  +updateBiography(String) void
+  +updateQualification(String) void
+}
+class LanguageCode {
+  <<enumeration>>
+  AR
+  EN
+}
+class AccountStatus {
+  <<enumeration>>
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+class Juz {
+  <<entity>>
+  +Integer juzId
+  +Integer juzNumber
+  +String nameAr
+  +String nameEn
+  +List~Surah~ surahs
+  +getOrderedSurahs() List~Surah~
+}
+class Surah {
+  <<entity>>
+  +Integer surahId
+  +Integer juzId
+  +String nameAr
+  +String nameEn
+  +Integer revelationOrder
+  +String revelationType
+  +Integer verseCount
+  +Integer displayOrder
+  +List~Verse~ verses
+  +getVerse(Integer) Verse
+  +containsVerse(Integer) Boolean
+}
+class Verse {
+  <<entity>>
+  +Integer verseId
+  +Integer surahId
+  +Integer verseNumber
+  +String uthmaniText
+  +String normalizedText
+  +Integer pageNumber
+  +Integer hizbNumber
+  +List~VerseWord~ words
+  +getWord(Integer) VerseWord
+  +getDisplayText() String
+}
+class VerseWord {
+  <<value object>>
+  +Integer wordId
+  +Integer verseId
+  +Integer wordPosition
+  +String uthmaniText
+  +String normalizedText
+  +matchesNormalized(String) Boolean
+}
+class TajweedRule {
+  <<entity>>
+  +Integer tajweedRuleId
+  +String ruleCode
+  +String nameAr
+  +String nameEn
+  +String descriptionAr
+  +String descriptionEn
+  +Boolean supported
+  +isAvailableForAnalysis() Boolean
+}
+class AuthenticationService {
+  <<service>>
+  +register(String, String, String, List~Role~) User
+  +authenticate(String, String) User
+  +changeProfile(UUID, ProfileData) User
+}
+class QuranCatalogService {
+  <<service>>
+  +browseJuzAmma() List~Surah~
+  +getSurah(Integer) Surah
+  +getVerse(Integer) Verse
+}
+class UserRepository {
+  <<repository>>
+  +findById(UUID) User
+  +findByEmail(String) User
+  +save(User) User
+  +saveLearnerProfile(LearnerProfile) LearnerProfile
+  +saveTeacherProfile(TeacherProfile) TeacherProfile
+}
+class QuranRepository {
+  <<repository>>
+  +findJuz(Integer) Juz
+  +findSurah(Integer) Surah
+  +findVerse(Integer) Verse
+  +listJuzAmmaSurahs() List~Surah~
+  +listSupportedTajweedRules() List~TajweedRule~
+}
+class ProfileData {
+  <<value object>>
+  +String displayName
+  +LanguageCode language
+}
+
+User "1" *-- "0..1" LearnerProfile : learner profile
+User "1" *-- "0..1" TeacherProfile : teacher profile
+User "1" -- "0..*" UserRole : receives
+Role "1" -- "0..*" UserRole : assigned as
+User --> LanguageCode
+User --> AccountStatus
+Juz "1" *-- "1..*" Surah : contains
+Surah "1" *-- "1..*" Verse : contains
+Verse "1" *-- "1..*" VerseWord : contains
+AuthenticationService ..> UserRepository
+AuthenticationService ..> User
+QuranCatalogService ..> QuranRepository
+QuranCatalogService ..> Surah
