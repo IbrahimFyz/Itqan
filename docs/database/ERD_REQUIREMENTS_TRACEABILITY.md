@@ -6,8 +6,8 @@ This matrix connects the functional requirements in `docs/project/REQUIREMENTS.m
 
 | Requirement | Requirement name | Supporting entities | Stored evidence | Notes/status |
 |---|---|---|---|---|
-| FR-01 | Create Account | `USER`, `ROLE`, `USER_ROLE`, `LEARNER_PROFILE`, `TEACHER_PROFILE` | Account identity, credentials, role, and profile | Registration validation and password hashing are application behavior. |
-| FR-02 | User Login | `USER` | Credential hash, account status, and last-login timestamp | Authentication execution is application behavior. |
+| FR-01 | Create Account | `USER`, `ROLE`, `USER_ROLE`, `LEARNER_PROFILE`, `TEACHER_PROFILE` | Managed identity subject, account profile, and roles | The managed identity provider authenticates the user; application registration maps its subject to the local profile. |
+| FR-02 | User Login | `USER` | Managed identity subject, account status, and last-login timestamp | Authentication execution belongs to the managed identity provider. |
 | FR-03 | Manage User Profile | `USER`, `LEARNER_PROFILE`, `TEACHER_PROFILE` | Shared and role-specific profile values | Profile authorization is application behavior. |
 | FR-04 | Browse Juz Amma | `JUZ`, `SURAH` | Juz and ordered Surah catalog | UI browsing is application behavior. |
 | FR-05 | Select Surah | `SURAH`, `RECITATION_SESSION` | Selected Surah for each session | Selection interaction is application behavior. |
@@ -28,7 +28,7 @@ This matrix connects the functional requirements in `docs/project/REQUIREMENTS.m
 | FR-20 | Display Session Results | `RECITATION_SESSION`, `RECITATION_ERROR`, `VERSE_WORD`, `MASTERY_SCORE_HISTORY` | Mastery result and words containing errors | Result rendering is UI behavior. |
 | FR-21 | Track User Progress | `LEARNER_SURAH_PROGRESS`, `MASTERY_SCORE_HISTORY`, `RECITATION_SESSION`, `SURAH` | Attempts, mastered Surahs, latest/best/average mastery, and history | Summary updates are application/database-service behavior. |
 | FR-22 | Track Practice Streaks | `DAILY_PRACTICE`, `PRACTICE_STREAK` | Daily practice evidence and current/longest streak | Requirement priority is Could Have. |
-| FR-23 | Teacher Dashboard | `LEARNING_CLASS`, `CLASS_ENROLLMENT`, `LEARNER_SURAH_PROGRESS`, `MASTERY_SCORE_HISTORY`, `DAILY_PRACTICE`, `PRACTICE_STREAK`, `STUDENT_PERFORMANCE_SNAPSHOT` | Class membership, completion, mastery, activity, and streak information | Snapshot table is proposed and may be replaced by live queries. |
+| FR-23 | Teacher Dashboard | `LEARNING_CLASS`, `CLASS_ENROLLMENT`, `LEARNER_SURAH_PROGRESS`, `MASTERY_SCORE_HISTORY`, `DAILY_PRACTICE`, `PRACTICE_STREAK`, `LEARNER_PERFORMANCE_SNAPSHOT` | Class membership, completion, mastery, activity, and streak information | Snapshot table is proposed and may be replaced by live queries. |
 | FR-24 | Manage Class | `LEARNING_CLASS`, `CLASS_ENROLLMENT`, `CLASS_ASSIGNMENT`, `ASSIGNMENT_PROGRESS` | Class details, membership, and proposed assignment state | Assignment tables are proposed; class and enrollment are confirmed. |
 | FR-25 | Send Student Messages | `TEACHER_MESSAGE`, `LEARNING_CLASS`, `CLASS_ENROLLMENT`, `RECITATION_SESSION` | Message, sender, recipient, class/session context, and read time | Sending and notifications are application behavior; enrollment controls access. |
 
@@ -36,11 +36,12 @@ This matrix connects the functional requirements in `docs/project/REQUIREMENTS.m
 
 | Entity | Related requirements | Status and purpose |
 |---|---|---|
-| `USER` | FR-01, FR-02, FR-03 | Confirmed account identity and authentication state. |
+| `USER` | FR-01, FR-02, FR-03 | Confirmed account identity and managed-identity subject. |
 | `ROLE` | FR-01 | Confirmed learner/teacher role catalog. |
 | `USER_ROLE` | FR-01 | Confirmed many-to-many user-role assignment. |
 | `LEARNER_PROFILE` | FR-01, FR-03, FR-11, FR-21, FR-22 | Confirmed learner extension and parent for learning records. |
 | `TEACHER_PROFILE` | FR-01, FR-03, FR-23, FR-24, FR-25 | Confirmed teacher extension and ownership. |
+| `CONSENT_RECORD` | NFR-07 | Confirmed per-purpose consent history and withdrawal evidence. |
 | `JUZ` | FR-04 | Confirmed Quran navigation reference. |
 | `SURAH` | FR-04, FR-05, FR-06, FR-11, FR-21, FR-24 | Confirmed Surah catalog and session target. |
 | `VERSE` | FR-06, FR-13, FR-15, FR-17 | Confirmed verse content and analysis location. |
@@ -64,7 +65,7 @@ This matrix connects the functional requirements in `docs/project/REQUIREMENTS.m
 | `CLASS_ASSIGNMENT` | FR-24 | Proposed class assignment detail. |
 | `ASSIGNMENT_PROGRESS` | FR-24 | Proposed learner assignment state. |
 | `TEACHER_MESSAGE` | FR-10, FR-25 | Confirmed teacher-to-learner message record. |
-| `STUDENT_PERFORMANCE_SNAPSHOT` | FR-23 | Proposed dashboard reporting cache. |
+| `LEARNER_PERFORMANCE_SNAPSHOT` | FR-23 | Proposed dashboard reporting cache. |
 | `CHALLENGE` | FR-09 | Proposed Al-Mushajji challenge definition. |
 | `LEARNER_CHALLENGE` | FR-09 | Proposed learner challenge progress. |
 | `REWARD` | FR-09 | Proposed Al-Mushajji reward definition. |

@@ -8,7 +8,7 @@ erDiagram
     USER {
         uuid user_id PK
         varchar email UK
-        text password_hash
+        varchar identity_subject UK
         varchar display_name
         varchar preferred_language
         varchar account_status
@@ -37,6 +37,15 @@ erDiagram
         uuid teacher_id PK, FK
         text biography
         text qualification
+    }
+    CONSENT_RECORD {
+        uuid consent_id PK
+        uuid user_id FK
+        varchar purpose_code
+        varchar policy_version
+        varchar collection_method
+        datetime granted_at
+        datetime withdrawn_at
     }
 
     %% QURAN CONTENT AND TAJWEED REFERENCE DATA
@@ -279,7 +288,7 @@ erDiagram
         datetime read_at
     }
     %% PROPOSED REPORTING CACHE
-    STUDENT_PERFORMANCE_SNAPSHOT {
+    LEARNER_PERFORMANCE_SNAPSHOT {
         uuid snapshot_id PK "PROPOSED"
         uuid class_id FK
         uuid learner_id FK
@@ -334,6 +343,7 @@ erDiagram
     ROLE ||--o{ USER_ROLE : assigns
     USER ||--o| LEARNER_PROFILE : extends
     USER ||--o| TEACHER_PROFILE : extends
+    USER ||--o{ CONSENT_RECORD : records
     JUZ ||--|{ SURAH : contains
     SURAH ||--|{ VERSE : contains
     VERSE ||--|{ VERSE_WORD : contains
@@ -373,8 +383,8 @@ erDiagram
     LEARNER_PROFILE ||--o{ TEACHER_MESSAGE : receives
     LEARNING_CLASS o|--o{ TEACHER_MESSAGE : contextualizes
     RECITATION_SESSION o|--o{ TEACHER_MESSAGE : references
-    LEARNING_CLASS ||--o{ STUDENT_PERFORMANCE_SNAPSHOT : summarizes
-    LEARNER_PROFILE ||--o{ STUDENT_PERFORMANCE_SNAPSHOT : measured_in
+    LEARNING_CLASS ||--o{ LEARNER_PERFORMANCE_SNAPSHOT : summarizes
+    LEARNER_PROFILE ||--o{ LEARNER_PERFORMANCE_SNAPSHOT : measured_in
     LEARNER_PROFILE ||--o{ LEARNER_CHALLENGE : joins
     CHALLENGE ||--o{ LEARNER_CHALLENGE : enrolls
     LEARNER_PROFILE ||--o{ LEARNER_REWARD : earns

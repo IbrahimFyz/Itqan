@@ -6,7 +6,7 @@ The class diagram describes the static software design of Itqan: domain state, b
 
 ## Class diagram versus ERD
 
-The ERD answers **what data is stored**. It shows tables, keys, attributes, and relational cardinalities. The class diagram answers **which objects collaborate and what they do**. It preserves all 33 persisted ERD entities and adds:
+The ERD answers **what data is stored**. It shows tables, keys, attributes, and relational cardinalities. The class diagram answers **which objects collaborate and what they do**. It preserves all 34 persisted ERD entities and adds:
 
 - domain methods and lifecycle rules;
 - enumerations and value objects;
@@ -62,7 +62,7 @@ These elements remain **proposed** and are marked `<<proposed>>`:
 
 - `ClassAssignment` and `AssignmentProgress`;
 - `AssignmentData`, `AssignmentStatus`, and assignment-creating operations;
-- `StudentPerformanceSnapshot` as a stored dashboard cache;
+- `LearnerPerformanceSnapshot` as a stored dashboard cache;
 - `Challenge`, `LearnerChallenge`, `Reward`, and `LearnerReward`;
 - `GamificationService` and `GamificationRepository`.
 
@@ -143,4 +143,4 @@ npx -y @mermaid-js/mermaid-cli \
   -b white -w 5600 -H 3600
 ```
 
-The verification script checks required classes, proposed labels, forbidden implementation-specific classes, learner/teacher profile modeling, all five Mermaid renders, and the explicit 33-entity ERD-to-UML mapping.
+The verification script checks required classes, proposed labels, forbidden implementation-specific classes, learner/teacher profile modeling, all five Mermaid renders, and the explicit 34-entity ERD-to-UML mapping.

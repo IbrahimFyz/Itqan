@@ -10,7 +10,7 @@ class User {
   <<entity>>
   +UUID userId
   +String email
-  -String passwordHash
+  +String identitySubject
   +String displayName
   +LanguageCode preferredLanguage
   +AccountStatus accountStatus
@@ -55,6 +55,18 @@ class TeacherProfile {
   +String? qualification
   +updateBiography(String) void
   +updateQualification(String) void
+}
+class ConsentRecord {
+  <<entity>>
+  +UUID consentId
+  +UUID userId
+  +String purposeCode
+  +String policyVersion
+  +String collectionMethod
+  +DateTime grantedAt
+  +DateTime? withdrawnAt
+  +withdraw(DateTime) void
+  +isActive() Boolean
 }
 class LanguageCode {
   <<enumeration>>
@@ -126,7 +138,7 @@ class TajweedRule {
 class AuthenticationService {
   <<service>>
   +register(String, String, String, List~Role~) User
-  +authenticate(String, String) User
+  +authenticate(String) User
   +changeProfile(UUID, ProfileData) User
 }
 class QuranCatalogService {
@@ -159,6 +171,7 @@ class ProfileData {
 
 User "1" *-- "0..1" LearnerProfile : learner profile
 User "1" *-- "0..1" TeacherProfile : teacher profile
+User "1" -- "0..*" ConsentRecord : records
 User "1" -- "0..*" UserRole : receives
 Role "1" -- "0..*" UserRole : assigned as
 User --> LanguageCode

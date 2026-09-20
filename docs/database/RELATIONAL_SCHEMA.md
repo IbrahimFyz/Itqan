@@ -17,9 +17,9 @@ This schema accompanies the complete Itqan ERD. It is implementation-neutral but
 
 ### USER
 
-`USER(user_id UUID PK, email VARCHAR(254) UK, password_hash TEXT, display_name VARCHAR(100), preferred_language VARCHAR(5), account_status VARCHAR(20), created_at TIMESTAMPTZ, updated_at TIMESTAMPTZ, last_login_at TIMESTAMPTZ NULL)`
+`USER(user_id UUID PK, identity_subject VARCHAR(255) UK, email VARCHAR(254) UK, display_name VARCHAR(100), preferred_language VARCHAR(5), account_status VARCHAR(20), created_at TIMESTAMPTZ, updated_at TIMESTAMPTZ, last_login_at TIMESTAMPTZ NULL)`
 
-Stores every authenticated learner or teacher account. `preferred_language` is `ar` or `en`; `account_status` is `active`, `suspended`, or `deleted`. Account deletion is logical.
+Stores every authenticated learner or teacher account. `identity_subject` is issued by the managed identity provider; the application never stores or verifies a password. `preferred_language` is `ar` or `en`; `account_status` is `active`, `suspended`, or `deleted`. Account deletion is logical.
 
 ### ROLE
 
@@ -44,6 +44,12 @@ Extends a user account with learner-specific preferences.
 `TEACHER_PROFILE(teacher_id UUID PK FK→USER.user_id, biography TEXT NULL, qualification TEXT NULL)`
 
 Extends a user account with teacher-specific information. Qualification verification remains unresolved.
+
+### CONSENT_RECORD
+
+`CONSENT_RECORD(consent_id UUID PK, user_id UUID FK→USER.user_id, purpose_code VARCHAR(50), policy_version VARCHAR(30), collection_method VARCHAR(30), granted_at TIMESTAMPTZ, withdrawn_at TIMESTAMPTZ NULL)`
+
+Immutable per-purpose consent history. A record is active when `withdrawn_at` is null; only one active record may exist for a `(user_id, purpose_code)` pair.
 
 ## Quran content and Tajweed references
 
@@ -167,13 +173,13 @@ Maintains one current streak summary per learner; daily evidence remains in `DAI
 
 `LEARNING_CLASS(class_id UUID PK, teacher_id UUID FK→TEACHER_PROFILE.teacher_id, class_name VARCHAR(100), description TEXT NULL, join_code VARCHAR(20) UK, class_status VARCHAR(20), created_at TIMESTAMPTZ, updated_at TIMESTAMPTZ)`
 
-Status is `active`, `archived`, or `closed`.
+Status is `active`, `archived`, or `closed`. A learner joins by entering the unique class code; an active enrollment grants the teacher scoped access.
 
 ### CLASS_ENROLLMENT
 
 `CLASS_ENROLLMENT(enrollment_id UUID PK, class_id UUID FK→LEARNING_CLASS.class_id, learner_id UUID FK→LEARNER_PROFILE.learner_id, enrollment_status VARCHAR(20), enrolled_at TIMESTAMPTZ NULL, ended_at TIMESTAMPTZ NULL)`
 
-Unique key `(class_id, learner_id)`. Status is `invited`, `active`, `left`, or `removed`.
+Unique key `(class_id, learner_id)`. Status is `active`, `left`, or `removed`.
 
 ### CLASS_ASSIGNMENT — proposed
 
@@ -193,9 +199,9 @@ Composite primary key `(assignment_id, learner_id)`. Status is `not_started`, `i
 
 The application must verify an active class enrollment before a teacher accesses learner data or sends a message.
 
-### STUDENT_PERFORMANCE_SNAPSHOT — proposed reporting cache
+### LEARNER_PERFORMANCE_SNAPSHOT — proposed reporting cache
 
-`STUDENT_PERFORMANCE_SNAPSHOT(snapshot_id UUID PK, class_id UUID FK→LEARNING_CLASS.class_id, learner_id UUID FK→LEARNER_PROFILE.learner_id, generated_at TIMESTAMPTZ, completed_surah_count SMALLINT, average_mastery_score NUMERIC(5,2) NULL, total_sessions INTEGER, total_practice_seconds INTEGER, current_streak_days INTEGER)`
+`LEARNER_PERFORMANCE_SNAPSHOT(snapshot_id UUID PK, class_id UUID FK→LEARNING_CLASS.class_id, learner_id UUID FK→LEARNER_PROFILE.learner_id, generated_at TIMESTAMPTZ, completed_surah_count SMALLINT, average_mastery_score NUMERIC(5,2) NULL, total_sessions INTEGER, total_practice_seconds INTEGER, current_streak_days INTEGER)`
 
 Unique key `(class_id, learner_id, generated_at)`. This derived cache can be omitted if live dashboard queries perform adequately.
 

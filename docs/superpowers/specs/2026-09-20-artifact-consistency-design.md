@@ -6,7 +6,7 @@
 ## Decisions
 
 1. Authentication is delegated to a managed identity provider. The application stores the provider subject identifier and account profile data; it never stores a password hash or verifies a password.
-2. A learner joins a teacher's class only through an invitation accepted by the learner or guardian. There is no self-enrollment join-code path.
+2. A learner joins a teacher's class by entering a class join code. There is no invitation-link path.
 3. Consent is represented by an immutable `CONSENT_RECORD` history. Each record stores the user, purpose, policy version, collection method, grant time, and optional withdrawal time. A withdrawal ends the applicable consent without deleting the audit history.
 4. Internal artifacts use `learner` and `enrollment`. `student` is reserved only for teacher-facing prose where it reads naturally.
 
@@ -14,7 +14,7 @@
 
 `USER` replaces `password_hash` with `identity_subject`, a unique value issued by the managed identity provider.
 
-`LEARNING_CLASS` removes `join_code`.
+`LEARNING_CLASS` retains a unique `join_code`.
 
 `CONSENT_RECORD` contains:
 
@@ -33,7 +33,7 @@ The schema requires a single active consent record per `(user_id, purpose_code)`
 `User` exposes `identitySubject` instead of `passwordHash`.
 `AuthenticationService` receives an identity-provider subject after provider authentication; it does not accept or verify passwords.
 `ConsentRecord` is a persisted entity related to `User` and has `withdraw(at)` and `isActive()` operations.
-`LearningClass` has invitation and enrollment operations only.
+`LearningClass` has a code-based enrollment operation only.
 
 ## Artifact boundaries
 

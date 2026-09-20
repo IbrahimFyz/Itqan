@@ -6,7 +6,7 @@ complete="$diagram_dir/itqan-class-diagram.mmd"
 
 test -f "$complete"
 
-for name in User Role UserRole LearnerProfile TeacherProfile Juz Surah Verse VerseWord TajweedRule AIMode RecitationSession RecitationSegment RecitationAnalysis PauseEvent ErrorType RecitationError ErrorFeedback AudioAssistance LearnerSurahProgress MasteryScoreHistory DailyPractice PracticeStreak LearningClass ClassEnrollment ClassAssignment AssignmentProgress TeacherMessage StudentPerformanceSnapshot Challenge LearnerChallenge Reward LearnerReward; do
+for name in User Role UserRole LearnerProfile TeacherProfile ConsentRecord Juz Surah Verse VerseWord TajweedRule AIMode RecitationSession RecitationSegment RecitationAnalysis PauseEvent ErrorType RecitationError ErrorFeedback AudioAssistance LearnerSurahProgress MasteryScoreHistory DailyPractice PracticeStreak LearningClass ClassEnrollment ClassAssignment AssignmentProgress TeacherMessage LearnerPerformanceSnapshot Challenge LearnerChallenge Reward LearnerReward; do
   rg -q "class $name([ {]|$)" "$complete" || { echo "Missing class: $name"; exit 1; }
 done
 
@@ -33,7 +33,7 @@ if rg -n 'User[[:space:]]+<\|--[[:space:]]+(Learner|Teacher)' "$complete"; then
   exit 1
 fi
 
-for name in ClassAssignment AssignmentProgress StudentPerformanceSnapshot Challenge LearnerChallenge Reward LearnerReward GamificationService GamificationRepository; do
+for name in ClassAssignment AssignmentProgress LearnerPerformanceSnapshot Challenge LearnerChallenge Reward LearnerReward GamificationService GamificationRepository; do
   rg -A4 "class $name" "$complete" | rg -qi 'proposed' || { echo "Missing proposed marker: $name"; exit 1; }
 done
 
@@ -69,9 +69,9 @@ check_view() {
   done
 }
 
-check_view "$diagram_dir/identity-quran-classes.mmd" User Role UserRole LearnerProfile TeacherProfile Juz Surah Verse VerseWord TajweedRule AuthenticationService QuranCatalogService
+check_view "$diagram_dir/identity-quran-classes.mmd" User Role UserRole LearnerProfile TeacherProfile ConsentRecord Juz Surah Verse VerseWord TajweedRule AuthenticationService QuranCatalogService
 check_view "$diagram_dir/recitation-feedback-classes.mmd" RecitationSession RecitationSegment RecitationAnalysis PauseEvent RecitationError ErrorFeedback AudioAssistance RecitationService AnalysisService FeedbackService
-check_view "$diagram_dir/progress-teacher-classes.mmd" LearnerSurahProgress MasteryScoreHistory DailyPractice PracticeStreak LearningClass ClassEnrollment ClassAssignment AssignmentProgress TeacherMessage StudentPerformanceSnapshot ProgressService ClassService TeacherMonitoringService MessagingService
+check_view "$diagram_dir/progress-teacher-classes.mmd" LearnerSurahProgress MasteryScoreHistory DailyPractice PracticeStreak LearningClass ClassEnrollment ClassAssignment AssignmentProgress TeacherMessage LearnerPerformanceSnapshot ProgressService ClassService TeacherMonitoringService MessagingService
 check_view "$diagram_dir/gamification-classes-proposed.mmd" Challenge LearnerChallenge Reward LearnerReward GamificationService GamificationRepository
 
 erd="docs/database/itqan-erd.mmd"
@@ -86,6 +86,7 @@ ROLE Role
 USER_ROLE UserRole
 LEARNER_PROFILE LearnerProfile
 TEACHER_PROFILE TeacherProfile
+CONSENT_RECORD ConsentRecord
 JUZ Juz
 SURAH Surah
 VERSE Verse
@@ -109,12 +110,27 @@ CLASS_ENROLLMENT ClassEnrollment
 CLASS_ASSIGNMENT ClassAssignment
 ASSIGNMENT_PROGRESS AssignmentProgress
 TEACHER_MESSAGE TeacherMessage
-STUDENT_PERFORMANCE_SNAPSHOT StudentPerformanceSnapshot
+LEARNER_PERFORMANCE_SNAPSHOT LearnerPerformanceSnapshot
 CHALLENGE Challenge
 LEARNER_CHALLENGE LearnerChallenge
 REWARD Reward
 LEARNER_REWARD LearnerReward
 ENTITY_MAP
+
+for source in docs/database/itqan-erd.mmd docs/database/RELATIONAL_SCHEMA.md "$diagram_dir"/*.mmd; do
+  if rg -qi 'password_hash|passwordHash' "$source"; then
+    echo "Password storage is forbidden with managed identity: $source"
+    exit 1
+  fi
+done
+
+rg -q 'join_code' docs/database/itqan-erd.mmd || { echo "Learning classes require a join code"; exit 1; }
+rg -Fq '+String joinCode' "$complete" || { echo "LearningClass must expose its join code"; exit 1; }
+rg -Fq '+joinClass(UUID, String) ClassEnrollment' "$complete" || { echo "ClassService must support code-based enrollment"; exit 1; }
+if rg -qi 'inviteLearner|acceptInvitation|INVITED' docs/database/itqan-erd.mmd "$diagram_dir"/*.mmd; then
+  echo "Invitation-link enrollment is forbidden"
+  exit 1
+fi
 
 for source in docs/database/itqan-erd.mmd docs/database/RELATIONAL_SCHEMA.md docs/database/ERD_REQUIREMENTS_TRACEABILITY.md "$diagram_dir"/*.mmd "$diagram_dir"/CLASS_DIAGRAM_NOTES.md; do
   if rg -qi 'AUDIO_RECORDING|AudioRecording|AudioStoragePort|storageUri|storage_uri|retentionExpiresAt|retention_expires_at|deletedAt|deleted_at' "$source"; then

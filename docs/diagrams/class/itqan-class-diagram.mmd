@@ -10,7 +10,7 @@ class User {
   <<entity>>
   +UUID userId
   +String email
-  -String passwordHash
+  +String identitySubject
   +String displayName
   +LanguageCode preferredLanguage
   +AccountStatus accountStatus
@@ -55,6 +55,18 @@ class TeacherProfile {
   +String? qualification
   +updateBiography(String) void
   +updateQualification(String) void
+}
+class ConsentRecord {
+  <<entity>>
+  +UUID consentId
+  +UUID userId
+  +String purposeCode
+  +String policyVersion
+  +String collectionMethod
+  +DateTime grantedAt
+  +DateTime? withdrawnAt
+  +withdraw(DateTime) void
+  +isActive() Boolean
 }
 class LanguageCode {
   <<enumeration>>
@@ -391,8 +403,7 @@ class LearningClass {
   +ClassStatus classStatus
   +DateTime createdAt
   +DateTime updatedAt
-  +inviteLearner(UUID) ClassEnrollment
-  +activateEnrollment(UUID) void
+  +enrollLearner(UUID) ClassEnrollment
   +removeLearner(UUID) void
   +archive() void
   +hasActiveLearner(UUID) Boolean
@@ -452,7 +463,7 @@ class TeacherMessage {
   +markRead(DateTime) void
   +referencesSession() Boolean
 }
-class StudentPerformanceSnapshot {
+class LearnerPerformanceSnapshot {
   <<proposed>>
   <<entity>>
   +UUID snapshotId
@@ -474,7 +485,6 @@ class ClassStatus {
 }
 class EnrollmentStatus {
   <<enumeration>>
-  INVITED
   ACTIVE
   LEFT
   REMOVED
@@ -540,7 +550,7 @@ class LearnerReward {
 class AuthenticationService {
   <<service>>
   +register(String, String, String, List~Role~) User
-  +authenticate(String, String) User
+  +authenticate(String) User
   +changeProfile(UUID, ProfileData) User
 }
 class QuranCatalogService {
@@ -579,8 +589,7 @@ class ClassService {
   <<proposed: createAssignment>>
   <<service>>
   +createClass(UUID, String) LearningClass
-  +inviteLearner(UUID, UUID) ClassEnrollment
-  +acceptInvitation(UUID, UUID) ClassEnrollment
+  +joinClass(UUID, String) ClassEnrollment
   +removeLearner(UUID, UUID) void
   +createAssignment(UUID, AssignmentData) ClassAssignment
 }
@@ -588,7 +597,7 @@ class TeacherMonitoringService {
   <<proposed: getLearnerPerformance>>
   <<service>>
   +getClassProgress(UUID, UUID) List~LearnerSurahProgress~
-  +getLearnerPerformance(UUID, UUID, UUID) StudentPerformanceSnapshot
+  +getLearnerPerformance(UUID, UUID, UUID) LearnerPerformanceSnapshot
 }
 class MessagingService {
   <<service>>
@@ -692,6 +701,7 @@ class AssignmentData {
 
 User "1" *-- "0..1" LearnerProfile : learner profile
 User "1" *-- "0..1" TeacherProfile : teacher profile
+User "1" -- "0..*" ConsentRecord : records
 User "1" -- "0..*" UserRole : receives
 Role "1" -- "0..*" UserRole : assigned as
 User --> LanguageCode
@@ -744,8 +754,8 @@ TeacherProfile "1" -- "0..*" TeacherMessage : sends
 LearnerProfile "1" -- "0..*" TeacherMessage : receives
 LearningClass "0..1" -- "0..*" TeacherMessage : contextualizes
 RecitationSession "0..1" -- "0..*" TeacherMessage : references
-LearningClass "1" -- "0..*" StudentPerformanceSnapshot : summarizes
-LearnerProfile "1" -- "0..*" StudentPerformanceSnapshot : measured in
+LearningClass "1" -- "0..*" LearnerPerformanceSnapshot : summarizes
+LearnerProfile "1" -- "0..*" LearnerPerformanceSnapshot : measured in
 LearningClass --> ClassStatus
 ClassEnrollment --> EnrollmentStatus
 AssignmentProgress --> AssignmentStatus
