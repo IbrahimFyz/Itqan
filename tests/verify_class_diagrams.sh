@@ -18,6 +18,11 @@ for name in RecitationSession RecitationSegment RecitationAnalysis RecitationErr
   rg -q "class $name([ {]|$)" "$complete" || { echo "Missing transient-audio model element: $name"; exit 1; }
 done
 
+rg -A2 '^class VerseWord \{' "$complete" | rg -q '<<entity>>' || { echo "VerseWord must be modeled as a persisted entity"; exit 1; }
+rg -A5 '^class AIMode \{' "$complete" | rg -Fq '+AIModeCode modeCode' || { echo "AIMode.modeCode must use AIModeCode"; exit 1; }
+rg -A2 '^class VerseWord \{' "$diagram_dir/identity-quran-classes.mmd" | rg -q '<<entity>>' || { echo "VerseWord detail view must match the canonical entity type"; exit 1; }
+rg -A5 '^class AIMode \{' "$diagram_dir/recitation-feedback-classes.mmd" | rg -Fq '+AIModeCode modeCode' || { echo "AIMode detail view must match the canonical mode type"; exit 1; }
+
 if rg -ni '\b(Admin|Flutter|FastAPI|SQLAlchemy|ORM|HttpController)\b' "$diagram_dir"/*.mmd; then
   echo "Forbidden implementation or Admin class found"
   exit 1

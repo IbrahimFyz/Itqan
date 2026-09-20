@@ -105,7 +105,7 @@ class Verse {
   +getDisplayText() String
 }
 class VerseWord {
-  <<value object>>
+  <<entity>>
   +Integer wordId
   +Integer verseId
   +Integer wordPosition
@@ -128,7 +128,7 @@ class TajweedRule {
 class AIMode {
   <<entity>>
   +Integer aiModeId
-  +String modeCode
+  +AIModeCode modeCode
   +String nameAr
   +String nameEn
   +String description

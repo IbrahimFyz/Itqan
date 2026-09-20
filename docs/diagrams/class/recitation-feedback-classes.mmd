@@ -135,9 +135,15 @@ class AudioAssistance {
 class AIMode {
   <<entity>>
   +Integer aiModeId
-  +String modeCode
+  +AIModeCode modeCode
   +Boolean active
   +isSelectable() Boolean
+}
+class AIModeCode {
+  <<enumeration>>
+  AL_MUJAWWID
+  AL_MUSHAJJI
+  AL_MUALLIM
 }
 class SessionStatus {
   <<enumeration>>
