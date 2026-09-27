@@ -48,7 +48,7 @@ Any real learner audio used during testing requires the applicable consent decis
 | FT-08 | FR-09 | With A1, run Al-Mushajji. The response provides encouragement consistent with the selected mode; detailed mode boundaries remain subject to OQ-07. |
 | FT-09 | FR-11, FR-12 | Start a session and grant microphone permission. Audio capture begins only for the active session. |
 | FT-10 | FR-17, FR-18 | Request appropriate audio assistance, then continue recitation. Assistance is available where supported and the learner can resume the same session. |
-| FT-11 | FR-19, FR-20 | End a session. The learner receives a result containing a mastery value on the 0–100 scale and detected-word information. The score formula is subject to OQ-08. |
+| FT-11 | FR-19, FR-20 | End a session. The learner receives a result containing a mastery value on the 0–100 scale and detected-word information. Check the FR-20 formula with known word-error counts; a zero-word session has no score. |
 | FT-12 | FR-21, FR-22 | Complete sessions with varied results. Progress shows completed Surahs at full mastery and average mastery; streak behaviour is tested once its definition is confirmed. |
 | FT-13 | FR-10, FR-23 | Sign in as T1. The teacher dashboard presents only the authorized stored learning results for L1. |
 | FT-14 | FR-24 | Perform the approved class-management actions. Exact actions are blocked until the class-management scope is confirmed. |
@@ -110,7 +110,6 @@ The current heuristic evaluation is the initial expert review. Its privacy, navi
 | --- | --- |
 | OQ-05, OQ-06 | Defines teacher–learner relationship, dashboard fields, and class-management acceptance tests. |
 | OQ-07 | Defines the testable difference between Al-Mujawwid and Al-Mushajji. |
-| OQ-08 | Defines the mastery-score calculation and scoring test oracle. |
 | OQ-09, OQ-10 | Defines error taxonomy, expert benchmark, and NFR-01 accuracy targets. |
 | OQ-11 | Defines real-time timing, failure handling, retry, and fallback acceptance criteria. |
 | OQ-12 | Requires a verified Quran-content source before content-verification testing. |

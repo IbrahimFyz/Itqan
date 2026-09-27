@@ -22,7 +22,7 @@ Academic phase gates will ensure that iteration does not bypass required IS498 o
 
 ### Evolving requirements
 
-Several project decisions remain unresolved, including the final functional and non-functional requirements, detailed behavior of the AI modes, teacher workflow, Mastery Score formula, technology stack, database schema, and AI feasibility. An iterative approach allows the team to refine these decisions as research, prototyping, technical investigation, and advisor feedback provide better evidence.
+Several project decisions remain unresolved, including the final functional and non-functional requirements, detailed behavior of the AI modes, teacher workflow, technology stack, database schema, and AI feasibility. The defined Mastery Score formula still requires evaluation. An iterative approach allows the team to refine these decisions as research, prototyping, technical investigation, and advisor feedback provide better evidence.
 
 ### AI and technical uncertainty
 

@@ -57,7 +57,7 @@ This matrix connects the functional requirements in `docs/project/REQUIREMENTS.m
 | `ERROR_FEEDBACK` | FR-08, FR-16 | Confirmed localized feedback content. |
 | `AUDIO_ASSISTANCE` | FR-17 | Confirmed assistance reference and playback evidence. |
 | `LEARNER_SURAH_PROGRESS` | FR-10, FR-21, FR-23 | Confirmed current per-Surah progress summary. |
-| `MASTERY_SCORE_HISTORY` | FR-20, FR-21, FR-23 | Confirmed session-level mastery history; formula unresolved. |
+| `MASTERY_SCORE_HISTORY` | FR-20, FR-21, FR-23 | Session-level mastery history stores total words, effective errors, and the calculated score. |
 | `DAILY_PRACTICE` | FR-22, FR-23 | Supporting daily activity evidence. |
 | `PRACTICE_STREAK` | FR-22, FR-23 | Confirmed current and longest streak summary. |
 | `LEARNING_CLASS` | FR-10, FR-23, FR-24, FR-25 | Confirmed teacher-owned class. |
