@@ -357,17 +357,11 @@ Tracks consecutive days of Quran practice.
 
 ## Mastery Score
 
-Current concept:
+The score is **0–100%**. For a completed session with `total_words > 0`:
 
-> **0–100%**
+> **Mastery Score = (Total Words − Effective Errors) / Total Words × 100**
 
-Initial conceptual components:
-
-- Tajweed Accuracy
-- Reading Fluency
-- Number of Pauses
-
-⚠️ The exact formula and weights are unresolved.
+A complete word-pronunciation error counts as 1 effective error and a Tajweed-only error counts as 0.5. Each word contributes at most 1 effective error. A session with `total_words = 0` has no mastery score.
 
 ## Teacher Dashboard
 

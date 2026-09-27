@@ -32,7 +32,7 @@ Learner recitation audio is processed transiently in memory and discarded after 
 |---|---|
 | **Confirmed** | Juz Amma browse/select, Surah verses, mode selection, recitation session, feedback, session result, progress, teacher dashboard, and class management boundaries. |
 | **Proposed** | Selected-Surah overview, exact screen wording, search presentation, navigation layout, streak presentation, and retry/empty-state wording. |
-| **Unresolved** | Detailed AI-mode behaviour (OQ-07), mastery formula (OQ-08), teacher-learner workflow and detailed dashboard fields (OQ-05/OQ-06), and final processing-failure behaviour (OQ-11). |
+| **Unresolved** | Detailed AI-mode behaviour (OQ-07), teacher-learner workflow and detailed dashboard fields (OQ-05/OQ-06), and final processing-failure behaviour (OQ-11). The prototype's old “formula pending” label needs updating to match FR-20. |
 
 ## Traceability
 

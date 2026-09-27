@@ -13,7 +13,7 @@
 
 | ID | Heuristic | Issue and evidence | Severity | Recommended / final change | Status |
 |---|---|---|---:|---|---|
-| HE-01 | Visibility of system status | A displayed mastery result could be read as a verified assessment even though the current mastery formula is unresolved (OQ-08). The session-results screen therefore labels the value **“illustrative — formula pending.”** | 3 | Retain the pending label until the team approves a formula and evaluation method; then replace it with a defined explanation of the score. | **Implemented safeguard; deferred decision.** |
+| HE-01 | Visibility of system status | At the 2026-09-20 review, the mastery formula was unresolved, so the session-results screen labeled its value **“illustrative — formula pending.”** FR-20 now defines the formula; its interpretation still needs evaluation. | 3 | Update the prototype label to explain the defined formula, while avoiding claims of a validated assessment until evaluation is complete. | **Formula defined; prototype update pending.** |
 | HE-02 | Help users recognise, diagnose, and recover from errors | A learner denied microphone permission needs clear recovery guidance. The prototype shows a microphone-permission explanation and Retry, but the exact failure/retry behaviour is not approved (OQ-11). | 3 | After the team decides the technical recovery path, specify whether Retry re-requests permission, directs the learner to device settings, or both. Test the wording with learners. | **Deferred pending OQ-11.** |
 | HE-03 | Match between system and the real world | AI-mode names alone may be unfamiliar to a first-time learner. The mode screen uses descriptive choice cards: Al-Mujawwid for Tajweed/recitation feedback and Al-Mushajji for encouragement. | 2 | Keep the plain-language descriptions beside the Arabic mode names; confirm final detailed behaviours once OQ-07 is resolved. | **Implemented safeguard; deferred decision.** |
 | HE-04 | Error prevention | Search must not leave a learner without an understandable outcome when no Surah matches. The Juz Amma browser includes a live search and no-results state; the browser covers all 37 Surahs from An-Naba to An-Nas. | 2 | Keep a short no-results explanation and an obvious way to clear the query. Confirm the final wording during learner testing. | **Implemented safeguard; proposed wording.** |
@@ -27,7 +27,7 @@
 ## Prioritised follow-up
 
 1. Resolve the microphone-denied and analysis-failure recovery behaviour before implementation or formal usability testing (HE-02; OQ-11).
-2. Resolve the mastery formula and explain its interpretation before presenting scores as evaluative results (HE-01; OQ-08).
+2. Update the mastery-score label and evaluate its interpretation before presenting scores as validated results (HE-01; OQ-08).
 3. Define the detailed AI-mode behaviours and teacher dashboard fields before expanding those prototype areas (HE-03; OQ-07 and OQ-06).
 4. Run task-based learner and teacher usability testing after those decisions, then update this log with participant evidence and final changes.
 
@@ -37,4 +37,4 @@
 - Teacher dashboard and class management: FR-23 and FR-24.
 - Clear, user-friendly flow and language support: NFR-04 and NFR-11.
 - Privacy and transient-audio policy: NFR-07, `USER_JOURNEYS.md`, and `system-architecture.pdf`.
-- Unresolved decisions: `OPEN_QUESTIONS.md` (OQ-05 to OQ-08 and OQ-11).
+- Unresolved decisions: `OPEN_QUESTIONS.md` (OQ-05 to OQ-07 and OQ-11); OQ-08 records the defined formula.

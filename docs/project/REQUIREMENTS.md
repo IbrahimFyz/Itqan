@@ -280,6 +280,8 @@ The system shall allow users to end an active recitation session.
 
 The system shall display the user's recitation result as a mastery percentage out of 100% and identify the words in which recitation errors were detected.
 
+For a completed session with `total_words > 0`, the Mastery Score shall be `(Total Words − Effective Errors) / Total Words × 100`. A complete word-pronunciation error contributes 1 effective error, a Tajweed-only error contributes 0.5, and each word contributes at most 1. A session with `total_words = 0` has no mastery score.
+
 ### FR-21 — Track User Progress
 
 **Priority:** Should Have

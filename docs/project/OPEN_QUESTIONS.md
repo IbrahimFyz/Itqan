@@ -11,7 +11,7 @@ This file tracks unresolved decisions. Do not treat these items as final require
 | OQ-05 | Teacher-student relationship | 🔴 | Workflow not finalized |
 | OQ-06 | Teacher Dashboard | 🔴 | Exact features not finalized |
 | OQ-07 | AI Mode behavior | 🔴 | Detailed behavior not finalized |
-| OQ-08 | Mastery Score formula | 🔴 | Formula/weights not finalized |
+| OQ-08 | Mastery Score formula | 🟢 | Defined in FR-20 and the relational schema; evaluation of score interpretation remains open. |
 | OQ-09 | AI model and dataset | 🔴 | Research required |
 | OQ-10 | Tajweed detection approach | 🔴 | Research/feasibility required |
 | OQ-11 | Real-time processing | 🔴 | Technical feasibility required |

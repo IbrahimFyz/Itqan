@@ -56,12 +56,7 @@ Do NOT state that the system guarantees 100% accuracy or detects every Tajweed e
 ## 7. Mastery Score
 The project includes a 0–100 Mastery Score.
 
-The current concept relates it to:
-- Tajweed accuracy
-- Reading fluency
-- Number of pauses
-
-The exact formula and weights are unresolved. Do not invent them.
+For a completed session with `total_words > 0`, the formula is `(Total Words − Effective Errors) / Total Words × 100`. A complete word-pronunciation error contributes 1 effective error, a Tajweed-only error contributes 0.5, and each word contributes at most 1. A session with `total_words = 0` has no mastery score. Evaluation of the score's interpretation remains open.
 
 ## 8. Technical Direction
 The project presentation proposed:
@@ -219,7 +214,6 @@ Still requiring analysis, research, or approval:
 - Teacher-student relationship workflow.
 - Exact Teacher Dashboard.
 - Exact behavior of the three AI modes.
-- Mastery Score formula.
 - AI model/dataset/training strategy.
 - Tajweed detection approach.
 - Real-time processing approach.

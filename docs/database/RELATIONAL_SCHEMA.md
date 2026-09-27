@@ -41,7 +41,7 @@ Extends a user account with learner-specific preferences.
 
 ### TEACHER_PROFILE
 
-`TEACHER_PROFILE(teacher_id UUID PK FK→USER.user_id, biography TEXT NULL, qualification TEXT NULL)`
+`TEACHER_PROFILE(teacher_id UUID PK FK→USER.user_id, school_name VARCHAR(150), biography TEXT NULL, qualification TEXT NULL)`
 
 Extends a user account with teacher-specific information. Qualification verification remains unresolved.
 
@@ -95,7 +95,7 @@ Fixed modes are `al_mujawwid`, `al_mushajji`, and `al_muallim`.
 
 `RECITATION_SESSION(session_id UUID PK, learner_id UUID FK→LEARNER_PROFILE.learner_id, surah_id SMALLINT FK→SURAH.surah_id, ai_mode_id SMALLINT FK→AI_MODE.ai_mode_id, started_at TIMESTAMPTZ, ended_at TIMESTAMPTZ NULL, session_status VARCHAR(20), completion_percentage NUMERIC(5,2) DEFAULT 0, mastery_score NUMERIC(5,2) NULL, total_duration_seconds INTEGER NULL, total_pause_count INTEGER DEFAULT 0, error_count INTEGER DEFAULT 0, failure_reason TEXT NULL)`
 
-Stores one learner attempt for one Surah and selected AI mode. Status is `active`, `completed`, `abandoned`, or `failed`. Completed sessions require `ended_at`; active sessions must not have it. The schema stores the mastery result, not an unapproved formula.
+Stores one learner attempt for one Surah and selected AI mode. Status is `active`, `completed`, `abandoned`, or `failed`. Completed sessions require `ended_at`; active sessions must not have it. The schema stores the session mastery result; the calculation is defined by the approved mastery formula in the requirements.
 
 ### RECITATION_SEGMENT
 
@@ -151,9 +151,9 @@ Composite primary key `(learner_id, surah_id)`. Contains the current progress su
 
 ### MASTERY_SCORE_HISTORY
 
-`MASTERY_SCORE_HISTORY(mastery_history_id UUID PK, learner_id UUID FK→LEARNER_PROFILE.learner_id, surah_id SMALLINT FK→SURAH.surah_id, session_id UUID UK FK→RECITATION_SESSION.session_id, tajweed_score NUMERIC(5,2) NULL, pronunciation_score NUMERIC(5,2) NULL, fluency_score NUMERIC(5,2) NULL, pause_score NUMERIC(5,2) NULL, final_mastery_score NUMERIC(5,2), calculated_at TIMESTAMPTZ, formula_version VARCHAR(30) NULL)`
+`MASTERY_SCORE_HISTORY(mastery_history_id UUID PK, learner_id UUID FK→LEARNER_PROFILE.learner_id, surah_id SMALLINT FK→SURAH.surah_id, session_id UUID UK FK→RECITATION_SESSION.session_id, total_words INTEGER, effective_errors NUMERIC(6,2), final_mastery_score NUMERIC(5,2), calculated_at TIMESTAMPTZ, formula_version VARCHAR(30) NULL)`
 
-Component fields permit an approved future formula; no weights are assumed.
+Stores the values used for the approved mastery calculation: `Mastery Score = (Total Words − Effective Errors) / Total Words × 100`. A complete word pronunciation error contributes 1 effective error, while a Tajweed-only error contributes 0.5; the effective error contribution per word is capped at 1.
 
 ### DAILY_PRACTICE
 
