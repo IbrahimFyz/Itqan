@@ -35,6 +35,7 @@ erDiagram
     }
     TEACHER_PROFILE {
         uuid teacher_id PK, FK
+        varchar school_name
         text biography
         text qualification
     }
@@ -211,10 +212,8 @@ erDiagram
         uuid learner_id FK
         smallint surah_id FK
         uuid session_id FK, UK
-        decimal tajweed_score
-        decimal pronunciation_score
-        decimal fluency_score
-        decimal pause_score
+        integer total_words
+        decimal effective_errors
         decimal final_mastery_score
         datetime calculated_at
         varchar formula_version
