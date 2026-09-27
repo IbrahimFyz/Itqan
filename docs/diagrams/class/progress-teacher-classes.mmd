@@ -1,0 +1,282 @@
+---
+title: Itqan Progress Teacher and Class Classes
+config:
+  theme: neutral
+---
+classDiagram
+direction TB
+
+class LearnerSurahProgress {
+  <<entity>>
+  +UUID learnerId
+  +Integer surahId
+  +Integer attemptCount
+  +Integer completedSessionCount
+  +Decimal? bestMasteryScore
+  +Decimal? averageMasteryScore
+  +Decimal? latestMasteryScore
+  +Boolean fullyMastered
+  +DateTime? firstPracticedAt
+  +DateTime? lastPracticedAt
+  +DateTime? masteredAt
+  +recordAttempt(RecitationSession) void
+  +recalculateAverage(List~MasteryScoreHistory~) void
+  +markMastered(DateTime) void
+  +isMasteryImproving(List~MasteryScoreHistory~) Boolean
+}
+class MasteryScoreHistory {
+  <<entity>>
+  +UUID masteryHistoryId
+  +UUID learnerId
+  +Integer surahId
+  +UUID sessionId
+  +Decimal? tajweedScore
+  +Decimal? pronunciationScore
+  +Decimal? fluencyScore
+  +Decimal? pauseScore
+  +Decimal finalMasteryScore
+  +DateTime calculatedAt
+  +String? formulaVersion
+  +validateScoreRange() Boolean
+}
+class DailyPractice {
+  <<entity>>
+  +UUID learnerId
+  +Date practiceDate
+  +Integer sessionCount
+  +Integer completedSessionCount
+  +Integer totalPracticeSeconds
+  +Integer versesPracticed
+  +recordSession(RecitationSession) void
+}
+class PracticeStreak {
+  <<entity>>
+  +UUID learnerId
+  +Integer currentStreakDays
+  +Integer longestStreakDays
+  +Date? currentStreakStartedOn
+  +Date? lastPracticeDate
+  +DateTime updatedAt
+  +recordPractice(Date) void
+  +resetIfBroken(Date) void
+}
+class LearningClass {
+  <<proposed: addAssignment>>
+  <<entity>>
+  +UUID classId
+  +UUID teacherId
+  +String className
+  +String? description
+  +String joinCode
+  +ClassStatus classStatus
+  +DateTime createdAt
+  +DateTime updatedAt
+  +enrollLearner(UUID) ClassEnrollment
+  +removeLearner(UUID) void
+  +archive() void
+  +hasActiveLearner(UUID) Boolean
+  +addAssignment(ClassAssignment) void
+}
+class ClassEnrollment {
+  <<entity>>
+  +UUID enrollmentId
+  +UUID classId
+  +UUID learnerId
+  +EnrollmentStatus enrollmentStatus
+  +DateTime? enrolledAt
+  +DateTime? endedAt
+  +accept(DateTime) void
+  +leave(DateTime) void
+  +remove(DateTime) void
+  +isActive() Boolean
+}
+class ClassAssignment {
+  <<proposed>>
+  <<entity>>
+  +UUID assignmentId
+  +UUID classId
+  +Integer surahId
+  +UUID createdBy
+  +String title
+  +String? instructions
+  +Decimal? targetMasteryScore
+  +DateTime? dueAt
+  +DateTime createdAt
+  +isDue(DateTime) Boolean
+  +meetsTarget(Decimal) Boolean
+}
+class AssignmentProgress {
+  <<proposed>>
+  <<entity>>
+  +UUID assignmentId
+  +UUID learnerId
+  +UUID? bestSessionId
+  +AssignmentStatus assignmentStatus
+  +Decimal? bestMasteryScore
+  +DateTime? completedAt
+  +DateTime updatedAt
+  +recordAttempt(RecitationSession) void
+  +markCompleted(DateTime) void
+}
+class TeacherMessage {
+  <<entity>>
+  +UUID messageId
+  +UUID teacherId
+  +UUID learnerId
+  +UUID? classId
+  +UUID? sessionId
+  +String messageText
+  +DateTime sentAt
+  +DateTime? readAt
+  +markRead(DateTime) void
+  +referencesSession() Boolean
+}
+class LearnerPerformanceSnapshot {
+  <<proposed>>
+  <<entity>>
+  +UUID snapshotId
+  +UUID classId
+  +UUID learnerId
+  +DateTime generatedAt
+  +Integer completedSurahCount
+  +Decimal? averageMasteryScore
+  +Integer totalSessions
+  +Integer totalPracticeSeconds
+  +Integer currentStreakDays
+  +isCurrent(DateTime, Integer) Boolean
+}
+class LearnerProfile {
+  <<entity>>
+  +UUID learnerId
+  +String? learningGoal
+  +String? experienceLevel
+  +Boolean remindersEnabled
+}
+class TeacherProfile {
+  <<entity>>
+  +UUID teacherId
+  +String? biography
+  +String? qualification
+}
+class Surah {
+  <<entity>>
+  +Integer surahId
+  +String nameAr
+  +String nameEn
+}
+class RecitationSession {
+  <<entity>>
+  +UUID sessionId
+  +UUID learnerId
+  +Integer surahId
+  +SessionStatus status
+  +Decimal? masteryScore
+  +DateTime? endedAt
+}
+class ClassStatus {
+  <<enumeration>>
+  ACTIVE
+  ARCHIVED
+  CLOSED
+}
+class EnrollmentStatus {
+  <<enumeration>>
+  ACTIVE
+  LEFT
+  REMOVED
+}
+class AssignmentStatus {
+  <<proposed>>
+  <<enumeration>>
+  NOT_STARTED
+  IN_PROGRESS
+  COMPLETED
+  OVERDUE
+}
+class ProgressService {
+  <<service>>
+  +updateFromCompletedSession(UUID) LearnerSurahProgress
+  +getLearnerProgress(UUID) List~LearnerSurahProgress~
+  +updateDailyPractice(UUID) DailyPractice
+  +updateStreak(UUID, Date) PracticeStreak
+}
+class ClassService {
+  <<proposed: createAssignment>>
+  <<service>>
+  +createClass(UUID, String) LearningClass
+  +joinClass(UUID, String) ClassEnrollment
+  +removeLearner(UUID, UUID) void
+  +createAssignment(UUID, AssignmentData) ClassAssignment
+}
+class TeacherMonitoringService {
+  <<proposed: getLearnerPerformance>>
+  <<service>>
+  +getClassProgress(UUID, UUID) List~LearnerSurahProgress~
+  +getLearnerPerformance(UUID, UUID, UUID) LearnerPerformanceSnapshot
+}
+class MessagingService {
+  <<service>>
+  +sendMessage(UUID, UUID, UUID, String, UUID?) TeacherMessage
+  +markRead(UUID, UUID) TeacherMessage
+}
+class ProgressRepository {
+  <<repository>>
+  +findSurahProgress(UUID, Integer) LearnerSurahProgress?
+  +saveSurahProgress(LearnerSurahProgress) LearnerSurahProgress
+  +listMasteryHistory(UUID, Integer) List~MasteryScoreHistory~
+  +saveMasteryHistory(MasteryScoreHistory) MasteryScoreHistory
+  +saveDailyPractice(DailyPractice) DailyPractice
+  +saveStreak(PracticeStreak) PracticeStreak
+}
+class ClassRepository {
+  <<repository>>
+  +findClass(UUID) LearningClass?
+  +saveClass(LearningClass) LearningClass
+  +findActiveEnrollment(UUID, UUID) ClassEnrollment?
+  +saveEnrollment(ClassEnrollment) ClassEnrollment
+  +saveMessage(TeacherMessage) TeacherMessage
+}
+class AssignmentData {
+  <<proposed>>
+  <<value object>>
+  +Integer surahId
+  +String title
+  +String? instructions
+  +Decimal? targetScore
+  +DateTime? dueAt
+}
+
+LearnerProfile "1" -- "0..*" LearnerSurahProgress : tracks
+Surah "1" -- "0..*" LearnerSurahProgress : summarizes
+LearnerProfile "1" -- "0..*" MasteryScoreHistory : earns
+Surah "1" -- "0..*" MasteryScoreHistory : measures
+RecitationSession "1" -- "0..1" MasteryScoreHistory : produces
+LearnerProfile "1" -- "0..*" DailyPractice : logs
+LearnerProfile "1" -- "0..1" PracticeStreak : maintains
+TeacherProfile "1" -- "0..*" LearningClass : owns
+LearningClass "1" *-- "0..*" ClassEnrollment : enrolls
+LearnerProfile "1" -- "0..*" ClassEnrollment : joins
+LearningClass "1" *-- "0..*" ClassAssignment : assigns
+Surah "1" -- "0..*" ClassAssignment : targets
+TeacherProfile "1" -- "0..*" ClassAssignment : creates
+ClassAssignment "1" *-- "0..*" AssignmentProgress : tracks
+LearnerProfile "1" -- "0..*" AssignmentProgress : completes
+RecitationSession "0..1" -- "0..*" AssignmentProgress : evidences
+TeacherProfile "1" -- "0..*" TeacherMessage : sends
+LearnerProfile "1" -- "0..*" TeacherMessage : receives
+LearningClass "0..1" -- "0..*" TeacherMessage : contextualizes
+RecitationSession "0..1" -- "0..*" TeacherMessage : references
+LearningClass "1" -- "0..*" LearnerPerformanceSnapshot : summarizes
+LearnerProfile "1" -- "0..*" LearnerPerformanceSnapshot : measured in
+LearningClass --> ClassStatus
+ClassEnrollment --> EnrollmentStatus
+AssignmentProgress --> AssignmentStatus
+ProgressService ..> ProgressRepository
+ProgressService ..> LearnerSurahProgress
+ClassService ..> ClassRepository
+ClassService ..> LearningClass
+ClassService ..> AssignmentData
+TeacherMonitoringService ..> ClassRepository
+TeacherMonitoringService ..> ProgressRepository
+MessagingService ..> ClassRepository
+MessagingService ..> TeacherMessage

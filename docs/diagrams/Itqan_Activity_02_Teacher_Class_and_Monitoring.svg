@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1700" height="2100" viewBox="0 0 1700 2100">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto"><path d="M0,0 L9,4 L0,8 Z" fill="#222"/></marker>
+    <style>
+      text{font-family:Arial,sans-serif;fill:#222}
+      .title{font-size:28px;font-weight:bold}.subtitle{font-size:14px;fill:#444}
+      .lane{fill:#fff;stroke:#c7ccd1;stroke-width:1.5}.lanehead{fill:#f4f6f8;stroke:#c7ccd1;stroke-width:1.5}.lanetext{font-size:17px;font-weight:bold}
+      .action{fill:#fbfbfc;stroke:#222;stroke-width:2}.system{fill:#fbfbfc;stroke:#222;stroke-width:2}.service{fill:#eef0f3;stroke:#222;stroke-width:2}.data{fill:#eef0f3;stroke:#222;stroke-width:2}.decision{fill:#fff;stroke:#555;stroke-width:2}
+      .event{fill:#222;stroke:#222}.end{fill:#fff;stroke:#222;stroke-width:3}.label{font-size:15px;text-anchor:middle}.small{font-size:12px;fill:#444;text-anchor:middle}.flow{fill:none;stroke:#222;stroke-width:1.8;marker-end:url(#arrow)}.tag{font-size:12px;font-weight:bold;fill:#555}.note{fill:#fff;stroke:#999;stroke-width:1.3}.notetext{font-size:12px;fill:#444}.phase{fill:#f4f6f8;fill-opacity:.72;stroke:#c7ccd1;stroke-width:1.5;stroke-dasharray:3 3}.phasetitle{font-size:14px;font-weight:bold;fill:#444}.phaseid{font-size:12px;font-weight:bold;fill:#555}
+    </style>
+  </defs>
+
+  <text x="850" y="42" text-anchor="middle" class="title">ITQAN — Activity Diagram 02: Teacher Class and Progress Monitoring</text>
+  <text x="850" y="66" text-anchor="middle" class="subtitle">Scope: Al-Mu'allim class management and learner performance review</text>
+
+  <rect x="40" y="95" width="360" height="1880" class="lane"/><rect x="400" y="95" width="420" height="1880" class="lane"/><rect x="820" y="95" width="470" height="1880" class="lane"/><rect x="1290" y="95" width="370" height="1880" class="lane"/>
+  <rect x="40" y="95" width="360" height="52" class="lanehead"/><rect x="400" y="95" width="420" height="52" class="lanehead"/><rect x="820" y="95" width="470" height="52" class="lanehead"/><rect x="1290" y="95" width="370" height="52" class="lanehead"/>
+  <text x="220" y="128" class="lanetext" text-anchor="middle">Teacher</text><text x="610" y="128" class="lanetext" text-anchor="middle">Itqan App</text><text x="1055" y="128" class="lanetext" text-anchor="middle">Teacher and Progress Services</text><text x="1475" y="128" class="lanetext" text-anchor="middle">Data Store</text>
+
+  <rect x="58" y="158" width="1584" height="455" rx="8" class="phase"/><text x="1320" y="185" class="phaseid">PHASE 01</text><text x="1320" y="207" class="phasetitle">Open teacher mode and choose the task</text>
+  <rect x="58" y="635" width="1584" height="420" rx="8" class="phase"/><text x="1320" y="662" class="phaseid">PHASE 02</text><text x="1320" y="684" class="phasetitle">Create or update class information</text>
+  <rect x="58" y="1075" width="1584" height="880" rx="8" class="phase"/><text x="1320" y="1102" class="phaseid">PHASE 03</text><text x="1320" y="1124" class="phasetitle">Retrieve and review learner practice performance</text>
+
+  <circle cx="220" cy="185" r="13" class="event"/><rect x="115" y="220" width="210" height="58" rx="7" class="action"/><text x="220" y="246" class="label">Open teacher features</text><text x="220" y="265" class="small">Al-Mu'allim mode</text><path d="M220 198 L220 220" class="flow"/>
+  <rect x="495" y="315" width="230" height="58" rx="7" class="system"/><text x="610" y="341" class="label">Display teacher dashboard</text><text x="610" y="360" class="small">FR-10</text><path d="M325 249 L450 249 L450 344 L495 344" class="flow"/>
+  <rect x="115" y="410" width="210" height="58" rx="7" class="action"/><text x="220" y="436" class="label">Choose teacher action</text><text x="220" y="455" class="small">manage class or monitor progress</text><path d="M495 344 L450 344 L450 439 L325 439" class="flow"/>
+  <path d="M220 505 L292 557 L220 609 L148 557 Z" class="decision"/><text x="220" y="553" class="label">Manage a</text><text x="220" y="571" class="label">class?</text><path d="M220 468 L220 505" class="flow"/>
+
+  <rect x="115" y="655" width="210" height="58" rx="7" class="action"/><text x="220" y="681" class="label">Create or update class</text><text x="220" y="700" class="small">class details only</text><path d="M220 609 L220 655" class="flow"/><text x="241" y="635" class="tag">Yes</text>
+  <rect x="495" y="750" width="230" height="58" rx="7" class="system"/><text x="610" y="776" class="label">Validate class changes</text><text x="610" y="795" class="small">required information</text><path d="M325 684 L450 684 L450 779 L495 779" class="flow"/>
+  <rect x="930" y="845" width="250" height="58" rx="7" class="service"/><text x="1055" y="871" class="label">Save class changes</text><text x="1055" y="890" class="small">FR-10</text><path d="M725 779 L875 779 L875 874 L930 874" class="flow"/>
+  <rect x="1350" y="940" width="250" height="58" rx="7" class="data"/><text x="1475" y="966" class="label">Persist class record</text><text x="1475" y="985" class="small">create or update</text><path d="M1180 874 L1235 874 L1235 969 L1350 969" class="flow"/>
+  <path d="M1350 969 L1235 969 L1235 1084 L325 1084 L325 1164" class="flow"/>
+
+  <rect x="115" y="1135" width="210" height="58" rx="7" class="action"/><text x="220" y="1161" class="label">Select class or learner</text><text x="220" y="1180" class="small">available to the teacher</text><path d="M148 557 L95 557 L95 1164 L115 1164" class="flow"/><text x="105" y="548" class="tag">No</text>
+  <rect x="495" y="1230" width="230" height="58" rx="7" class="system"/><text x="610" y="1256" class="label">Request progress data</text><text x="610" y="1275" class="small">selected learner or class</text><path d="M325 1164 L450 1164 L450 1259 L495 1259" class="flow"/>
+  <rect x="930" y="1325" width="250" height="58" rx="7" class="service"/><text x="1055" y="1351" class="label">Retrieve practice and</text><text x="1055" y="1370" class="label">performance information</text><path d="M725 1259 L875 1259 L875 1354 L930 1354" class="flow"/>
+  <rect x="1350" y="1420" width="250" height="58" rx="7" class="data"/><text x="1475" y="1446" class="label">Read session and</text><text x="1475" y="1465" class="label">progress records</text><path d="M1180 1354 L1235 1354 L1235 1449 L1350 1449" class="flow"/>
+  <rect x="930" y="1515" width="250" height="58" rx="7" class="service"/><text x="1055" y="1541" class="label">Prepare monitoring view</text><text x="1055" y="1560" class="small">activity, completion, performance</text><path d="M1350 1449 L1235 1449 L1235 1544 L1180 1544" class="flow"/>
+  <rect x="495" y="1610" width="230" height="58" rx="7" class="system"/><text x="610" y="1636" class="label">Display learner progress</text><text x="610" y="1655" class="small">practice and performance</text><path d="M930 1544 L875 1544 L875 1639 L725 1639" class="flow"/>
+  <rect x="115" y="1705" width="210" height="58" rx="7" class="action"/><text x="220" y="1731" class="label">Review learner information</text><text x="220" y="1750" class="small">FR-10</text><path d="M495 1639 L450 1639 L450 1734 L325 1734" class="flow"/>
+  <path d="M220 1800 L292 1852 L220 1904 L148 1852 Z" class="decision"/><text x="220" y="1848" class="label">Review another</text><text x="220" y="1866" class="label">record?</text><path d="M220 1763 L220 1800" class="flow"/>
+  <path d="M292 1852 L365 1852 L365 344 L495 344" class="flow"/><text x="330" y="1838" class="tag">Yes</text>
+  <circle cx="220" cy="1942" r="17" class="end"/><circle cx="220" cy="1942" r="10" class="event"/><path d="M220 1904 L220 1925" class="flow"/><text x="241" y="1916" class="tag">No</text>
+
+  <rect x="70" y="2010" width="1560" height="44" rx="5" class="note"/><text x="88" y="2035" class="notetext">Note: learners join teacher classes using a join code, and the dashboard functions follow FR-23 to FR-25. Class enrollment uses a join code; there is no invitation-link or Add Students to Class flow.</text>
+</svg>

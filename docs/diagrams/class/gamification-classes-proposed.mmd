@@ -1,0 +1,86 @@
+---
+title: Itqan Proposed Al-Mushajji Gamification Classes
+config:
+  theme: neutral
+---
+classDiagram
+direction TB
+
+class Challenge {
+  <<proposed>>
+  <<entity>>
+  +UUID challengeId
+  +String titleAr
+  +String titleEn
+  +String descriptionAr
+  +String descriptionEn
+  +String challengeType
+  +Integer targetValue
+  +DateTime? startsAt
+  +DateTime? endsAt
+  +Boolean active
+  +isAvailable(DateTime) Boolean
+  +isCompletedBy(Integer) Boolean
+}
+class LearnerChallenge {
+  <<proposed>>
+  <<entity>>
+  +UUID learnerId
+  +UUID challengeId
+  +Integer progressValue
+  +String challengeStatus
+  +DateTime joinedAt
+  +DateTime? completedAt
+  +incrementProgress(Integer) void
+  +complete(DateTime) void
+}
+class Reward {
+  <<proposed>>
+  <<entity>>
+  +UUID rewardId
+  +String rewardCode
+  +String nameAr
+  +String nameEn
+  +String description
+  +String rewardType
+  +matches(String) Boolean
+}
+class LearnerReward {
+  <<proposed>>
+  <<entity>>
+  +UUID learnerId
+  +UUID rewardId
+  +UUID? challengeId
+  +DateTime awardedAt
+  +wasAwardedByChallenge() Boolean
+}
+class LearnerProfile {
+  <<entity>>
+  +UUID learnerId
+  +String? learningGoal
+  +String? experienceLevel
+  +Boolean remindersEnabled
+}
+class GamificationService {
+  <<proposed>>
+  <<service>>
+  +joinChallenge(UUID, UUID) LearnerChallenge
+  +recordProgress(UUID, UUID, Integer) LearnerChallenge
+  +awardReward(UUID, UUID, UUID?) LearnerReward
+}
+class GamificationRepository {
+  <<proposed>>
+  <<repository>>
+  +findChallenge(UUID) Challenge?
+  +saveLearnerChallenge(LearnerChallenge) LearnerChallenge
+  +findReward(UUID) Reward?
+  +saveLearnerReward(LearnerReward) LearnerReward
+}
+
+LearnerProfile "1" -- "0..*" LearnerChallenge : joins
+Challenge "1" -- "0..*" LearnerChallenge : tracks
+LearnerProfile "1" -- "0..*" LearnerReward : earns
+Reward "1" -- "0..*" LearnerReward : awards
+Challenge "0..1" -- "0..*" LearnerReward : produces
+GamificationService ..> GamificationRepository
+GamificationService ..> Challenge
