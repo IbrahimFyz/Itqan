@@ -43,5 +43,5 @@
   <path d="M292 1852 L365 1852 L365 344 L495 344" class="flow"/><text x="330" y="1838" class="tag">Yes</text>
   <circle cx="220" cy="1942" r="17" class="end"/><circle cx="220" cy="1942" r="10" class="event"/><path d="M220 1904 L220 1925" class="flow"/><text x="241" y="1916" class="tag">No</text>
 
-  <rect x="70" y="2010" width="1560" height="44" rx="5" class="note"/><text x="88" y="2035" class="notetext">Note: how learners are associated with teachers or classes, and the exact dashboard metrics, are unresolved. This diagram does not assume invitations, messages, or adding students.</text>
+  <rect x="70" y="2010" width="1560" height="44" rx="5" class="note"/><text x="88" y="2035" class="notetext">Note: learners join teacher classes using a join code, and the dashboard functions follow FR-23 to FR-25. Class enrollment uses a join code; there is no invitation-link or Add Students to Class flow.</text>
 </svg>

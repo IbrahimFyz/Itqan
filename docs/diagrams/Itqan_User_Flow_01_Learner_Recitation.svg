@@ -39,5 +39,5 @@
   <rect x="1600" y="1400" width="225" height="95" rx="10" class="result"/><text x="1712" y="1431" class="label">Progress screen</text><text x="1712" y="1453" class="detail">completed Surahs, average, streak</text><path d="M1505 1445 L1600 1445" class="flow"/>
   <rect x="1915" y="1400" width="225" height="95" rx="10" class="primary"/><text x="2027" y="1431" class="label">Learner home</text><text x="2027" y="1453" class="detail">start another practice session</text><path d="M1825 1445 L1915 1445" class="flow"/>
 
-  <rect x="85" y="1640" width="2230" height="55" rx="6" class="note"/><text x="105" y="1664" class="notetxt">Traceability: FR-01 to FR-09 cover access and preparation; FR-11 to FR-19 cover the active session; FR-20 to FR-22 cover results and progress. Smart Prompting is not shown because it is not yet a functional requirement.</text>
+  <rect x="85" y="1640" width="2230" height="55" rx="6" class="note"/><text x="105" y="1664" class="notetxt">Traceability: FR-01 to FR-09 cover access and preparation; FR-11 to FR-19 cover the active session; FR-20 to FR-22 cover results and progress. Smart Prompting is included as FR-26 and may be triggered when the user pauses, hesitates, or appears to forget during recitation.</text>
 </svg>

@@ -51,14 +51,13 @@ text{font-family:Arial,sans-serif;fill:#222}
 <ellipse cx="960" cy="1520" rx="120" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="960" y="1525" text-anchor="middle" class="l">View Practice Streak</text>
 <ellipse cx="650" cy="1660" rx="80" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="650" y="1665" text-anchor="middle" class="l">Login</text>
 <ellipse cx="940" cy="1660" rx="97" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="940" y="1665" text-anchor="middle" class="l">Manage Profile</text>
-<ellipse cx="650" cy="1770" rx="108" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="650" y="1775" text-anchor="middle" class="l">Teacher Dashboard</text>
-<ellipse cx="1180" cy="1710" rx="94" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="1180" y="1715" text-anchor="middle" class="l">View Students</text>
-<ellipse cx="1180" cy="1800" rx="155" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="1180" y="1805" text-anchor="middle" class="l">Student Recitation Activity</text>
-<ellipse cx="1180" cy="1890" rx="112" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="1180" y="1895" text-anchor="middle" class="l">Student Completion</text>
-<ellipse cx="1180" cy="1980" rx="94" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="1180" y="1985" text-anchor="middle" class="l">Student Score</text>
+<ellipse cx="650" cy="1770" rx="125" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="650" y="1775" text-anchor="middle" class="l">View Teacher Dashboard</text>
+<ellipse cx="1180" cy="1800" rx="183" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="1180" y="1805" text-anchor="middle" class="l">View Student Recitation Activity</text>
+<ellipse cx="1180" cy="1890" rx="142" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="1180" y="1895" text-anchor="middle" class="l">View Student Completion</text>
+<ellipse cx="1180" cy="1980" rx="128" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="1180" y="1985" text-anchor="middle" class="l">View Student Score</text>
 <ellipse cx="650" cy="1940" rx="90" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="650" y="1945" text-anchor="middle" class="l">Manage Class</text>
 <ellipse cx="1180" cy="2090" rx="90" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="1180" y="2095" text-anchor="middle" class="l">Create Class</text>
-<ellipse cx="1180" cy="2180" rx="123" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="1180" y="2185" text-anchor="middle" class="l">Add Students to Class</text>
+<ellipse cx="1180" cy="1520" rx="125" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="1180" y="1525" text-anchor="middle" class="l">Join Class via Code</text>
 <ellipse cx="650" cy="2280" rx="145" ry="27" fill="white" stroke="#222" stroke-width="2"/><text x="650" y="2285" text-anchor="middle" class="l">Send Student Messages</text>
 <path d="M190 143 L960 143" class="line"/>
 <path d="M420 143 L420 163" class="line"/>
@@ -77,9 +76,10 @@ text{font-family:Arial,sans-serif;fill:#222}
 <path d="M680 473 L680 493" class="line"/>
 <path d="M190 633 L420 633" class="line"/>
 <path d="M420 633 L420 653" class="line"/>
-<path d="M190 1473 L960 1473" class="line"/>
+<path d="M190 1473 L1180 1473" class="line"/>
 <path d="M700 1473 L700 1493" class="line"/>
 <path d="M960 1473 L960 1493" class="line"/>
+<path d="M1180 1473 L1180 1493" class="line"/>
 
 <path d="M190 460 L190 1473" class="line"/>
 <path d="M190 1613 L940 1613" class="line"/>
@@ -112,7 +112,6 @@ text{font-family:Arial,sans-serif;fill:#222}
 <path d="M755 1776 L1071 1884" class="d" marker-end="url(#a)"/><text x="913" y="1824" text-anchor="middle" class="tag">«include»</text>
 <path d="M750 1780 L1093 1970" class="d" marker-end="url(#a)"/><text x="922" y="1869" text-anchor="middle" class="tag">«include»</text>
 <path d="M737 1947 L1093 2083" class="d" marker-end="url(#a)"/><text x="915" y="2009" text-anchor="middle" class="tag">«include»</text>
-<path d="M732 1951 L1068 2169" class="d" marker-end="url(#a)"/><text x="900" y="2054" text-anchor="middle" class="tag">«include»</text>
 <rect x="330" y="2350" width="800" height="70" fill="white" stroke="#999"/>
 <text x="345" y="2373" class="l">Note: AI is internal system functionality, not an external Actor.</text>
 <text x="345" y="2395" class="l">Al-Mujawwid / Al-Mushajji / Al-Mu'allim are modes — not Actors and not standalone Use Cases.</text>

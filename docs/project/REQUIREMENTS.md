@@ -113,24 +113,7 @@ Although the system includes these roles, the overall target audience is not lim
 
 ---
 
-## 8. User Research
-
-User research for Itqan focuses on understanding the needs and challenges faced by Quran readers during recitation practice. The research considers the difficulties users may encounter when practicing independently, particularly the difficulty of identifying pronunciation and Tajweed mistakes without immediate guidance.
-
-The research focuses on the following areas:
-
-- The need for immediate feedback during Quran recitation.
-- The difficulty of continuously accessing a qualified Quran teacher for correction.
-- The need to identify and correct pronunciation and Tajweed errors during practice.
-- The importance of receiving understandable guidance that helps users improve their recitation.
-- The need for motivation and consistent practice.
-- The need for an interactive experience that can support users with different learning needs.
-
-These findings help define the requirements of Itqan and guide the design of its AI-powered recitation coaching features.
-
----
-
-## 9. Gap Analysis
+## 8. Gap Analysis
 
 The analysis of existing Quran recitation learning approaches indicates several gaps that can affect users who practice independently. Traditional learning methods can provide valuable guidance through qualified teachers, but continuous access to a teacher may not always be available. On the other hand, digital Quran applications can provide access to Quranic content and support practice, but may not provide the same level of interactive, real-time recitation coaching.
 
@@ -148,7 +131,8 @@ Therefore, the main gap addressed by Itqan is the need for an interactive AI-bas
 
 ---
 
-# 10. Functional Requirements
+
+# 9. Functional Requirements
 
 ## A. Account & User Management
 
@@ -156,7 +140,7 @@ Therefore, the main gap addressed by Itqan is the need for an interactive AI-bas
 
 **Priority:** Must Have
 
-The system shall allow new users to create an account by providing the required registration information.
+The system shall allow new users to create a Quran Reader or Teacher account by selecting an account type and providing the required registration information for that account type. Teacher registration shall additionally require the teacher's school name.
 
 ### FR-02 — User Login
 
@@ -280,7 +264,14 @@ The system shall allow users to end an active recitation session.
 
 The system shall display the user's recitation result as a mastery percentage out of 100% and identify the words in which recitation errors were detected.
 
-For a completed session with `total_words > 0`, the Mastery Score shall be `(Total Words − Effective Errors) / Total Words × 100`. A complete word-pronunciation error contributes 1 effective error, a Tajweed-only error contributes 0.5, and each word contributes at most 1. A session with `total_words = 0` has no mastery score.
+The mastery score shall be calculated using the following formula:
+
+**Mastery Score = (Total Words − Effective Errors) / Total Words × 100**
+
+For scoring purposes:
+- A complete-word pronunciation error shall count as 1 effective error.
+- A Tajweed-only error within a word shall count as 0.5 effective error.
+- The maximum penalty assigned to a single word shall be 1 effective error, even if multiple error types are detected for that word.
 
 ### FR-21 — Track User Progress
 
@@ -306,7 +297,7 @@ The system shall provide teachers with a dashboard to view students' recitation 
 
 **Priority:** Should Have
 
-The system shall allow teachers to create and manage classes and add students to a class.
+The system shall allow teachers to create and manage classes. The system shall generate a class join code for each class, and shall allow Quran Readers to join a class by entering its join code.
 
 ### FR-25 — Send Student Messages
 
@@ -314,9 +305,17 @@ The system shall allow teachers to create and manage classes and add students to
 
 The system shall allow teachers to send messages to students based on their recitation activity and performance.
 
+## G. Recitation Assistance
+
+### FR-26 — Receive Smart Prompting
+
+**Priority:** Should Have
+
+The system shall provide smart prompting when the user pauses, hesitates, or appears to forget during Quran recitation.
+
 ---
 
-# 11. Non-Functional Requirements
+# 10. Non-Functional Requirements
 
 ### NFR-01 — Accuracy
 
@@ -364,7 +363,7 @@ The system shall support Arabic as the primary language for Quranic content and 
 
 ---
 
-# 12. Requirements Prioritization
+# 11. Requirements Prioritization
 
 | ID | Requirement | Priority |
 |---|---|---|
@@ -393,17 +392,18 @@ The system shall support Arabic as the primary language for Quranic content and 
 | FR-23 | Teacher Dashboard | Must Have |
 | FR-24 | Manage Class | Should Have |
 | FR-25 | Send Student Messages | Could Have |
+| FR-26 | Receive Smart Prompting | Should Have |
 
 **Priority Summary:**
 
 - Must Have: 17 requirements
-- Should Have: 6 requirements
+- Should Have: 7 requirements
 - Could Have: 2 requirements
 - Won't Have: 0 requirements
 
 ---
 
-# 13. Requirements Traceability
+# 12. Requirements Traceability
 
 | FR | Requirement | Priority | Related System Function / Use Case |
 |---|---|---|---|
@@ -429,20 +429,7 @@ The system shall support Arabic as the primary language for Quranic content and 
 | FR-20 | Display Session Results | Must Have | View Session Results |
 | FR-21 | Track User Progress | Should Have | View User Progress |
 | FR-22 | Track Practice Streaks | Could Have | View Practice Streak |
-| FR-23 | Teacher Dashboard | Must Have | View Teacher Dashboard, View Students, View Student Recitation Activity, View Student Completion, View Student Score |
-| FR-24 | Manage Class | Should Have | Create Class, Manage Class, Add Students to Class |
+| FR-23 | Teacher Dashboard | Must Have | View Teacher Dashboard, View Student Recitation Activity, View Student Completion, View Student Score |
+| FR-24 | Manage Class | Should Have | Create Class, Manage Class, Join Class via Code |
 | FR-25 | Send Student Messages | Could Have | Send Student Messages |
-
-# 14. Business Model Canvas
-
-| Element | Itqan |
-|---|---|
-| Customer Segments | Quran Readers / Learners, Teachers |
-| Value Propositions | AI-powered Quran recitation coaching, real-time feedback, pronunciation and Tajweed error detection, motivational and teacher-oriented modes |
-| Channels | Standalone mobile application |
-| Customer Relationships | Personalized AI interaction, progress tracking, motivational support |
-| Key Activities | Quran recitation analysis, error detection, feedback generation, progress tracking, teacher-oriented monitoring |
-| Key Resources | AI models, Quranic content, recitation analysis components, application infrastructure |
-| Key Partners | Potential future integration partners with Quran applications |
-| Cost Structure | Application development, AI processing/infrastructure, maintenance, and future improvements |
-| Revenue Streams | Not defined yet |
+| FR-26 | Receive Smart Prompting | Should Have | Receive Smart Prompting |

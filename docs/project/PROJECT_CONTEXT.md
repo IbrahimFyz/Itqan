@@ -1,232 +1,410 @@
-# Itqan Project Context
+# Itqan — Project Context
 
 ## 1. Project Identity
-- Name: Itqan / إتقان
-- University: King Saud University
-- Department: Information Systems
-- Project courses: IS498 / IS499
-- Current platform decision: standalone Itqan application.
+
+**Project:** Itqan (إتقان) — AI-Powered Quran Recitation Coaching
+**University:** King Saud University
+**Department:** Information Systems
+**Courses:** IS498 Graduation Project I / IS499 Graduation Project II
+**Team:** Ibrahim, Abdulaziz, Saud
+
+Itqan is a standalone application for Quran recitation coaching. IS498 focuses on problem definition, requirements, analysis, and system design. Implementation and further testing are planned for IS499.
+
+---
 
 ## 2. Problem
-Quran readers and learners may have difficulty accessing continuous and immediate guidance while practicing. Pronunciation/Tajweed mistakes may remain uncorrected, and a reader may pause or forget without immediate assistance.
+
+Quran readers and learners may have difficulty accessing continuous and immediate guidance while practicing. Pronunciation and Tajweed mistakes may remain uncorrected, and a reader may pause, hesitate, or forget without immediate assistance.
+
+Itqan aims to provide AI-assisted recitation analysis and timely feedback to support Quran readers during practice.
+
+---
 
 ## 3. Target Audience and Roles
-### General audience
-Anyone who reads the Quran and seeks to improve recitation, pronunciation, Tajweed, reading, or memorization.
 
-### Main system roles
-- Student / Learner
+### General Target Audience
+
+Itqan is intended for anyone who reads the Quran and seeks to improve recitation, pronunciation, Tajweed, reading, or memorization.
+
+### Main System Roles
+
+- Quran Reader / Learner
 - Teacher
 
-### Additional target group
-Children are specifically relevant to the Al-Mushajji mode.
+### Additional Target Group
+
+Children are particularly relevant to the Al-Mushajji mode, which focuses on encouragement and motivation.
 
 No Admin role is currently approved.
 
+### Teacher Enrollment
+
+Teachers create and manage classes. Quran Readers join a teacher's class using a teacher-provided class join code.
+
+Teachers do not directly add readers, and no invitation-link or invitation-acceptance flow is part of the approved design.
+
+Teacher registration additionally requires the school name.
+
+---
+
 ## 4. Current Scope
-- Standalone application.
-- Juz Amma only: 37 Surahs, from An-Naba (78) to An-Nas (114).
-- Surah selection.
-- Microphone-based recitation.
-- AI recitation analysis.
-- Pronunciation/Tajweed error detection as a target capability.
-- Feedback.
+
+The current IS498 project scope includes:
+
+- Standalone Itqan application.
+- Juz Amma only: 37 Surahs, 564 verses, and 2,308 words.
+- Browsing and selecting Surahs.
+- Displaying Quranic verses for recitation.
+- Microphone-based recitation sessions.
+- AI-assisted recitation analysis.
+- Pronunciation and Tajweed error detection as a target capability.
+- Error-location identification.
+- Recitation feedback.
 - Audio-based assistance where applicable.
-- Smart Prompting after a pause or when assistance is needed.
-- Session/progress tracking.
-- Mastery Score.
-- Al-Mujawwid, Al-Mushajji, and Al-Mu'allim.
+- Smart Prompting when the reader pauses, hesitates, forgets, or needs assistance.
+- Session results and Mastery Score.
+- User progress tracking.
+- Practice streaks.
+- Teacher classes and student progress monitoring.
+- Teacher messaging.
+- Three approved AI modes:
+  - Al-Mujawwid
+  - Al-Mushajji
+  - Al-Mu'allim
 
-## 5. Future Vision
-These are future directions, not current IS498 requirements:
-1. Integration with other Quran applications/platforms.
-2. Integration with AI agents.
-3. Expansion to the full Quran.
-4. Additional future capabilities.
+The authoritative functional requirement list is FR-01 through FR-26 in `docs/project/REQUIREMENTS.md`.
 
-The product is intentionally allowed to evolve. Features may be added, modified, or removed when justified by research, feasibility, testing, user feedback, or project decisions.
+---
 
-## 6. Accuracy and Performance
-The team aims for the highest practical accuracy possible, with 100% accuracy as an aspirational target.
+## 5. AI Modes
 
-The team also aims for real-time and comprehensive Tajweed-error detection as far as technically feasible.
+### Al-Mujawwid
 
-Do NOT state that the system guarantees 100% accuracy or detects every Tajweed error perfectly unless testing provides evidence.
+Focuses on recitation analysis, pronunciation/Tajweed error detection, and feedback during recitation.
+
+### Al-Mushajji
+
+Focuses on motivation, encouragement, challenges, and rewards. It is particularly relevant to children and users who benefit from motivational support.
+
+### Al-Mu'allim
+
+Supports teacher-oriented learning and progress functionality, including teacher visibility into enrolled Quran Readers' recitation activity and progress.
+
+AI modes are system functionality, not external actors in the Use Case Diagram.
+
+---
+
+## 6. Smart Prompting
+
+Smart Prompting is an approved project capability and is represented by FR-26.
+
+It is intended to assist the Quran Reader when the system detects that assistance may be needed, such as after a pause, hesitation, or apparent forgetting.
+
+Smart Prompting is modeled as an extension of the normal recitation-feedback flow and is not treated as a separate external actor.
+
+---
 
 ## 7. Mastery Score
-The project includes a 0–100 Mastery Score.
 
-For a completed session with `total_words > 0`, the formula is `(Total Words − Effective Errors) / Total Words × 100`. A complete word-pronunciation error contributes 1 effective error, a Tajweed-only error contributes 0.5, and each word contributes at most 1. A session with `total_words = 0` has no mastery score. Evaluation of the score's interpretation remains open.
+The system calculates a Mastery Score on a 0–100 scale.
 
-## 8. Technical Direction
-The project presentation proposed:
-- Python
-- Whisper
-- Flutter
-- FastAPI
-- PostgreSQL
-- Hugging Face
-- RAG
-- Google Colab
-- Quran API
-- Firebase
+The approved formula is:
 
-These are proposed directions unless separately approved. Technology choices must be justified and documented.
+`Mastery Score = (Total Words − Effective Errors) / Total Words × 100`
 
-## 9. Core User Flow
-1. Select Surah.
-2. Start reciting.
-3. AI analyzes recitation.
-4. AI provides feedback.
-5. AI provides Smart Prompting when needed.
-6. Session/progress information is updated.
+Error weighting:
 
-This flow can evolve during analysis, prototyping, implementation, and testing.
+- Complete word-pronunciation error = 1 effective error.
+- Tajweed-only error = 0.5 effective error.
+- Maximum contribution per word = 1 effective error.
 
-## 10. Competitive Analysis
-Relevant solutions identified for research include:
+The score is used to summarize the user's performance for a completed recitation session.
+
+---
+
+## 8. Current Architecture and Technical Direction
+
+The current architecture direction is:
+
+- Flutter mobile application for Android and iOS.
+- FastAPI/Python backend.
+- PostgreSQL database.
+- Managed identity provider for authentication.
+- Separate stateless Python recitation-analysis service.
+- Recitation analysis using `obadx/muaalem-model-v3_2`, based on `facebook/w2v-bert-2.0`.
+- Quranic content bundled from the King Fahd Glorious Quran Printing Complex source selected by the architecture.
+- Audio is processed in memory and is not retained.
+- Teacher access is scoped according to class ownership and active enrollment.
+- Production hosting/deployment remains an IS499 implementation decision.
+
+The Recitation Service acts as the main orchestrator for the recitation session flow. The intended flow is:
+
+`Itqan App → Recitation Service → AI Analysis Engine → Recitation Service → Itqan App`
+
+Services should not bypass the Recitation Service to communicate directly with the application for the main recitation-session flow.
+
+Detailed implementation choices and deployment decisions may be refined during IS499.
+
+---
+
+## 9. IS498 / IS499 Boundaries
+
+### IS498
+
+IS498 focuses on:
+
+- Problem definition.
+- Stakeholder and target-user analysis.
+- Existing solution review and gap analysis.
+- Functional and non-functional requirements.
+- Requirements prioritization and traceability.
+- Use cases and scenarios.
+- System analysis and design.
+- Database design.
+- Architecture and technology justification.
+- Relevant system diagrams.
+- UI/UX design and prototype artifacts.
+- Test planning.
+- Social, ethical, legal, global, and security impact analysis.
+- Project planning and supporting documentation.
+
+### IS499
+
+IS499 is intended to cover:
+
+- System implementation.
+- Integration.
+- Detailed testing and evaluation.
+- Deployment/hosting decisions.
+- Final documentation and evidence of implementation.
+- Further validation of AI performance and system behavior.
+
+IS498 does not claim production implementation or completed implementation-level evaluation.
+
+---
+
+## 10. Current Non-Goals and Explicit Exclusions
+
+The following are not part of the current approved IS498 scope:
+
+- Production implementation.
+- A claim of 100% AI accuracy.
+- Invented user-research findings.
+- Ayat integration as part of the current project.
+- Whisper as part of the final approved architecture.
+- Invitation-based class enrollment.
+- Direct teacher addition of Quran Readers to classes.
+
+Future ideas must not be presented as current requirements.
+
+---
+
+## 11. Future Vision
+
+The following are future directions and are not current IS498 requirements:
+
+1. Integration with other Quran applications or platforms.
+2. Integration with AI agents.
+3. Expansion beyond Juz Amma to the full Quran.
+4. Additional future capabilities based on research, feasibility, testing, and user needs.
+
+Future vision must remain separate from the current approved scope unless a future project decision explicitly changes the scope.
+
+---
+
+## 12. Competitive Analysis
+
+Relevant existing solutions identified for comparison include:
+
 - Tarteel
 - Tilawa.ai
 - QariAI
 - Tajweed.chat
 
-Never claim Itqan is the first or only AI Quran application, Tajweed detector, or voice-enabled solution without reliable evidence.
+Competitive claims must be based on reliable and current sources.
 
-Competitive capabilities must be verified using current sources.
+Itqan must not be described as the first, only, or unique AI Quran application, Tajweed detector, or voice-enabled Quran solution without reliable evidence.
 
-## 11. IS498 / IS499
-The official Graduation Project Handbook is the academic authority.
+---
 
-IS498 Track A includes areas such as:
-- Problem/stakeholder analysis.
-- User research.
-- Existing solution review.
-- BMC when applicable.
-- Functional and non-functional requirements.
-- Prioritization and traceability.
-- Development methodology.
-- Use cases and scenarios.
-- Activity/BPMN modeling where applicable.
-- ERD and relational schema.
-- Sequence and class diagrams.
-- Architecture and technology justification.
-- Clickable UI prototype.
-- Test plan.
-- Social, ethical, legal, global, and security impacts.
-- Report and supporting documentation.
+## 13. Artifact Consistency
 
-IS499 continues with implementation, testing, deployment/hosted build, documentation, and evidence of genuine individual contribution.
+The project artifacts must remain consistent and traceable.
 
-## 12. Artifact Consistency
-The following must remain connected:
+Important relationships include:
+
 - Stakeholders ↔ Use Case Actors
+- Requirements ↔ Use Cases
 - Use Cases ↔ Scenarios
 - Significant Scenarios ↔ Sequence Diagrams
-- ERD ↔ Relational Schema / Classes
-- NFRs ↔ Tests
-- Use Cases ↔ UI Screens
+- ERD ↔ Relational Schema
+- ERD / Schema ↔ Class and Architecture decisions where applicable
+- NFRs ↔ Test Plan
+- Use Cases ↔ UI Screens / User Flows
 - Requirements ↔ Architecture
-- Terminology across all artifacts
+- Terminology across all project artifacts
 
-## 13. Team Responsibilities
+Changes to one major artifact should be checked against related artifacts before being treated as final.
+
+---
+
+## 14. Team Responsibilities
+
 ### Ibrahim
-Problem, objectives, scope, stakeholders, target users, user research, gap analysis, requirements, prioritization, traceability, BMC if applicable, Use Case Diagram, Sequence Diagram, ERD, Relational Schema, Use Cases ↔ System mapping, social/global impact, report coordination, abstract/introduction/conclusion, references, weekly progress compilation, AI Use Declaration, GitHub follow-up.
+
+Primary responsibility includes:
+
+- Problem
+- Objectives
+- Scope
+- Stakeholders
+- Target Users
+- Gap Analysis
+- Functional Requirements
+- Non-Functional Requirements
+- Requirements Prioritization
+- Requirements Traceability
+- Use Case Diagram
+- Sequence Diagram
+- Social Impact
+- Global Impact
+- Report Coordination
+- Abstract
+- Introduction
+- Conclusion and IS499 Plan
+- Reference List
+- Formatting and Report Compilation
+- Weekly Progress Log
+- AI Use Declaration
+- GitHub Follow-up
 
 ### Saud
-Existing solutions, system analysis, system architecture, technology stack and justification, data flow within architecture, Requirements ↔ Architecture, security impact.
+
+Primary responsibility includes:
+
+- Existing Solutions
+- System Analysis
+- Database
+- ER Diagram
+- Relational Schema
+- System Architecture
+- Architecture Diagram
+- Technology Stack
+- Technology Justification
+- Data Flow
 
 ### Abdulaziz
-UI/UX, Activity Diagram, Class Diagram, user flow, wireframes, clickable prototype, main user journeys, heuristic evaluation, development methodology, methodology justification, Gantt, resource schedule, risk register/mitigation, test plan, ethical/legal impact.
 
-### Team principle
-Responsibilities are flexible. A team member may take additional work from another member after completing their own tasks.
+Primary responsibility includes:
 
-## 14. GitHub Structure
-```text
-Itqan/
-├── README.md
-├── .gitignore
-├── docs/
-│   ├── requirements/
-│   ├── diagrams/
-│   ├── database/
-│   ├── architecture/
-│   ├── ui-ux/
-│   └── report/
-├── src/
-└── tests/
-```
+- UI/UX
+- Design
+- Activity Diagram
+- Class Diagram
+- User Flow
+- Wireframes
+- Clickable Prototype
+- Heuristic Evaluation
+- Development Methodology
+- Gantt Chart
+- Resource Schedule
+- Risk Register
+- Risk Mitigation
+- Test Plan
+- Ethical Impact
+- Legal Impact
 
-Recommended task branches:
-- feature/problem-users
-- feature/requirements
-- feature/use-case-diagram
-- feature/erd
-- feature/ui-wireframes
-- feature/architecture
-- feature/test-plan
+Responsibilities may be shared or reassigned when a team member completes their primary work and takes additional work from another member.
 
-Workflow:
-Task → branch → commit → push → PR → review → merge.
+---
 
-## 15. Evidence Status Rules
-### 🟢 Confirmed
-Explicitly approved or verified from an authoritative source.
+## 15. Evidence and Decision Status Rules
 
-### 🟡 Proposed
-Suggested or mentioned but not finalized.
+Project information should be distinguished according to its status:
 
-### 🔴 Unresolved
-Missing, contradictory, or awaiting a decision/research.
+### Confirmed
 
-Never silently convert 🟡 or 🔴 information into 🟢 information.
+Explicitly approved by the team or supported by an authoritative source.
+
+### Proposed
+
+Suggested or discussed but not yet finalized.
+
+### Unresolved
+
+Missing, contradictory, deferred, or awaiting a decision, research, or implementation validation.
+
+AI tools and team members must not silently convert proposed or unresolved information into confirmed project decisions.
+
+---
 
 ## 16. AI Tool Rules
-Any AI tool working on this repository must:
 
-1. Never invent requirements, features, research results, technologies, datasets, architecture decisions, competitor capabilities, or academic requirements.
+Any AI tool working with the Itqan repository must:
+
+1. Never invent requirements, features, research findings, technologies, datasets, architecture decisions, competitor capabilities, or academic requirements.
 2. Distinguish confirmed, proposed, and unresolved information.
-3. Use the official IS498/IS499 handbook for academic requirements.
-4. Preserve consistency between requirements, use cases, scenarios, diagrams, database, architecture, UI, testing, and report.
-5. Never fabricate survey responses, interviews, participants, statistics, or user-research findings.
+3. Use the official IS498/IS499 handbook as the academic authority.
+4. Preserve consistency between requirements, use cases, scenarios, diagrams, database, architecture, UI, testing, and the report.
+5. Never fabricate surveys, interviews, participants, statistics, or user-research findings.
 6. Never claim guaranteed 100% AI accuracy or perfect Tajweed detection without evidence.
 7. Keep future vision separate from current scope.
 8. Identify conflicts instead of guessing.
 9. Propose project changes explicitly and explain their impact.
 10. Treat AI-generated content as assistance that requires team review and approval.
 11. Do not describe unimplemented or unevaluated functionality as completed functionality.
-12. Prefer asking/flagging when a critical project fact is missing.
+12. Flag critical missing project information instead of making unsupported assumptions.
+
+---
 
 ## 17. Source Priority
-When sources conflict:
+
+When project sources conflict, use the following priority:
+
 1. Official IS498/IS499 Handbook — academic requirements.
-2. Latest team-approved project decisions — current project scope/decisions.
-3. Latest approved project presentation/documentation — project concept.
-4. Verified external research — competitors, technologies, market information.
+2. Latest team-approved project decisions — current project scope and decisions.
+3. Latest approved project artifacts and documentation — current project definition.
+4. Verified external research — competitors, technologies, and supporting information.
 5. AI suggestions — ideas only.
 
-Conflicts must be explicitly flagged.
+Conflicts must be explicitly identified and resolved rather than silently overwritten.
 
-## 18. Open Questions
-Still requiring analysis, research, or approval:
-- Final FR/NFR list and IDs.
-- Prioritization and traceability method.
-- Teacher-student relationship workflow.
-- Exact Teacher Dashboard.
-- Exact behavior of the three AI modes.
-- AI model/dataset/training strategy.
-- Tajweed detection approach.
-- Real-time processing approach.
-- Quran text source.
-- Final technology stack.
-- Authentication.
-- Database schema.
-- API design.
-- Hosting/deployment.
-- User Research results.
-- Final Existing Solutions and Gap Analysis.
-- BMC applicability.
-- Detailed impact analyses.
+---
 
-## 19. Current Principle
+## 18. User Research and BMC Status
+
+### User Research
+
+User research is not required for the current project according to the advisor's direction.
+
+No user-research findings, survey results, interviews, participants, or statistics should be invented or presented as completed research.
+
+### Business Model Canvas
+
+A Business Model Canvas is not required for the current project according to the advisor's direction.
+
+If project requirements change, its applicability can be reconsidered.
+
+---
+
+## 19. Authoritative Project Sources
+
+The following artifacts should be treated as the primary project sources of truth for their respective areas:
+
+- `docs/project/REQUIREMENTS.md`
+- `docs/project/DECISION_LOG.md`
+- `docs/project/OPEN_QUESTIONS.md`
+- `docs/project/SYSTEM_ARCHITECTURE_FINAL.md`
+- ERD artifacts
+- Relational schema
+- Latest approved project documentation
+
+The README should also be consulted for current repository context and team workflow.
+
+When sources conflict, apply the Source Priority rules above and explicitly resolve the conflict.
+
+---
+
+## 20. Current Principle
+
 > Build what we can justify, test what we claim, and document what we actually do.

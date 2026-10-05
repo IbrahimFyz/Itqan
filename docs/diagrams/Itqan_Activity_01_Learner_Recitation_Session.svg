@@ -118,5 +118,5 @@
   <path d="M500 2194 L455 2194 L455 2260 L237 2260" class="flow"/>
 
   <rect x="70" y="2350" width="1560" height="44" rx="5" class="note"/>
-  <text x="88" y="2375" class="notetext">Note: Smart Prompting is intentionally excluded because it is not yet a functional requirement. Mastery is displayed as required by FR-20; its formula remains unresolved.</text>
+  <text x="88" y="2375" class="notetext">Note: Smart Prompting is included as FR-26 (Should Have) and may be triggered during pauses or hesitation. Mastery is displayed according to FR-20 using the approved effective-error formula.</text>
 </svg>
