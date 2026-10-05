@@ -28,7 +28,7 @@ Phase One covers IS498 analysis, requirements, design, planning, prototype work,
 | ID | Work package | Primary owner | Planned weeks | Main output | Depends on |
 |---|---|---|---|---|---|
 | P1 | Project setup, methodology, initial planning, and risk identification | Abdulaziz | 1-3 | Methodology, planning baseline, initial risks | Confirmed project scope |
-| P2 | Stakeholders and target users | Ibrahim | 1-4 | Stakeholder and target-user analysis | Project problem and scope |
+| P2 | Stakeholders, target users, and user research planning | Ibrahim | 1-4 | Stakeholder and target-user analysis | Project problem and scope |
 | P3 | Existing-solutions research and comparison | Saud | 1-5 | Verified comparison of existing solutions | Research sources |
 | P4 | Problem statement, objectives, scope, and gap analysis | Ibrahim | 3-6 | Formal problem, objectives, scope, and gap | P2, P3 |
 | P5 | Functional and non-functional requirements | Ibrahim | 4-7 | Reviewed FRs and NFRs | P2, P4 |

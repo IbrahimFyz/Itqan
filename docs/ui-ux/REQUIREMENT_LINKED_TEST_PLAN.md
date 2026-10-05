@@ -80,7 +80,7 @@ Any real learner audio used during testing requires the applicable consent decis
 
 | ID | Requirement(s) | Measurement and expected result |
 | --- | --- | --- |
-| NFT-01 | NFR-01 | Compare analysis output with an expert-labelled evaluation set. Report precision, recall, and error-location accuracy. Acceptance criteria and measured thresholds will be defined as part of the IS499 evaluation plan using the selected model and project-specific evaluation data. |
+| NFT-01 | NFR-01 | Compare analysis output with an expert-labelled evaluation set. Report precision, recall, and error-location accuracy. Acceptance criteria are **TBD** after OQ-09 and OQ-10. |
 | NFT-02 | NFR-02 | Measure end-to-end feedback latency across representative sessions and report median and 95th percentile. The maximum acceptable delay is **TBD**; do not label a delay acceptable without an approved target. |
 | NFT-03 | NFR-03 | Observe active recitation sessions. Feedback is delivered during active recitation without requiring a pause after every word; define the observable timing rule after OQ-11. |
 | NFT-04 | NFR-04 | Ask representative learners to complete: choose S1, choose a mode, start a session, interpret feedback, and find progress. Record completion, time, errors, and assistance needed. Acceptance threshold is **TBD**. |
@@ -110,9 +110,9 @@ The current heuristic evaluation is the initial expert review. Its privacy, navi
 | --- | --- |
 | OQ-05, OQ-06 | Defines teacher–learner relationship, dashboard fields, and class-management acceptance tests. |
 | OQ-07 | Defines the testable difference between Al-Mujawwid and Al-Mushajji. |
-| OQ-09, OQ-10 | Current model selection and evaluation approach are recorded; integrated error taxonomy and benchmark validation remain IS499 work. |
+| OQ-09, OQ-10 | Defines error taxonomy, expert benchmark, and NFR-01 accuracy targets. |
 | OQ-11 | Defines real-time timing, failure handling, retry, and fallback acceptance criteria. |
-| OQ-12 | Quran content source and bundled Juz Amma scope are defined in the current architecture; content verification remains part of implementation/evaluation. |
+| OQ-12 | Requires a verified Quran-content source before content-verification testing. |
 | OQ-14 | Defines authentication flow details and related security test cases. |
 
 ## Exit criteria
