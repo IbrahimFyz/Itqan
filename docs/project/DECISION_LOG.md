@@ -49,8 +49,8 @@ Use this file to record significant project decisions.
 - **Affected artifacts:** Requirements, diagrams, implementation, testing, report.
 
 ### 2026-09-16 — Development Methodology
-- **Status:** 🟡 Proposed
-- **Decision:** Use an iterative Agile software development life cycle with academic phase gates. The approach supports small, reviewable iterations while preventing downstream artifacts from being finalized before their required inputs are sufficiently stable.
+- **Status:** 🟢 Confirmed
+- **Decision:** Use an Iterative Agile Software Development Life Cycle with Academic Phase Gates. Requirements may evolve during the project, especially due to AI feasibility and validation. An iterative approach supports continuous refinement and validation, while academic phase gates provide clear boundaries between IS498 analysis/design and IS499 implementation.
 - **Reason:** Itqan has evolving requirements, AI feasibility uncertainty, UI prototyping needs, cross-artifact dependencies, and formal IS498 deliverables that require documented review points.
 - **Source/Evidence:** Official IS498/IS499 Graduation Project Handbook; current project context, open questions, dependency rules, and GitHub workflow.
 - **Affected artifacts:** Project plan, Gantt chart, resource schedule, risk register, requirements, diagrams, UI/UX, architecture, test plan, IS498 report, and IS499 implementation workflow.
