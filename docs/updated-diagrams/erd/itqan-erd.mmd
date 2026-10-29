@@ -1,10 +1,12 @@
 ---
-title: Itqan — Stored Data ERD (progress derived, not stored)
+title: Itqan — Stored Data ERD
 config:
   theme: neutral
 ---
 erDiagram
     direction TB
+    %% Key fields shown for readability; the full stored field list is in
+    %% Itqan_Requirements.md section 8.1 and belongs in Task 7's schema.
     %% Stored data only. Progress, mastery and streak summaries are derived from sessions,
     %% not separate stored entities. Quran text is bundled in the app and read-only in DB;
     %% reference audio is bundled in the app only. Recitation audio is never stored.
@@ -13,13 +15,9 @@ erDiagram
     %% Added-word mistakes point to the following expected WORD. Deletion log
     %% has no account link so its entries remain anonymous.
     ACCOUNT {
-        uuid account_id PK "non-sequential"
+        uuid account_id PK
         text identity_subject UK
-        text account_type "Reader or Teacher"
-        text display_name
-        text email
-        text language "ar or en"
-        datetime created_at
+        text account_type
     }
     TEACHER_DETAIL {
         uuid teacher_id PK, FK
@@ -28,46 +26,39 @@ erDiagram
     CONSENT_RECORD {
         uuid consent_id PK
         uuid reader_id FK
-        text purpose "recitation or teacher sharing"
+        text purpose
         datetime granted_at
-        datetime withdrawn_at "optional"
+        datetime withdrawn_at
     }
     SURAH {
-        smallint surah_number PK "78-114; app bundle + DB"
+        smallint surah_number PK
         text arabic_name
-        text english_name
         smallint verse_count
     }
     VERSE {
         smallint surah_number PK, FK
         smallint verse_number PK
         text uthmani_text
-        text imlaei_text
     }
     WORD {
         smallint surah_number PK, FK
         smallint verse_number PK, FK
         smallint word_position PK
         text word_text
-        integer audio_start_ms
-        integer audio_end_ms
     }
     TAJWEED_RULE {
         smallint rule_id PK
-        text name UK "Ghunnah, Qalqalah, Madd"
+        text name UK
     }
     RECITATION_SESSION {
         uuid session_id PK
         uuid reader_id FK
         smallint surah_number FK
-        text mode "Mujawwid or Mushajji"
-        datetime started_at
+        text mode
         datetime ended_at
         text end_reason
         integer counted_words
-        decimal effective_errors
-        decimal mastery_score "optional if zero words"
-        boolean whole_surah_analysed
+        decimal mastery_score
     }
     MISTAKE {
         uuid mistake_id PK
@@ -76,37 +67,32 @@ erDiagram
         smallint verse_number FK
         smallint word_position FK
         text error_type
-        smallint rule_id FK "optional; Tajweed only"
-        decimal penalty "1 or 0.5"
+        smallint rule_id FK
+        decimal penalty
     }
     QURAN_CLASS {
         uuid class_id PK
         uuid teacher_id FK
         text name
         text join_code UK
-        datetime created_at
     }
     ENROLMENT {
         uuid enrolment_id PK
         uuid class_id FK
         uuid reader_id FK
         datetime joined_at
-        datetime left_at "optional while active"
-        text status "active or ended"
-        text end_reason "left or consent withdrawn"
+        datetime left_at
     }
     MESSAGE {
         uuid message_id PK
         uuid teacher_id FK
         uuid class_id FK
-        text audience "one reader or whole class"
-        text message_text
-        datetime sent_at
+        text audience
     }
     MESSAGE_RECIPIENT {
         uuid message_id PK, FK
         uuid reader_id PK, FK
-        datetime read_at "optional while unread"
+        datetime read_at
     }
     DELETION_LOG {
         uuid log_id PK
