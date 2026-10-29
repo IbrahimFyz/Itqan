@@ -1,23 +1,37 @@
 ---
-title: Itqan — Stored Data ERD
+title: Itqan — Complete Stored Data ERD (progress is derived, not stored)
 config:
   theme: neutral
 ---
 erDiagram
     direction TB
-    %% Key fields shown for readability; the full stored field list is in
-    %% Itqan_Requirements.md section 8.1 and belongs in Task 7's schema.
-    %% Stored data only. Progress, mastery and streak summaries are derived from sessions,
-    %% not separate stored entities. Quran text is bundled in the app and read-only in DB;
-    %% reference audio is bundled in the app only. Recitation audio is never stored.
-    %% Teacher accounts require TEACHER_DETAIL. Only one active ENROLMENT per
-    %% reader/class is allowed; rejoining creates a new row and join date.
-    %% Added-word mistakes point to the following expected WORD. Deletion log
-    %% has no account link so its entries remain anonymous.
+    %% All stored fields from Itqan_Requirements.md section 8.1 are shown.
+    %% Derived progress (best scores, full mastery, average, streak, teacher
+    %% summaries) is calculated from sessions; no cache is modeled here.
+    %% SURAH, VERSE and WORD are read-only DB references and app-bundled text.
+    %% Reference audio is app-bundled only; recitation audio is never stored.
+    %% Exactly one TEACHER_DETAIL is mandatory for each Teacher account and
+    %% absent for Reader accounts. Role-specific FKs enforce Reader/Teacher.
+    %% Consent has at most one active grant per reader and purpose.
+    %% At most one active ENROLMENT per reader/class; rejoin creates a new row.
+    %% QURAN_CLASS is the Class group in section 8.1 (CLASS is a parser keyword).
+    %% MESSAGE.teacher_id must own its QURAN_CLASS; each recipient was actively
+    %% enrolled when sent. A reader retains received messages after leaving.
+    %% MISTAKE's WORD must belong to its session's SURAH. Added-word mistakes
+    %% point to the following expected WORD. Tajweed-only errors have rule_id
+    %% and penalty 0.5; whole-word errors have no rule_id and penalty 1.
+    %% No word contributes more than 1 effective error. A zero-word session
+    %% has a null score. Only ended session summaries and mistakes are stored.
+    %% DELETION_LOG is intentionally unlinked to ACCOUNT. FR-28 deletes related
+    %% rows and the identity-provider account; only this anonymous log remains.
     ACCOUNT {
-        uuid account_id PK
+        uuid account_id PK "non-sequential"
         text identity_subject UK
-        text account_type
+        text account_type "Reader or Teacher"
+        text display_name
+        text email
+        text language "ar or en"
+        datetime created_at
     }
     TEACHER_DETAIL {
         uuid teacher_id PK, FK
@@ -26,39 +40,46 @@ erDiagram
     CONSENT_RECORD {
         uuid consent_id PK
         uuid reader_id FK
-        text purpose
+        text purpose "recitation or teacher sharing"
         datetime granted_at
-        datetime withdrawn_at
+        datetime withdrawn_at "nullable while active"
     }
     SURAH {
-        smallint surah_number PK
+        smallint surah_number PK "78-114; read-only DB + app bundle"
         text arabic_name
+        text english_name
         smallint verse_count
     }
     VERSE {
         smallint surah_number PK, FK
         smallint verse_number PK
         text uthmani_text
+        text imlaei_text
     }
     WORD {
         smallint surah_number PK, FK
         smallint verse_number PK, FK
         smallint word_position PK
         text word_text
+        integer audio_start_ms
+        integer audio_end_ms
     }
     TAJWEED_RULE {
         smallint rule_id PK
-        text name UK
+        text name UK "Ghunnah, Qalqalah, Madd"
     }
     RECITATION_SESSION {
         uuid session_id PK
         uuid reader_id FK
         smallint surah_number FK
-        text mode
+        text mode "Mujawwid or Mushajji"
+        datetime started_at
         datetime ended_at
-        text end_reason
+        text end_reason "completed, ended early, interrupted"
         integer counted_words
-        decimal mastery_score
+        decimal effective_errors
+        decimal mastery_score "nullable if zero words"
+        boolean whole_surah_analysed
     }
     MISTAKE {
         uuid mistake_id PK
@@ -67,32 +88,37 @@ erDiagram
         smallint verse_number FK
         smallint word_position FK
         text error_type
-        smallint rule_id FK
-        decimal penalty
+        smallint rule_id FK "nullable; Tajweed only"
+        decimal penalty "1 or 0.5"
     }
     QURAN_CLASS {
         uuid class_id PK
         uuid teacher_id FK
         text name
-        text join_code UK
+        text join_code UK "immutable"
+        datetime created_at
     }
     ENROLMENT {
         uuid enrolment_id PK
         uuid class_id FK
         uuid reader_id FK
         datetime joined_at
-        datetime left_at
+        datetime left_at "nullable while active"
+        text status "active or ended"
+        text end_reason "left or consent withdrawn"
     }
     MESSAGE {
         uuid message_id PK
         uuid teacher_id FK
         uuid class_id FK
-        text audience
+        text audience "one reader or whole class"
+        text message_text
+        datetime sent_at
     }
     MESSAGE_RECIPIENT {
         uuid message_id PK, FK
         uuid reader_id PK, FK
-        datetime read_at
+        datetime read_at "nullable while unread"
     }
     DELETION_LOG {
         uuid log_id PK
