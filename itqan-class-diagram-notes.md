@@ -1,6 +1,6 @@
 # Itqan class diagram — Task 8 review notes
 
-**Source of truth:** [final requirements](../../../Itqan_Requirements.md), [reviewed scenarios](../scenarios/USE_CASE_SCENARIOS.md), [architecture](../architecture/ARCHITECTURE.md), [approved ERD](../erd/itqan-erd.mmd), and [relational schema](../../../itqan-relational-schema.md). The older `docs/diagrams/class/` files describe superseded roles and features and were not reused.
+**Source of truth:** [final requirements](Itqan_Requirements.md), [reviewed scenarios](docs/updated-diagrams/scenarios/USE_CASE_SCENARIOS.md), [architecture](docs/updated-diagrams/architecture/ARCHITECTURE.md), [approved ERD](docs/updated-diagrams/erd/itqan-erd.mmd), and [relational schema](itqan-relational-schema.md). The older `docs/diagrams/class/` files describe superseded roles and features and were not reused.
 
 ## Read the four views
 
@@ -11,7 +11,7 @@
 | 3. Session data and progress | [Mermaid](itqan-class-03-session-progress.mmd) | [SVG](itqan-class-03-session-progress.svg) | Ended sessions, word-linked mistakes, optional Tajweed rules and derived progress. |
 | 4. Classes and messaging | [Mermaid](itqan-class-04-class-messaging.mmd) | [SVG](itqan-class-04-class-messaging.svg) | Teacher-owned classes, Reader enrolments, access checks, one-way messages, recipient read dates. |
 
-The diagrams are **four views of one model**, not four systems. A `«reference: view N»` box repeats a class name so a cross-view dependency or association is readable; its complete definition appears in view N. Solid lines are UML associations with multiplicities, dashed arrows are service dependencies, and the filled diamond means the Comparison Engine is contained in the Recitation Service. No inheritance is shown: an Account has exactly one immutable type, and only Teachers have `TeacherDetail` (FR-01, BR-15). The `Account`–`TeacherDetail` `0..1` multiplicity applies across all Accounts; it is exactly one for Teachers and zero for Readers. `?` marks a nullable attribute. Names use UML camel case while the [schema](../../../itqan-relational-schema.md) uses PostgreSQL snake case.
+The diagrams are **four views of one model**, not four systems. A `«reference: view N»` box repeats a class name so a cross-view dependency or association is readable; its complete definition appears in view N. Solid lines are UML associations with multiplicities, dashed arrows are service dependencies, and the filled diamond means the Comparison Engine is contained in the Recitation Service. No inheritance is shown: an Account has exactly one immutable type, and only Teachers have `TeacherDetail` (FR-01, BR-15). The `Account`–`TeacherDetail` `0..1` multiplicity applies across all Accounts; it is exactly one for Teachers and zero for Readers. `?` marks a nullable attribute. Names use UML camel case while the [schema](itqan-relational-schema.md) uses PostgreSQL snake case.
 
 ## Responsibilities and boundaries
 
