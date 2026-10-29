@@ -1,0 +1,132 @@
+---
+title: Itqan — Stored Data ERD (progress derived, not stored)
+config:
+  theme: neutral
+---
+erDiagram
+    direction TB
+    %% Stored data only. Progress, mastery and streak summaries are derived from sessions,
+    %% not separate stored entities. Quran text is bundled in the app and read-only in DB;
+    %% reference audio is bundled in the app only. Recitation audio is never stored.
+    %% Teacher accounts require TEACHER_DETAIL. Only one active ENROLMENT per
+    %% reader/class is allowed; rejoining creates a new row and join date.
+    %% Added-word mistakes point to the following expected WORD. Deletion log
+    %% has no account link so its entries remain anonymous.
+    ACCOUNT {
+        uuid account_id PK "non-sequential"
+        text identity_subject UK
+        text account_type "Reader or Teacher"
+        text display_name
+        text email
+        text language "ar or en"
+        datetime created_at
+    }
+    TEACHER_DETAIL {
+        uuid teacher_id PK, FK
+        text school_name
+    }
+    CONSENT_RECORD {
+        uuid consent_id PK
+        uuid reader_id FK
+        text purpose "recitation or teacher sharing"
+        datetime granted_at
+        datetime withdrawn_at "optional"
+    }
+    SURAH {
+        smallint surah_number PK "78-114; app bundle + DB"
+        text arabic_name
+        text english_name
+        smallint verse_count
+    }
+    VERSE {
+        smallint surah_number PK, FK
+        smallint verse_number PK
+        text uthmani_text
+        text imlaei_text
+    }
+    WORD {
+        smallint surah_number PK, FK
+        smallint verse_number PK, FK
+        smallint word_position PK
+        text word_text
+        integer audio_start_ms
+        integer audio_end_ms
+    }
+    TAJWEED_RULE {
+        smallint rule_id PK
+        text name UK "Ghunnah, Qalqalah, Madd"
+    }
+    RECITATION_SESSION {
+        uuid session_id PK
+        uuid reader_id FK
+        smallint surah_number FK
+        text mode "Mujawwid or Mushajji"
+        datetime started_at
+        datetime ended_at
+        text end_reason
+        integer counted_words
+        decimal effective_errors
+        decimal mastery_score "optional if zero words"
+        boolean whole_surah_analysed
+    }
+    MISTAKE {
+        uuid mistake_id PK
+        uuid session_id FK
+        smallint surah_number FK
+        smallint verse_number FK
+        smallint word_position FK
+        text error_type
+        smallint rule_id FK "optional; Tajweed only"
+        decimal penalty "1 or 0.5"
+    }
+    QURAN_CLASS {
+        uuid class_id PK
+        uuid teacher_id FK
+        text name
+        text join_code UK
+        datetime created_at
+    }
+    ENROLMENT {
+        uuid enrolment_id PK
+        uuid class_id FK
+        uuid reader_id FK
+        datetime joined_at
+        datetime left_at "optional while active"
+        text status "active or ended"
+        text end_reason "left or consent withdrawn"
+    }
+    MESSAGE {
+        uuid message_id PK
+        uuid teacher_id FK
+        uuid class_id FK
+        text audience "one reader or whole class"
+        text message_text
+        datetime sent_at
+    }
+    MESSAGE_RECIPIENT {
+        uuid message_id PK, FK
+        uuid reader_id PK, FK
+        datetime read_at "optional while unread"
+    }
+    DELETION_LOG {
+        uuid log_id PK
+        text account_type
+        datetime deleted_at
+    }
+
+    ACCOUNT ||--o| TEACHER_DETAIL : teacher_has
+    ACCOUNT ||--o{ CONSENT_RECORD : reader_grants
+    ACCOUNT ||--o{ RECITATION_SESSION : reader_owns
+    SURAH ||--|{ VERSE : contains
+    VERSE ||--|{ WORD : contains
+    SURAH ||--o{ RECITATION_SESSION : selected_for
+    RECITATION_SESSION ||--o{ MISTAKE : records
+    WORD ||--o{ MISTAKE : identifies
+    TAJWEED_RULE o|--o{ MISTAKE : classifies
+    ACCOUNT ||--o{ QURAN_CLASS : teacher_owns
+    QURAN_CLASS ||--o{ ENROLMENT : has
+    ACCOUNT ||--o{ ENROLMENT : reader_joins
+    ACCOUNT ||--o{ MESSAGE : teacher_sends
+    QURAN_CLASS ||--o{ MESSAGE : context_for
+    MESSAGE ||--|{ MESSAGE_RECIPIENT : delivered_to
+    ACCOUNT ||--o{ MESSAGE_RECIPIENT : reader_receives
