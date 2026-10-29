@@ -1,0 +1,97 @@
+@startuml itqan-architecture
+' Itqan — System architecture
+' Built only from Itqan_Requirements.md: §10 (parts and main recitation path),
+' §8 (stored and never-stored data), §1 (connectivity), §11 (open vendor and
+' hosting choices). Solid arrows: requests and stored data. Dashed arrows:
+' transient recitation data (audio, phonemes) that is never stored.
+<style>
+root {
+  FontName Helvetica
+  FontSize 12
+  FontColor #000000
+  BackGroundColor #FFFFFF
+  LineColor #000000
+  LineThickness 0.75
+  RoundCorner 0
+  Shadowing 0
+}
+
+note { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+
+componentDiagram {
+  actor     { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  component { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  package   { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  node      { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  database  { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  cloud     { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  arrow     { LineColor #000000; LineThickness 0.75 }
+}
+</style>
+
+actor "Quran Reader /\nTeacher" as User
+
+node "Phone (Android / iOS)" {
+  component "Itqan App (Flutter)" as App {
+    component "Screens (Arabic RTL / English),\nfeedback and next-word hints" as UI
+    component "Microphone capture (16 kHz mono,\nper verse) + pause detection" as Mic
+    database "Bundled Juz Amma text\n+ reference audio (offline)" as Bundle
+  }
+}
+
+cloud "Managed Identity Provider\n(vendor chosen in IS499)" as IdP
+
+node "Application backend (FastAPI, Python)" {
+  component "Account Service" as Acc
+  component "Recitation Service" as RecSvc {
+    component "Session control\n(start, per verse, score, store)" as Rec
+    component "Comparison Engine" as Cmp
+  }
+  component "Progress Service\n(recalculated after\neach session)" as Prog
+  component "Class Service" as Cls
+}
+
+node "Analysis Service\n(stateless, Python / GPU)" {
+  component "muaalem-model-v3_2" as Model
+}
+
+database "PostgreSQL" as DB {
+  component "Accounts, consents, sessions + mistakes,\nclasses, enrolments, messages, deletion log" as Stored
+  component "Juz Amma reference\n(read-only)" as Ref
+}
+
+User --> UI
+
+' Phone-internal (hints: pause detected in Mic, shown on Screens)
+UI -right- Bundle : read verses,\nplay word audio
+Bundle -[hidden]right- Mic
+
+' Identity
+UI -left-> IdP : sign in / out
+Acc -left-> IdP : remove account
+
+' Phone to backend (HTTPS / REST)
+UI --> Acc : profile, consent,\ndeletion
+Mic ..> Rec : verse audio +\nverse ID (in memory)
+Rec --> UI : feedback
+UI --> Prog : results, history,\nprogress
+UI --> Cls : classes, dashboard,\nmessages
+
+' Recitation analysis (transient)
+Rec ..> Model : verse audio\n(in memory)
+Model ..> Rec : phonemes
+Cmp --> Ref : expected verse
+
+' Storage
+Rec --> Stored : summary + mistakes\n(no audio)
+Rec -right-> Cmp : compare
+Acc --> Stored
+Prog --> Stored
+Cls --> Stored
+
+legend bottom left
+  Solid arrow: request or stored data. Dashed arrow: recitation audio or phonemes,
+  processed in memory and never stored. Phone ↔ backend traffic uses HTTPS / REST.
+endlegend
+
+@enduml

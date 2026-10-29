@@ -421,7 +421,7 @@ This section says **what must be stored**. Table design is left to the ERD and s
 | **Account** | account ID (non-sequential), identity-provider subject, account type (Reader or Teacher), display name, email, language (ar or en), created date | One type per account. No password. |
 | **Teacher detail** | school name | Teacher accounts only; required. |
 | **Consent record** | consent ID, reader, purpose (recitation or teacher sharing), granted date, withdrawn date (empty while active) | A new grant creates a new record. |
-| **Surah** (bundled, read-only) | surah number (78–114), Arabic name, English name, verse count | 37 rows. |
+| **Surah** (bundled, read-only) | surah number (78–114), Arabic name, English name, verse count | 37 rows. Surah, Verse and Word are bundled in the app **and** held as read-only reference tables in the Database, so the Comparison Engine has the expected verse and every mistake can link to a word. Reference audio is bundled in the app only. |
 | **Verse** (bundled) | surah, verse number, Uthmani text, plain (imlaei) text | 564 rows. |
 | **Word** (bundled) | verse, word position, word text, reference-audio start and end times | 2,308 rows. Every mistake links here. |
 | **Tajweed rule** (reference) | rule ID, name (Ghunnah, Qalqalah, Madd) | 3 rows in phase one. |
@@ -514,7 +514,7 @@ These are the parts of the system that appear in sequence, architecture and data
 | **Analysis Service** | Separate stateless Python/GPU service (`obadx/muaalem-model-v3_2`) | Receives a verse's audio and returns phonemes with articulation attributes. Keeps nothing. | FR-13 |
 | **Progress Service** | Backend | Best score per surah, full mastery, average mastery, streak, session history. | FR-20–FR-22 |
 | **Class Service** | Backend | Classes, join codes, enrolments, the teacher dashboard with enrolment and join-date checks, messages and read status. | FR-23–FR-25 |
-| **Database** | PostgreSQL | Stores only §8.1. | All stored data |
+| **Database** | PostgreSQL | Stores only §8.1, including the read-only Juz Amma reference tables (Surah, Verse, Word, Tajweed rule). Never stores audio. | All stored data |
 
 **Main recitation path (for the sequence diagram):**
 `Itqan App → Recitation Service → Analysis Service → Recitation Service (Comparison Engine) → Itqan App`. At the end of the session: `Recitation Service → Database` (summary and mistakes), then `Progress Service` recalculates.
@@ -565,6 +565,7 @@ These are measurements and vendor choices. None of them changes a diagram.
 | FR-29 ✚ | Logout and inactivity timeout. |
 | Priorities | 19 Must, 8 Should, 2 Could (29 FRs). The report's §6.3 needs updating. |
 | Use cases | IDs UC-01 to UC-19, UC-26 to UC-28 (§7). |
+| Architecture review (Task 4) | Quran text held both in the app bundle and as read-only reference tables in the Database; reference audio in the app only (§8.1, §10). |
 | Scenario review (Task 1) | Deleting a Teacher erases their classes and enrolments instead of closing them, so the Class has no states (FR-28, BR-11, §8.1, §9); duplicate class names allowed (FR-24); class message to an empty class refused (BR-12, UC-19); correction covers profile only (FR-27); no inactivity timeout during a session, and logout mid-session ends it as interrupted (FR-19, FR-29). |
 | Data | 9 report entities dropped or made transient; Message recipient and Deletion log added (§8.3). |
 
