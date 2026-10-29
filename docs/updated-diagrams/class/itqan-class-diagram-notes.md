@@ -1,12 +1,12 @@
 # Itqan class diagram — Task 8 review notes
 
-**Diagram:** [open SVG](itqan-class-diagram.svg) · [editable Mermaid source](itqan-class-diagram.mmd). This is **one class diagram** at the repository root.
+**Diagram:** [open SVG](../../../itqan-class-diagram.svg) · [editable Mermaid source](itqan-class-diagram.mmd). The SVG is at the repository root; its editable source and these notes are in `docs/updated-diagrams/class/`.
 
-**Sources:** [final requirements](Itqan_Requirements.md), [reviewed Task 1 scenarios](docs/updated-diagrams/scenarios/USE_CASE_SCENARIOS.md), [Task 4 architecture](docs/updated-diagrams/architecture/ARCHITECTURE.md), [approved ERD](docs/updated-diagrams/erd/itqan-erd.mmd), and [Task 7 relational schema](itqan-relational-schema.md). The older `docs/diagrams/class/` model predates the final requirements and was not reused.
+**Sources:** [final requirements](../../../Itqan_Requirements.md), [reviewed Task 1 scenarios](../scenarios/USE_CASE_SCENARIOS.md), [Task 4 architecture](../architecture/ARCHITECTURE.md), [approved ERD](../erd/itqan-erd.mmd), and [Task 7 relational schema](../../../itqan-relational-schema.md). The older `docs/diagrams/class/` model predates the final requirements and was not reused.
 
 ## How to read it
 
-The diagram shows **all 14 stored entities and every stored field in requirements §8.1**, plus the app and service responsibilities. It also shows every §8.2 relationship. Solid lines show associations and multiplicities. Dashed arrows show service dependencies. The filled diamond means `ComparisonEngine` is contained in `RecitationService`, as in Task 4. `?` means nullable. Class names use UML camel case; the schema uses PostgreSQL snake case. Foreign-key attributes and associations both appear so the stored fields and the relationships can be checked independently. The [schema](itqan-relational-schema.md) remains the source for constraints, transactions and deletion effects.
+The diagram shows **all 14 stored entities and every stored field in requirements §8.1**, plus the app and service responsibilities. It also shows every §8.2 relationship. Solid lines show associations and multiplicities. Dashed arrows show service dependencies. The filled diamond means `ComparisonEngine` is contained in `RecitationService`, as in Task 4. `?` means nullable. Class names use UML camel case; the schema uses PostgreSQL snake case. Foreign-key attributes and associations both appear so the stored fields and the relationships can be checked independently. The [schema](../../../itqan-relational-schema.md) remains the source for constraints, transactions and deletion effects.
 
 `Account.accountType` is exactly one immutable value: Reader or Teacher. There is no Reader/Teacher inheritance. Reader or Teacher labels on association lines state which account type may participate. Only Teachers have a school name; it is stored in `TEACHER_DETAIL` and managed through `AccountService`.
 
@@ -18,7 +18,7 @@ The diagram shows **all 14 stored entities and every stored field in requirement
 - `ProgressService` derives history, results, best score per Surah, full mastery, average mastery and practice streak from ended sessions. It creates no required progress table (FR-20–FR-22).
 - `ClassService` handles Teacher-owned classes, immutable unique join codes, Reader enrolment and leave, authorized dashboard reads, one-way messages, recipients and read dates. It checks active enrolment and Teacher ownership on each dashboard read (FR-23–FR-25).
 
-These operations name responsibilities, not a proposed API. `RecitationSession` represents the ended summary that is stored; Started and Active are transient runtime states. A zero-word session has a NULL score. Every `Mistake` refers to one expected `Word` from its session's Surah; an added-word error points to the following expected Word. Tajweed-only errors use one of Ghunnah, Qalqalah or Madd and a 0.5 penalty; whole-word errors use penalty 1. A Word contributes at most 1 effective error. These and the score formula are specified in the [schema](itqan-relational-schema.md) and requirements.
+These operations name responsibilities, not a proposed API. `RecitationSession` represents the ended summary that is stored; Started and Active are transient runtime states. A zero-word session has a NULL score. Every `Mistake` refers to one expected `Word` from its session's Surah; an added-word error points to the following expected Word. Tajweed-only errors use one of Ghunnah, Qalqalah or Madd and a 0.5 penalty; whole-word errors use penalty 1. A Word contributes at most 1 effective error. These and the score formula are specified in the [schema](../../../itqan-relational-schema.md) and requirements.
 
 A Reader can have several class enrolments, but only one active enrolment per Reader/Class. Rejoining creates a new enrolment with a new join date. Teacher-sharing consent is required to join; withdrawing it ends all active enrolments. Dashboard access shows only sessions ended on or after the earliest active join date across that Teacher's classes. A whole-class message snapshots its active recipients at send time; Readers cannot reply, and delivered messages remain after leaving. Reader and Teacher deletion follow FR-28.
 
@@ -110,8 +110,8 @@ All 14 persistent ERD entities are shown as classes. The app, Identity Provider,
 | NFR-10 Compatibility | `ItqanApp` uses the device microphone; Android/iOS compatibility needs device testing. |
 | NFR-11 Language Support | `Account.language` stores ar or en; `ItqanApp` handles Arabic text and right-to-left UI. |
 
-The §9 state machines remain separate diagrams. This class diagram holds the fields needed for their final states: `RecitationSession.endReason`, `Enrolment.status` and `endReason`, `ConsentRecord.withdrawnAt`, `MessageRecipient.readAt`, and `DeletionLog.deletedAt`. The [requirements](Itqan_Requirements.md) remain authoritative for the transition order and exceptions.
+The §9 state machines remain separate diagrams. This class diagram holds the fields needed for their final states: `RecitationSession.endReason`, `Enrolment.status` and `endReason`, `ConsentRecord.withdrawnAt`, `MessageRecipient.readAt`, and `DeletionLog.deletedAt`. The [requirements](../../../Itqan_Requirements.md) remain authoritative for the transition order and exceptions.
 
 ## Review status
 
-The single SVG is rendered from its Mermaid source. Task 5 sequence diagrams are still Open; their eventual message names should be checked against these operations. The device-local practice-day ambiguity flagged in the schema remains: §8.1 stores no historical device time zone. No extra field or product decision is introduced here.
+The single root SVG is rendered from the Mermaid source in this folder. Task 8 was marked Done at Abdulaziz Alfarhood's request on 2026-10-29. Task 5 sequence diagrams are still Open; their eventual message names should be checked against these operations. The device-local practice-day ambiguity flagged in the schema remains: §8.1 stores no historical device time zone. No extra field or product decision is introduced here.
