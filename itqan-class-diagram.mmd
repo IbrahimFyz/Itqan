@@ -6,33 +6,58 @@ config:
 classDiagram
 direction TB
 
+%% Domain classes: every stored item from requirements section 8.1.
 class Account {
   +UUID accountId
+  +String identitySubject
   +String accountType
   +String displayName
+  +String email
   +String language
+  +DateTime createdAt
+}
+class TeacherDetail {
+  +UUID teacherId
+  +String schoolName
 }
 class ConsentRecord {
+  +UUID consentId
+  +UUID readerId
   +String purpose
   +DateTime grantedAt
   +DateTime withdrawnAt?
 }
 class Surah {
   +int surahNumber
+  +String arabicName
+  +String englishName
   +int verseCount
 }
 class Verse {
+  +int surahNumber
   +int verseNumber
   +String uthmaniText
+  +String imlaeiText
 }
 class Word {
+  +int surahNumber
+  +int verseNumber
   +int wordPosition
   +String wordText
   +int audioStartMs
   +int audioEndMs
 }
+class TajweedRule {
+  +int ruleId
+  +String name
+}
 class RecitationSession {
+  +UUID sessionId
+  +UUID readerId
+  +int surahNumber
   +String mode
+  +DateTime startedAt
+  +DateTime endedAt
   +String endReason
   +int countedWords
   +decimal effectiveErrors
@@ -40,37 +65,80 @@ class RecitationSession {
   +bool wholeSurahAnalysed
 }
 class Mistake {
+  +UUID mistakeId
+  +UUID sessionId
+  +int surahNumber
+  +int verseNumber
+  +int wordPosition
   +String errorType
   +int ruleId?
   +decimal penalty
 }
 class QuranClass {
+  +UUID classId
+  +UUID teacherId
   +String name
   +String joinCode
+  +DateTime createdAt
 }
 class Enrolment {
+  +UUID enrolmentId
+  +UUID classId
+  +UUID readerId
   +DateTime joinedAt
   +DateTime leftAt?
   +String status
+  +String endReason?
 }
 class Message {
+  +UUID messageId
+  +UUID teacherId
+  +UUID classId
   +String audience
   +String messageText
   +DateTime sentAt
 }
 class MessageRecipient {
+  +UUID messageId
+  +UUID readerId
   +DateTime readAt?
 }
+class DeletionLog {
+  +UUID logId
+  +String accountType
+  +DateTime deletedAt
+}
 
+%% Responsibilities derived from Tasks 1 and 4; these add no stored data.
+class ItqanApp {
+  +browseAndReadSurah()
+  +selectSurahAndMode()
+  +checkMicrophonePermission()
+  +captureVerseAudio()
+  +showVerseFeedback()
+  +showNextWordHint()
+  +playBundledWordAudio()
+  +logout()
+}
+class IdentityProvider {
+  +register()
+  +authenticate()
+  +logout()
+  +removeIdentity()
+}
 class AccountService {
   +registerOrUpdateAccount()
   +grantOrWithdrawConsent()
+  +getStoredDataSummary()
   +deleteAccount()
 }
 class RecitationService {
   +startSession()
   +analyseVerse()
   +endAndScoreSession()
+}
+class AnalysisService {
+  +analyseVerseAudio()
 }
 class ComparisonEngine {
   +compareVerse()
@@ -87,23 +155,34 @@ class ClassService {
   +sendAndReadMessages()
 }
 
+Account "1" -- "0..1" TeacherDetail : Teacher has exactly one
 Account "1" -- "0..*" ConsentRecord : Reader grants
 Account "1" -- "0..*" RecitationSession : Reader owns
-Account "1" -- "0..*" QuranClass : Teacher owns
-Account "1" -- "0..*" Enrolment : Reader joins
-Account "1" -- "0..*" Message : Teacher sends
-Account "1" -- "0..*" MessageRecipient : Reader receives
 Surah "1" -- "1..*" Verse : contains
 Verse "1" -- "1..*" Word : contains
 Surah "1" -- "0..*" RecitationSession : selected for
 RecitationSession "1" -- "0..*" Mistake : records
-Word "1" -- "0..*" Mistake : expected Word
+Word "1" -- "0..*" Mistake : expected word
+TajweedRule "0..1" -- "0..*" Mistake : classifies Tajweed
+Account "1" -- "0..*" QuranClass : Teacher owns
 QuranClass "1" -- "0..*" Enrolment : has
+Account "1" -- "0..*" Enrolment : Reader joins
+Account "1" -- "0..*" Message : Teacher sends
 QuranClass "1" -- "0..*" Message : context
 Message "1" -- "1..*" MessageRecipient : delivered to
+Account "1" -- "0..*" MessageRecipient : Reader receives
 
+ItqanApp ..> IdentityProvider : sign in and out
+ItqanApp ..> Surah : bundled text and audio
+ItqanApp ..> RecitationService : session traffic
+AccountService ..> Account : manages
 AccountService ..> ConsentRecord : records grants
-RecitationService *-- ComparisonEngine : contains
+AccountService ..> DeletionLog : anonymous audit
+AccountService ..> IdentityProvider : removes identity
 RecitationService ..> RecitationSession : finalizes
+RecitationService ..> AnalysisService : verse audio in memory
+RecitationService *-- ComparisonEngine : contains
+ComparisonEngine ..> Word : expected text
 ProgressService ..> RecitationSession : derives progress
 ClassService ..> Enrolment : checks access
+ClassService ..> Message : delivers

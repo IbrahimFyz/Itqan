@@ -22,7 +22,7 @@ This list covers the diagram and design deliverables explicitly required for Tra
 | 5 | Sequence Diagrams | Interactions for every significant scenario. Cover recitation and its endings/failures; assess class access, enrolment, messaging, consent and deletion for separate sequences. Record the scenario coverage. | 1, 4 | — | Open | |
 | 6 | ERD | Required stored data, keys, relationships and cardinalities from §8. Exclude prohibited stored data. | New requirements | Abdulaziz Alfarhood | Done | [editable ERD](docs/updated-diagrams/erd/itqan-erd.mmd) · [open SVG full size](https://raw.githubusercontent.com/IbrahimFyz/Itqan/feature/project-rework/itqan-erd.svg). All §8.1 stored fields and §8.2 relationships are shown; derived progress has no cache. Reviewed by Abdulaziz on 2026-10-29; report placement remains. |
 | 7 | Relational schema | Tables, fields, primary/foreign keys, nullability and constraints matching the ERD. | 6 | Abdulaziz Alfarhood | Done | [itqan-relational-schema.md](itqan-relational-schema.md). Reviewed by Abdulaziz Alfarhood on 2026-10-29. |
-| 8 | Class Diagram | Essential classes, attributes, operations, responsibilities and relationships in one readable diagram. | 1, 4 | Abdulaziz Alfarhood | Review | [class diagram source](itqan-class-diagram.mmd) · [open SVG](itqan-class-diagram.svg) · [review notes](itqan-class-diagram-notes.md) |
+| 8 | Class Diagram | All required stored entities and fields, service responsibilities and relationships in one diagram. | 1, 4 | Abdulaziz Alfarhood | Review | [class diagram source](itqan-class-diagram.mmd) · [open SVG](itqan-class-diagram.svg) · [review notes](itqan-class-diagram-notes.md) |
 | 9 | Clickable wireframes / UI prototype | Principal journeys for both roles, including consent, recitation/results, class access, messaging and account controls. Include relevant error and empty states. | 1, 3 | — | Open | |
 | 10 | Time and resource schedule | Work packages, owners, durations, dependencies and milestones using a project-management tool. A Gantt chart is an accepted format. | Team-agreed work packages and timing | — | Open | |
 
@@ -181,11 +181,11 @@ The handbook also requires a test plan and other report/course deliverables; tho
 
 **What to do:**
 1. Identify the main domain classes and the service responsibilities needed to deliver the scenarios.
-2. Add essential attributes and operations only. Avoid listing every getter, setter or implementation helper.
+2. Show every required attribute in requirements §8.1 and the essential operations. Avoid listing getters, setters or implementation helpers.
 3. Draw supported associations, multiplicities and dependencies using correct UML notation. Use inheritance/composition only where their meaning is justified.
 4. Align service operations with sequence messages and persistent fields with the ERD.
-5. Explain any ERD entity without a corresponding class, as Appendix R requests.
-6. Keep the one diagram readable. Do not introduce prohibited persisted data as new classes.
+5. Give every ERD entity a corresponding class; keep all required relationships from requirements §8.2.
+6. Keep one diagram. Exclude the prohibited persisted data in requirements §8.3.
 
 **Deliver:** editable source and SVG for one consistent class diagram.
 
