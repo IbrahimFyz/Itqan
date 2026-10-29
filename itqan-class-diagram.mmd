@@ -1,0 +1,109 @@
+---
+title: Itqan — Class Diagram
+config:
+  theme: neutral
+---
+classDiagram
+direction TB
+
+class Account {
+  +UUID accountId
+  +String accountType
+  +String displayName
+  +String language
+}
+class ConsentRecord {
+  +String purpose
+  +DateTime grantedAt
+  +DateTime withdrawnAt?
+}
+class Surah {
+  +int surahNumber
+  +int verseCount
+}
+class Verse {
+  +int verseNumber
+  +String uthmaniText
+}
+class Word {
+  +int wordPosition
+  +String wordText
+  +int audioStartMs
+  +int audioEndMs
+}
+class RecitationSession {
+  +String mode
+  +String endReason
+  +int countedWords
+  +decimal effectiveErrors
+  +decimal masteryScore?
+  +bool wholeSurahAnalysed
+}
+class Mistake {
+  +String errorType
+  +int ruleId?
+  +decimal penalty
+}
+class QuranClass {
+  +String name
+  +String joinCode
+}
+class Enrolment {
+  +DateTime joinedAt
+  +DateTime leftAt?
+  +String status
+}
+class Message {
+  +String audience
+  +String messageText
+  +DateTime sentAt
+}
+class MessageRecipient {
+  +DateTime readAt?
+}
+
+class AccountService {
+  +registerOrUpdateAccount()
+  +grantOrWithdrawConsent()
+  +deleteAccount()
+}
+class RecitationService {
+  +startSession()
+  +analyseVerse()
+  +endAndScoreSession()
+}
+class ComparisonEngine {
+  +compareVerse()
+  +locateMistakes()
+}
+class ProgressService {
+  +getResultsAndHistory()
+  +getMasteryAndStreak()
+}
+class ClassService {
+  +createOrRenameClass()
+  +joinOrLeaveClass()
+  +getVisibleSessions()
+  +sendAndReadMessages()
+}
+
+Account "1" -- "0..*" ConsentRecord : Reader grants
+Account "1" -- "0..*" RecitationSession : Reader owns
+Account "1" -- "0..*" QuranClass : Teacher owns
+Account "1" -- "0..*" Enrolment : Reader joins
+Account "1" -- "0..*" Message : Teacher sends
+Account "1" -- "0..*" MessageRecipient : Reader receives
+Surah "1" -- "1..*" Verse : contains
+Verse "1" -- "1..*" Word : contains
+Surah "1" -- "0..*" RecitationSession : selected for
+RecitationSession "1" -- "0..*" Mistake : records
+Word "1" -- "0..*" Mistake : expected Word
+QuranClass "1" -- "0..*" Enrolment : has
+QuranClass "1" -- "0..*" Message : context
+Message "1" -- "1..*" MessageRecipient : delivered to
+
+AccountService ..> ConsentRecord : records grants
+RecitationService *-- ComparisonEngine : contains
+RecitationService ..> RecitationSession : finalizes
+ProgressService ..> RecitationSession : derives progress
+ClassService ..> Enrolment : checks access

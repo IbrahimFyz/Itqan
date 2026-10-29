@@ -22,7 +22,7 @@ This list covers the diagram and design deliverables explicitly required for Tra
 | 5 | Sequence Diagrams | Interactions for every significant scenario. Cover recitation and its endings/failures; assess class access, enrolment, messaging, consent and deletion for separate sequences. Record the scenario coverage. | 1, 4 | — | Open | |
 | 6 | ERD | Required stored data, keys, relationships and cardinalities from §8. Exclude prohibited stored data. | New requirements | Abdulaziz Alfarhood | Done | [editable ERD](docs/updated-diagrams/erd/itqan-erd.mmd) · [open SVG full size](https://raw.githubusercontent.com/IbrahimFyz/Itqan/feature/project-rework/itqan-erd.svg). All §8.1 stored fields and §8.2 relationships are shown; derived progress has no cache. Reviewed by Abdulaziz on 2026-10-29; report placement remains. |
 | 7 | Relational schema | Tables, fields, primary/foreign keys, nullability and constraints matching the ERD. | 6 | Abdulaziz Alfarhood | Done | [itqan-relational-schema.md](itqan-relational-schema.md). Reviewed by Abdulaziz Alfarhood on 2026-10-29. |
-| 8 | Class Diagram | Essential classes, attributes, operations, responsibilities and relationships. Use multiple views only when needed for readability. | 1, 4 | Abdulaziz Alfarhood | Review | [review notes](itqan-class-diagram-notes.md) · [accounts/content source](itqan-class-01-account-content.mmd) / [SVG](itqan-class-01-account-content.svg) · [recitation flow source](itqan-class-02-recitation-flow.mmd) / [SVG](itqan-class-02-recitation-flow.svg) · [session/progress source](itqan-class-03-session-progress.mmd) / [SVG](itqan-class-03-session-progress.svg) · [classes/messaging source](itqan-class-04-class-messaging.mmd) / [SVG](itqan-class-04-class-messaging.svg) |
+| 8 | Class Diagram | Essential classes, attributes, operations, responsibilities and relationships in one readable diagram. | 1, 4 | Abdulaziz Alfarhood | Review | [class diagram source](itqan-class-diagram.mmd) · [open SVG](itqan-class-diagram.svg) · [review notes](itqan-class-diagram-notes.md) |
 | 9 | Clickable wireframes / UI prototype | Principal journeys for both roles, including consent, recitation/results, class access, messaging and account controls. Include relevant error and empty states. | 1, 3 | — | Open | |
 | 10 | Time and resource schedule | Work packages, owners, durations, dependencies and milestones using a project-management tool. A Gantt chart is an accepted format. | Team-agreed work packages and timing | — | Open | |
 
@@ -185,9 +185,9 @@ The handbook also requires a test plan and other report/course deliverables; tho
 3. Draw supported associations, multiplicities and dependencies using correct UML notation. Use inheritance/composition only where their meaning is justified.
 4. Align service operations with sequence messages and persistent fields with the ERD.
 5. Explain any ERD entity without a corresponding class, as Appendix R requests.
-6. Split into readable views if needed; repeated classes must refer to the same definitions. Do not introduce prohibited persisted data as new classes.
+6. Keep the one diagram readable. Do not introduce prohibited persisted data as new classes.
 
-**Deliver:** editable source and SVG views describing one consistent model.
+**Deliver:** editable source and SVG for one consistent class diagram.
 
 **Done when:** classes explain the scenario responsibilities, agree with the data model and sequence diagrams, and contain no speculative features.
 
