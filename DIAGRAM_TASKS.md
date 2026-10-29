@@ -16,8 +16,8 @@ This list covers the diagram and design deliverables explicitly required for Tra
 | Task | Deliverable | What to produce | Needs first | Owner | Status | Output / notes |
 |---|---|---|---|---|---|---|
 | 1 | Written use-case scenarios | Review the flows already in requirements §7.3. Cover every catalogue use case with its conditions, steps, exceptions and outcome. | New requirements | — | open | |
-| 2 | Use Case Diagram | Quran Reader and Teacher; exact use-case names, IDs and include/extend relationships from §7.1–7.2. | New requirements | — | closed | |
-| 3 | Activity Diagrams | Main learner and teacher workflows, including decisions and exceptions. Use readable separate views for independent processes. BPMN or an equivalent notation is also accepted by the handbook. | 1 | — | Open | |
+| 2 | Use Case Diagram | Quran Reader and Teacher; exact use-case names, IDs and include/extend relationships from §7.1–7.2. | New requirements | saud | closed | |
+| 3 | Activity Diagrams | Main learner and teacher workflows, including decisions and exceptions. Use readable separate views for independent processes. BPMN or an equivalent notation is also accepted by the handbook. | 1 | saud | Open | |
 | 4 | System architecture and technology justification | Parts, responsibilities and connections from §10; processing and storage boundaries; reasons for the technology choices. | New requirements | — | Open | |
 | 5 | Sequence Diagrams | Interactions for every significant scenario. Cover recitation and its endings/failures; assess class access, enrolment, messaging, consent and deletion for separate sequences. Record the scenario coverage. | 1, 4 | — | Open | |
 | 6 | ERD | Required stored data, keys, relationships and cardinalities from §8. Exclude prohibited stored data. | New requirements | — | Open | |
