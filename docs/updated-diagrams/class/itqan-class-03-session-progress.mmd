@@ -1,0 +1,59 @@
+---
+title: Itqan class diagram 3 — Session data and derived progress
+config:
+  theme: neutral
+---
+classDiagram
+direction TB
+
+class Account {
+  <<reference: view 1>>
+}
+class Surah {
+  <<reference: view 1>>
+}
+class Word {
+  <<reference: view 1>>
+}
+class RecitationSession {
+  +UUID sessionId
+  +UUID readerId
+  +int surahNumber
+  +String mode
+  +DateTime startedAt
+  +DateTime endedAt
+  +String endReason
+  +int countedWords
+  +decimal effectiveErrors
+  +decimal masteryScore?
+  +bool wholeSurahAnalysed
+}
+class Mistake {
+  +UUID mistakeId
+  +UUID sessionId
+  +int surahNumber
+  +int verseNumber
+  +int wordPosition
+  +String errorType
+  +int ruleId?
+  +decimal penalty
+}
+class TajweedRule {
+  +int ruleId
+  +String name
+}
+class ProgressService {
+  +getSessionHistory(readerId)
+  +getSessionResults(sessionId)
+  +getBestScores(readerId)
+  +getFullMasteryCount(readerId)
+  +getAverageMastery(readerId)
+  +getPracticeStreak(readerId)
+}
+
+Account "1" -- "0..*" RecitationSession : Reader owns
+Surah "1" -- "0..*" RecitationSession : selected for
+RecitationSession "1" -- "0..*" Mistake : records
+Word "1" -- "0..*" Mistake : exact expected Word
+TajweedRule "0..1" -- "0..*" Mistake : Tajweed only
+ProgressService ..> RecitationSession : derives progress

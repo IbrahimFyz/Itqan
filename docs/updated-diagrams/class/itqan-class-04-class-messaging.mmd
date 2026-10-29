@@ -1,0 +1,68 @@
+---
+title: Itqan class diagram 4 — Classes and messaging
+config:
+  theme: neutral
+---
+classDiagram
+direction TB
+
+class Account {
+  <<reference: view 1>>
+}
+class ConsentRecord {
+  <<reference: view 1>>
+}
+class QuranClass {
+  +UUID classId
+  +UUID teacherId
+  +String name
+  +String joinCode
+  +DateTime createdAt
+}
+class Enrolment {
+  +UUID enrolmentId
+  +UUID classId
+  +UUID readerId
+  +DateTime joinedAt
+  +DateTime leftAt?
+  +String status
+  +String endReason?
+  +end(reason, date)
+}
+class Message {
+  +UUID messageId
+  +UUID teacherId
+  +UUID classId
+  +String audience
+  +String messageText
+  +DateTime sentAt
+}
+class MessageRecipient {
+  +UUID messageId
+  +UUID readerId
+  +DateTime readAt?
+  +markRead(date)
+}
+class ClassService {
+  +createClass(teacherId, name)
+  +renameClass(teacherId, classId, name)
+  +joinClassByCode(readerId, code)
+  +leaveClass(readerId, classId)
+  +getClassDashboard(teacherId, classId)
+  +getVisibleSessions(teacherId, classId, readerId)
+  +sendMessage(teacherId, classId, audience, readerId?, text)
+  +getReaderInbox(readerId)
+  +getSentMessages(teacherId)
+  +getUnreadCount(readerId)
+  +openMessage(readerId, messageId)
+}
+
+Account "1" -- "0..*" QuranClass : Teacher owns
+QuranClass "1" -- "0..*" Enrolment : has
+Account "1" -- "0..*" Enrolment : Reader joins
+Account "1" -- "0..*" Message : Teacher sends
+QuranClass "1" -- "0..*" Message : context
+Message "1" -- "1..*" MessageRecipient : delivered to
+Account "1" -- "0..*" MessageRecipient : Reader receives
+ClassService ..> ConsentRecord : checks sharing grant
+ClassService ..> QuranClass : owns and renames

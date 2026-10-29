@@ -1,0 +1,78 @@
+---
+title: Itqan class diagram 1 — Accounts and Quran content
+config:
+  theme: neutral
+---
+classDiagram
+direction LR
+
+class Account {
+  +UUID accountId
+  +String identitySubject
+  +String accountType
+  +String displayName
+  +String email
+  +String language
+  +DateTime createdAt
+}
+class TeacherDetail {
+  +UUID teacherId
+  +String schoolName
+}
+class ConsentRecord {
+  +UUID consentId
+  +UUID readerId
+  +String purpose
+  +DateTime grantedAt
+  +DateTime withdrawnAt?
+  +withdraw(date)
+}
+class Surah {
+  +int surahNumber
+  +String arabicName
+  +String englishName
+  +int verseCount
+}
+class Verse {
+  +int surahNumber
+  +int verseNumber
+  +String uthmaniText
+  +String imlaeiText
+}
+class Word {
+  +int surahNumber
+  +int verseNumber
+  +int wordPosition
+  +String wordText
+  +int audioStartMs
+  +int audioEndMs
+}
+class DeletionLog {
+  +UUID logId
+  +String accountType
+  +DateTime deletedAt
+}
+class AccountService {
+  +registerAccount(type, name, email, schoolName)
+  +updateProfile(accountId, name, language, schoolName)
+  +grantConsent(readerId, purpose)
+  +withdrawConsent(readerId, purpose)
+  +getStoredDataSummary(accountId)
+  +deleteAccount(accountId)
+}
+class IdentityProvider {
+  <<external>>
+  +createCredentials()
+  +authenticate()
+  +logout()
+  +removeAccount()
+}
+
+Account "1" -- "0..1" TeacherDetail : teacher only
+Account "1" -- "0..*" ConsentRecord : Reader grants
+Surah "1" -- "1..*" Verse : contains
+Verse "1" -- "1..*" Word : contains
+AccountService ..> Account : manages
+AccountService ..> ConsentRecord : records
+AccountService ..> DeletionLog : writes anonymous entry
+AccountService ..> IdentityProvider : credentials and deletion
