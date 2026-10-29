@@ -1,0 +1,114 @@
+@startuml itqan-use-case
+' Itqan — Use Case Diagram
+' Built only from Itqan_Requirements.md (§2 actors, §7.1 use cases,
+' §7.2 relationships). User goals only; internal processing (capture, analyse,
+' detect, locate, score, update progress) is in the activity and sequence
+' diagrams. UC-20..UC-25 are unused; UC-26 and UC-28 are the report's official IDs.
+<style>
+root {
+  FontName Helvetica
+  FontSize 12
+  FontColor #000000
+  BackGroundColor #FFFFFF
+  LineColor #000000
+  LineThickness 0.75
+  RoundCorner 0
+  Shadowing 0
+}
+
+note { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+
+useCaseDiagram {
+  actor     { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  usecase   { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  rectangle { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+  arrow     { LineColor #000000; LineThickness 0.75 }
+}
+</style>
+
+left to right direction
+' No title: the report supplies the figure caption. (In PlantUML 1.2026.9 a
+' title style leaks onto use cases, removing outlines and bolding labels.)
+
+actor "Quran Reader" as Reader
+actor "Teacher" as Teacher
+
+rectangle "Itqan" {
+  ' Recitation practice (FR-04..FR-20, FR-26)
+  usecase "Browse and Read Surah\nUC-07" as UC07
+  usecase "Select Surah\nUC-08" as UC08
+  usecase "Select AI Mode\nUC-09" as UC09
+  usecase UC10 as "Recite Surah
+UC-10
+--
+extension points
+word highlighted
+pause detected"
+  usecase "Receive Audio Assistance\nUC-11" as UC11
+  usecase "Receive Smart Prompting\nUC-28" as UC28
+  usecase "View Session Results\nUC-12" as UC12
+  usecase "View Session History\nUC-13" as UC13
+  usecase "View User Progress\nUC-14" as UC14
+  usecase "View Practice Streak\nUC-15" as UC15
+
+  ' Classes and messages, reader side (FR-24, FR-25)
+  usecase "Join Class via Code\nUC-26" as UC26
+  usecase "Leave Class\nUC-27" as UC27
+  usecase "View Teacher Messages\nUC-16" as UC16
+
+  ' Account, shared by both actors (FR-01..FR-03, FR-27..FR-29)
+  usecase "Register\nUC-01" as UC01
+  usecase "Login\nUC-02" as UC02
+  usecase "Logout\nUC-03" as UC03
+  usecase "Manage Profile\nUC-04" as UC04
+  usecase "Manage Consent\nand Privacy\nUC-05" as UC05
+  usecase "Delete Account\nUC-06" as UC06
+
+  ' Teacher, Al-Mu'allim mode (FR-10, FR-23..FR-25)
+  usecase "Manage Class\nUC-17" as UC17
+  usecase "View Teacher Dashboard\nUC-18" as UC18
+  usecase "Send Student Messages\nUC-19" as UC19
+}
+
+' Quran Reader associations
+Reader -- UC07
+Reader -- UC10
+Reader -- UC13
+Reader -- UC14
+Reader -- UC15
+Reader -- UC26
+Reader -- UC27
+Reader -- UC16
+' (--- is a longer edge: keeps the shared use cases below the reader-only ones)
+Reader --- UC01
+Reader --- UC02
+Reader --- UC03
+Reader --- UC04
+Reader --- UC05
+Reader --- UC06
+
+' Teacher associations (written use case -- actor so the Teacher sits on the right)
+UC01 -- Teacher
+UC02 -- Teacher
+UC03 -- Teacher
+UC04 -- Teacher
+UC05 -- Teacher
+UC06 -- Teacher
+UC17 -- Teacher
+UC18 -- Teacher
+UC19 -- Teacher
+
+' §7.2 relationships
+UC10 ..> UC08 : <<include>>
+UC10 ..> UC09 : <<include>>
+UC10 ..> UC12 : <<include>>
+UC13 ..> UC12 : <<include>>
+UC10 <.. UC11 : <<extend>>
+UC10 <.. UC28 : <<extend>>
+
+' Layout only: puts the Teacher's use cases in the right-hand column.
+UC14 -[hidden]- UC17
+UC15 -[hidden]- UC18
+UC26 -[hidden]- UC19
+
+@enduml

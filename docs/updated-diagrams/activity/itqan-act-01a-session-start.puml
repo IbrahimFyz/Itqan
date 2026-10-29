@@ -1,0 +1,61 @@
+@startuml itqan-act-01a-session-start
+' Itqan — Activity Diagram 01a: Recitation session, start
+' Built only from Itqan_Requirements.md: UC-10 flow steps 1-3 and its
+' exceptions (§7.3), includes UC-08 and UC-09 (§7.2); FR-05, FR-07, FR-11,
+' FR-27; BR-07, BR-16. Continues in 01b at connector A.
+<style>
+root {
+  FontName Helvetica
+  FontSize 12
+  FontColor #000000
+  BackGroundColor #FFFFFF
+  LineColor #000000
+  LineThickness 0.75
+  RoundCorner 0
+  Shadowing 0
+}
+
+note { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+
+activityDiagram {
+  activity    { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000; RoundCorner 10 }
+  diamond     { BackGroundColor #FFFFFF; LineColor #000000 }
+  activityBar { BackGroundColor #000000; LineColor #000000 }
+  arrow       { LineColor #000000; LineThickness 0.75 }
+  swimlane    { LineColor #000000; LineThickness 0.75 }
+}
+</style>
+
+|Quran Reader|
+start
+:Select surah (UC-08);
+:Select AI mode (UC-09);
+note right
+  Surah and mode are fixed
+  for the session (BR-07)
+end note
+
+|Itqan System|
+if (Recitation consent recorded?) then (no)
+  |Quran Reader|
+  if (Grant recitation consent? (UC-05)) then (no)
+    stop
+  else (yes)
+  endif
+  |Itqan System|
+  :Record recitation consent;
+else (yes)
+endif
+
+if (Microphone permission granted?) then (no)
+  :Explain how to grant permission;
+  stop
+else (yes)
+endif
+
+:Start session and show verses;
+(A)
+note right: Continues in Activity Diagram 01b
+detach
+
+@enduml

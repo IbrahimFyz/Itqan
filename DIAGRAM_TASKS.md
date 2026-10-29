@@ -15,9 +15,9 @@ This list covers the diagram and design deliverables explicitly required for Tra
 
 | Task | Deliverable | What to produce | Needs first | Owner | Status | Output / notes |
 |---|---|---|---|---|---|---|
-| 1 | Written use-case scenarios | Review the flows already in requirements §7.3. Cover every catalogue use case with its conditions, steps, exceptions and outcome. | New requirements | — | open | |
-| 2 | Use Case Diagram | Quran Reader and Teacher; exact use-case names, IDs and include/extend relationships from §7.1–7.2. | New requirements | saud | closed | |
-| 3 | Activity Diagrams | Main learner and teacher workflows, including decisions and exceptions. Use readable separate views for independent processes. BPMN or an equivalent notation is also accepted by the handbook. | 1 | saud | Open | |
+| 1 | Written use-case scenarios | Review the flows already in requirements §7.3. Cover every catalogue use case with its conditions, steps, exceptions and outcome. | New requirements | saud | Review | [USE_CASE_SCENARIOS.md](docs/updated-diagrams/scenarios/USE_CASE_SCENARIOS.md): all 22 use cases; 5 gaps decided and added to the requirements |
+| 2 | Use Case Diagram | Quran Reader and Teacher; exact use-case names, IDs and include/extend relationships from §7.1–7.2. | New requirements | saud | closed | [itqan-use-case.puml](docs/updated-diagrams/use-case/itqan-use-case.puml) · [SVG](docs/updated-diagrams/use-case/itqan-use-case.svg) · [review notes](docs/updated-diagrams/use-case/USE_CASE_REVIEW.md) |
+| 3 | Activity Diagrams | Main learner and teacher workflows, including decisions and exceptions. Use readable separate views for independent processes. BPMN or an equivalent notation is also accepted by the handbook. | 1 | saud | Review | [activity/](docs/updated-diagrams/activity/): ACT-01a, 01b, 02, 03, 04 · [review notes](docs/updated-diagrams/activity/ACTIVITY_REVIEW.md) |
 | 4 | System architecture and technology justification | Parts, responsibilities and connections from §10; processing and storage boundaries; reasons for the technology choices. | New requirements | — | Open | |
 | 5 | Sequence Diagrams | Interactions for every significant scenario. Cover recitation and its endings/failures; assess class access, enrolment, messaging, consent and deletion for separate sequences. Record the scenario coverage. | 1, 4 | — | Open | |
 | 6 | ERD | Required stored data, keys, relationships and cardinalities from §8. Exclude prohibited stored data. | New requirements | — | Open | |

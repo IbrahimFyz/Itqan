@@ -1,0 +1,90 @@
+@startuml itqan-act-02-class-enrolment
+' Itqan — Activity Diagram 02: Class management and enrolment
+' Built only from Itqan_Requirements.md and USE_CASE_SCENARIOS.md: UC-17
+' (create, rename) and UC-26 with their exceptions; FR-24, FR-27;
+' BR-09, BR-10, BR-11, BR-16.
+<style>
+root {
+  FontName Helvetica
+  FontSize 12
+  FontColor #000000
+  BackGroundColor #FFFFFF
+  LineColor #000000
+  LineThickness 0.75
+  RoundCorner 0
+  Shadowing 0
+}
+
+note { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+
+activityDiagram {
+  activity    { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000; RoundCorner 10 }
+  diamond     { BackGroundColor #FFFFFF; LineColor #000000 }
+  activityBar { BackGroundColor #000000; LineColor #000000 }
+  arrow       { LineColor #000000; LineThickness 0.75 }
+  swimlane    { LineColor #000000; LineThickness 0.75 }
+}
+</style>
+
+|Teacher|
+start
+:Manage class (UC-17);
+if (Create or rename?) then (rename)
+  :Pick an existing class;
+else (create)
+endif
+repeat
+  :Enter class name;
+  |Itqan System|
+backward:Refuse: name required;
+repeat while (Name empty?) is (yes) not (no)
+if (Renaming?) then (yes)
+  :Save new name
+  (join code unchanged);
+  |Teacher|
+  stop
+else (no)
+  |Itqan System|
+  :Create class and generate
+  unique join code (BR-10);
+  note right
+    Names need not be unique;
+    the join code identifies
+    the class (FR-24)
+  end note
+endif
+|Teacher|
+:Share join code outside the app;
+
+|Quran Reader|
+:Enter join code (UC-26);
+|Itqan System|
+if (Code matches a class?) then (no)
+  :Show "code not found";
+  stop
+else (yes)
+endif
+if (Reader already actively enrolled?) then (yes)
+  :Show "already in this class";
+  stop
+else (no)
+endif
+:Show class name and teacher,
+ask for teacher-sharing consent;
+|Quran Reader|
+if (Give consent?) then (no)
+  stop
+else (yes)
+endif
+|Itqan System|
+:Record teacher-sharing consent;
+:Create active enrolment with
+today's join date (BR-09);
+note right
+  Teacher sees this reader's sessions
+  from the join date onward (BR-08)
+end note
+|Quran Reader|
+stop
+
+@enduml

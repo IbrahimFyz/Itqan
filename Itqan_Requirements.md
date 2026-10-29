@@ -145,7 +145,7 @@ When the reader taps a highlighted word, the system shall play the correct recit
 The system shall allow the reader to continue reciting after feedback, audio assistance or a prompt, without restarting the session.
 
 **FR-19 — End Recitation Session** · Must 🟡
-The system shall end a session when the reader ends it, when the last verse is analysed, or automatically when the session is interrupted (the app is closed or sent to the background, a call arrives, or the connection is lost). In every case, the session is scored on the words analysed so far and nothing already analysed is lost.
+The system shall end a session when the reader ends it, when the last verse is analysed, or automatically when the session is interrupted (the app is closed or sent to the background, a call arrives, the connection is lost, or the reader logs out). In every case, the session is scored on the words analysed so far and nothing already analysed is lost.
 *Acceptance:* closing the app mid-session produces a scored session marked "interrupted".
 
 ### E. Results and progress
@@ -178,7 +178,7 @@ Only sessions ended on or after the reader's join date are shown (BR-08). Audio 
 *Acceptance:* T1 sees L1's sessions from L1's join date onward but not earlier ones. T1 cannot see a reader who is not enrolled in one of T1's classes.
 
 **FR-24 — Manage Class** · Should 🟡
-The system shall allow a teacher to create classes and rename them. The system shall generate a unique join code for each class, and the code never changes. A Quran Reader shall join a class by entering its code and giving teacher-sharing consent (FR-27). A reader may belong to several classes, may leave any class, and may rejoin a class later with the same code (BR-09).
+The system shall allow a teacher to create classes and rename them. The system shall generate a unique join code for each class, and the code never changes. Class names need not be unique, because the join code identifies the class. A Quran Reader shall join a class by entering its code and giving teacher-sharing consent (FR-27). A reader may belong to several classes, may leave any class, and may rejoin a class later with the same code (BR-09).
 *Acceptance:* a valid code with consent creates an active enrolment, and an invalid code is rejected. After the reader leaves, the teacher can no longer see them. Rejoining shows the teacher only sessions from the new join date.
 
 **FR-25 — Send Student Messages** · Could 🟡
@@ -202,19 +202,19 @@ A reader can withdraw either consent:
 - Withdrawing recitation consent blocks new sessions. Stored results stay until the reader deletes them.
 - Withdrawing teacher-sharing consent ends all of the reader's active enrolments.
 
-All users can view a summary of their stored data and request correction of their profile or deletion of their data (FR-28). Granting a consent again creates a new record.
+All users can view a summary of their stored data and request correction of their profile or deletion of their data (FR-28). Correction covers profile data only, edited through FR-03; session results and mistakes are system-generated and cannot be edited, only deleted with the account. Granting a consent again creates a new record.
 *Acceptance:* without recitation consent, no session starts. After teacher-sharing consent is withdrawn, no teacher sees the reader. The data summary lists every stored item category.
 
 **FR-28 — Delete Account** · Should ✚
 The system shall allow users to delete their account permanently and immediately:
 - **Reader:** deletes the account, all sessions and mistakes, enrolments, consents and received messages.
-- **Teacher:** deletes the account, closes all their classes (ending every enrolment in them) and deletes their sent messages.
+- **Teacher:** deletes the account, all their classes with their join codes and every enrolment in them, and their sent messages. Readers' own sessions are not affected.
 
 Only an anonymous deletion log entry (account type and date) remains. The identity-provider account is also removed.
 *Acceptance:* after deletion, the user cannot log in, and no other user can see any of the deleted user's data.
 
 **FR-29 — Logout** · Must ✚
-The system shall allow users to log out, and shall log them out automatically after a period of inactivity, which is set in IS499.
+The system shall allow users to log out, and shall log them out automatically after a period of inactivity, which is set in IS499. The inactivity timeout does not run during an active recitation session; logging out during a session ends it as interrupted (FR-19).
 *Acceptance:* after logout, no protected screen or data can be reached until the user logs in again.
 
 ---
@@ -253,8 +253,8 @@ Numeric targets are set during the IS499 evaluation (§11).
 | **BR-08 Teacher visibility** | A teacher sees a reader's sessions only while the reader has an active enrolment in one of the teacher's classes, and only sessions ended on or after that enrolment's join date. With several classes of the same teacher, the earliest active join date applies. |
 | **BR-09 Enrolment** | Joining requires a valid join code and teacher-sharing consent. There is at most one active enrolment per reader per class. Leaving ends the enrolment, and rejoining creates a new one with a new join date. Teachers cannot add or remove readers. |
 | **BR-10 Join code** | Generated by the system when a class is created, unique across all classes, never changed. Its format is an IS499 design detail. |
-| **BR-11 Class lifecycle** | A class is active from creation and closes only when its teacher deletes their account. A closed class accepts no joins and gives no access. |
-| **BR-12 Messages** | One-way, teacher to reader. A class message is delivered to the readers enrolled when it is sent. A reader keeps received messages after leaving the class. Messages can be sent only to actively enrolled readers. |
+| **BR-11 Class lifecycle** | A class exists from creation until its teacher deletes their account; it is then erased together with its join code and all its enrolments (FR-28). Teachers cannot delete a single class. |
+| **BR-12 Messages** | One-way, teacher to reader. A class message is delivered to the readers enrolled when it is sent. A reader keeps received messages after leaving the class. Messages can be sent only to actively enrolled readers. A class message to a class with no actively enrolled readers is refused, and nothing is stored. |
 | **BR-13 Read status** | A message is unread until the recipient opens it. Both the reader and the teacher see the status. |
 | **BR-14 Assistance** | Audio Assistance is requested by the reader for a highlighted or prompted word (FR-17). Smart Prompting is triggered by the system on a pause (FR-26). Neither is stored. |
 | **BR-15 Account type** | Exactly one type per account, fixed at registration. Al-Mu'allim comes with the Teacher type. |
@@ -359,7 +359,7 @@ Each flow lists a precondition (*Pre*), the main steps and the exceptions (*Ex*)
   - No recitation consent → go to UC-05 to grant it.
   - Microphone permission denied → explain how to grant it; the session does not start.
   - Analysis fails for a verse → "could not analyse"; the verse is excluded from the score and the session continues.
-  - Interrupted (app closed, call, connection lost) → the session ends automatically, with end reason "interrupted", and steps 10–11 run on the words analysed so far (on the next app open if needed).
+  - Interrupted (app closed, call, connection lost, logout) → the session ends automatically, with end reason "interrupted", and steps 10–11 run on the words analysed so far (on the next app open if needed).
   - 0 words counted → stored with no score; the results screen says so.
 
 **UC-11 Receive Audio Assistance**
@@ -386,7 +386,7 @@ Each flow lists a precondition (*Pre*), the main steps and the exceptions (*Ex*)
 **UC-26 Join Class via Code**
 - *Pre:* logged in as a Reader.
 - *Main:* (1) the reader enters a join code; (2) the system finds the active class and shows its name and teacher; (3) the system asks for teacher-sharing consent; (4) the reader consents; (5) the system creates an active enrolment with today's join date.
-- *Ex:* invalid code or closed class → "code not found". Already actively enrolled → "already in this class". Consent declined → the reader does not join.
+- *Ex:* invalid code (including the code of a deleted class) → "code not found". Already actively enrolled → "already in this class". Consent declined → the reader does not join.
 
 **UC-27 Leave Class**
 - *Main:* (1) the reader opens My Classes and picks a class; (2) chooses Leave and confirms; (3) the system ends the enrolment and records the leave date; the teacher's access ends.
@@ -406,7 +406,7 @@ Each flow lists a precondition (*Pre*), the main steps and the exceptions (*Ex*)
 
 **UC-19 Send Student Messages**
 - *Main:* (1) the teacher chooses a class, then either the whole class or one enrolled reader; (2) writes the message; (3) the system checks each recipient's active enrolment and delivers it; (4) the teacher's sent list shows the read status per recipient.
-- *Ex:* empty message → refused. Recipient no longer enrolled → refused for that recipient.
+- *Ex:* empty message → refused. Recipient no longer enrolled → refused for that recipient. Class message to a class with no enrolled readers → refused: "this class has no readers yet".
 
 ---
 
@@ -427,8 +427,8 @@ This section says **what must be stored**. Table design is left to the ERD and s
 | **Tajweed rule** (reference) | rule ID, name (Ghunnah, Qalqalah, Madd) | 3 rows in phase one. |
 | **Recitation session** | session ID, reader, surah, mode (Mujawwid or Mushajji), start time, end time, end reason (completed, ended early or interrupted), counted words, effective errors, Mastery Score (empty if 0 words), whole surah analysed (yes or no) | One row per session. |
 | **Mistake** | mistake ID, session, word, error type (wrong word, skipped word, added word, mispronounced letter or Tajweed), Tajweed rule (only for Tajweed errors), penalty (1 or 0.5) | 0 or more per session. |
-| **Class** | class ID, teacher, name, join code (unique), status (active or closed), created date | |
-| **Enrolment** | enrolment ID, class, reader, join date, leave date (empty while active), status (active or ended), end reason (left, consent withdrawn, account deleted or class closed) | At most one active per reader per class. |
+| **Class** | class ID, teacher, name (need not be unique), join code (unique), created date | Erased with the teacher's account. |
+| **Enrolment** | enrolment ID, class, reader, join date, leave date (empty while active), status (active or ended), end reason (left or consent withdrawn) | At most one active per reader per class. Erased when the reader's or the teacher's account is deleted. |
 | **Message** | message ID, teacher, class, audience (one reader or whole class), text, sent date | |
 | **Message recipient** | message, reader, read date (empty while unread) | One row per recipient, which gives read status on both sides. |
 | **Deletion log** | log ID, account type, deleted date | Anonymous: no name, email or ID. |
@@ -473,18 +473,18 @@ Each state machine diagram uses exactly these states and transitions.
 **Recitation session**
 `Started → Active → Ended`
 - Started → Active: the first verse is shown and capture begins.
-- Active → Ended, with end reason **completed** (last verse analysed), **ended early** (the reader ends it) or **interrupted** (app closed, call, connection lost).
+- Active → Ended, with end reason **completed** (last verse analysed), **ended early** (the reader ends it) or **interrupted** (app closed, call, connection lost, logout).
 - On Ended: the score is calculated, the summary and mistakes are stored, and everything else is discarded. Ended is final.
 
 **Enrolment**
 `Active → Ended`
 - Created Active by UC-26, after a valid code and consent.
-- Active → Ended, with end reason **left** (UC-27), **consent withdrawn** (FR-27), **account deleted** (FR-28, reader) or **class closed** (FR-28, teacher).
+- Active → Ended, with end reason **left** (UC-27) or **consent withdrawn** (FR-27).
 - Ended is final. Rejoining creates a new Active enrolment.
+- Deleting the reader's or the teacher's account erases the enrolment in any state (FR-28).
 
 **Class**
-`Active → Closed`
-- Active on creation. Closed only when the teacher deletes their account. Closed is final.
+No states. A class exists from creation until its teacher deletes their account, when it is erased (BR-11).
 
 **Consent record**
 `Granted → Withdrawn`
@@ -565,6 +565,7 @@ These are measurements and vendor choices. None of them changes a diagram.
 | FR-29 ✚ | Logout and inactivity timeout. |
 | Priorities | 19 Must, 8 Should, 2 Could (29 FRs). The report's §6.3 needs updating. |
 | Use cases | IDs UC-01 to UC-19, UC-26 to UC-28 (§7). |
+| Scenario review (Task 1) | Deleting a Teacher erases their classes and enrolments instead of closing them, so the Class has no states (FR-28, BR-11, §8.1, §9); duplicate class names allowed (FR-24); class message to an empty class refused (BR-12, UC-19); correction covers profile only (FR-27); no inactivity timeout during a session, and logout mid-session ends it as interrupted (FR-19, FR-29). |
 | Data | 9 report entities dropped or made transient; Message recipient and Deletion log added (§8.3). |
 
 ---

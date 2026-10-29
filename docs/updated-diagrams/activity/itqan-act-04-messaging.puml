@@ -1,0 +1,70 @@
+@startuml itqan-act-04-messaging
+' Itqan — Activity Diagram 04: Teacher messaging
+' Built only from Itqan_Requirements.md and USE_CASE_SCENARIOS.md: UC-19 and
+' UC-16 with their exceptions; FR-25; BR-12, BR-13.
+<style>
+root {
+  FontName Helvetica
+  FontSize 12
+  FontColor #000000
+  BackGroundColor #FFFFFF
+  LineColor #000000
+  LineThickness 0.75
+  RoundCorner 0
+  Shadowing 0
+}
+
+note { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000 }
+
+activityDiagram {
+  activity    { BackGroundColor #FFFFFF; LineColor #000000; FontColor #000000; RoundCorner 10 }
+  diamond     { BackGroundColor #FFFFFF; LineColor #000000 }
+  activityBar { BackGroundColor #000000; LineColor #000000 }
+  arrow       { LineColor #000000; LineThickness 0.75 }
+  swimlane    { LineColor #000000; LineThickness 0.75 }
+}
+</style>
+
+|Teacher|
+start
+:Send message (UC-19):
+pick a class;
+if (Whole class or one reader?) then (one reader)
+  :Pick an enrolled reader;
+else (whole class)
+endif
+repeat
+  :Write message;
+  |Itqan System|
+backward:Refuse: message empty;
+repeat while (Message empty?) is (yes) not (no)
+:Check each recipient's active
+enrolment; skip any who left;
+if (Any actively enrolled recipient?) then (no)
+  :Refuse: "this class has no
+  readers yet" (nothing stored);
+  |Teacher|
+  stop
+else (yes)
+endif
+|Itqan System|
+:Store message, one entry per
+recipient, marked unread (BR-12);
+|Teacher|
+:See message in sent list
+with read status per recipient;
+
+|Quran Reader|
+:Open inbox (UC-16),
+badge shows unread count;
+|Itqan System|
+:List messages, newest first;
+|Quran Reader|
+:Open the message;
+|Itqan System|
+:Record read date: shown as read
+to reader and teacher (BR-13);
+|Quran Reader|
+stop
+
+@enduml
