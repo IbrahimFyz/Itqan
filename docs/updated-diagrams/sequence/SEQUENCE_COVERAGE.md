@@ -1,4 +1,4 @@
-# Itqan Task 5 — Sequence diagram coverage and review
+# Itqan Task 5 — Sequence diagram coverage
 
 **Sources of truth:** [final requirements](../../../Itqan_Requirements.md), [reviewed Task 1 scenarios](../scenarios/USE_CASE_SCENARIOS.md), [Task 4 architecture](../architecture/ARCHITECTURE.md), [approved ERD](../erd/itqan-erd.mmd), [Task 7 schema](../../../itqan-relational-schema.md), and [Task 8 class diagram](../class/itqan-class-diagram.mmd). Older `docs/diagrams/sequence/` drawings are historical and were not copied. These eight diagrams cover separate interactions. Their SVG exports are at the repository root; editable Mermaid sources and this coverage list stay in this folder.
 
@@ -107,6 +107,6 @@ The processing path supports NFR-03, the access checks support NFR-06, and the s
 - The Recitation Service finalizes an interrupted session on analysed Words, including connection loss or app closure. The scenarios allow finalization when the app next opens if needed. They do not specify the durable handoff mechanism that guarantees NFR-05 if both app and backend disappear; none was invented in these diagrams.
 - The requirements require immediate deletion in both Database and Identity Provider but do not define a compensation procedure if the provider fails after database deletion. SEQ-08 shows the required successful path and cancellation, without inventing a recovery rule.
 - The [schema](../../../itqan-relational-schema.md) records the existing device-local practice-day ambiguity: historical time zones are not stored. SEQ-04 uses the device-local calendar stated in BR-06 and does not add a field.
-- Task 1 and Task 4 are in Review on the task board. These diagrams follow their current reviewed contents; message names can be reconciled if those artifacts change.
+- These diagrams follow the current Task 1 scenarios and Task 4 architecture; message names can be reconciled if those artifacts change.
 
-**Task status:** Review, awaiting Abdulaziz Alfarhood's review. No requirement or product decision was silently dropped.
+No requirement or product decision was silently dropped.

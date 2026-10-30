@@ -1,4 +1,4 @@
-# Itqan class diagram — Task 8 review notes
+# Itqan class diagram — Task 8 notes
 
 **Diagram:** [open SVG](../../../itqan-class-diagram.svg) · [editable Mermaid source](itqan-class-diagram.mmd). The SVG is at the repository root; its editable source and these notes are in `docs/updated-diagrams/class/`.
 
@@ -112,6 +112,6 @@ All 14 persistent ERD entities are shown as classes. The app, Identity Provider,
 
 The §9 state machines remain separate diagrams. This class diagram holds the fields needed for their final states: `RecitationSession.endReason`, `Enrolment.status` and `endReason`, `ConsentRecord.withdrawnAt`, `MessageRecipient.readAt`, and `DeletionLog.deletedAt`. The [requirements](../../../Itqan_Requirements.md) remain authoritative for the transition order and exceptions.
 
-## Review status
+## Limits
 
-The single root SVG is rendered from the Mermaid source in this folder. Task 8 was marked Done at Abdulaziz Alfarhood's request on 2026-10-29. The [Task 5 sequence diagrams](../sequence/SEQUENCE_COVERAGE.md) are in Review and use these service responsibilities. The device-local practice-day ambiguity flagged in the schema remains: §8.1 stores no historical device time zone. No extra field or product decision is introduced here.
+The single root SVG is rendered from the Mermaid source in this folder. The [Task 5 sequence diagrams](../sequence/SEQUENCE_COVERAGE.md) use these service responsibilities. The device-local practice-day ambiguity flagged in the schema remains: §8.1 stores no historical device time zone. No extra field or product decision is introduced here.
