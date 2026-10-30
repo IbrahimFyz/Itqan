@@ -1,0 +1,99 @@
+---
+title: SEQ-01 — Accounts, profile and consent (UC-01–UC-05)
+config:
+  theme: neutral
+---
+sequenceDiagram
+    actor User as Reader or Teacher
+    participant App as Itqan App
+    participant IdP as Identity Provider
+    participant Account as Account Service
+    participant Class as Class Service
+    participant DB as Database
+    alt UC-01 Register
+        User->>App: Choose Reader or Teacher, enter name and email
+        opt Teacher
+            User->>App: Enter required school name
+        end
+        alt Required field missing
+            App-->>User: Refuse registration
+        else Valid fields
+            App->>IdP: Register credentials
+            alt Email used or provider unavailable
+                IdP-->>App: Reject or unavailable
+                App-->>User: No account created
+            else Identity created
+                IdP-->>App: Identity subject
+                App->>Account: registerOrUpdateAccount(type, profile, subject)
+                Account->>DB: Store Account and conditional TeacherDetail
+                Note over DB: One fixed type, Arabic default, no Itqan password
+                Account-->>App: Account created
+                App-->>User: Open Reader or Teacher area, Teacher gets Al-Mu'allim
+            end
+        end
+    else UC-02 Login
+        User->>App: Sign in
+        App->>IdP: Authenticate credentials
+        alt Wrong credentials or provider unavailable
+            IdP-->>App: Reject or unavailable
+            App-->>User: Stay logged out
+        else Authenticated
+            IdP-->>App: Identity subject
+            App->>Account: Get matching Account
+            Account->>DB: Read fixed account type
+            Account-->>App: Reader or Teacher role
+            App-->>User: Open matching area, deny wrong-role screens and data
+        end
+    else UC-04 Manage profile
+        User->>App: Open profile
+        App->>Account: Get name, email, language and optional school name
+        Account->>DB: Read Account and conditional TeacherDetail
+        Account-->>App: Profile with email read-only here
+        User->>App: Edit name, ar/en language or Teacher school name
+        alt Email or credential change
+            App-->>User: Use Identity Provider
+        else Required name empty
+            App-->>User: Refuse change
+        else Valid profile change
+            App->>Account: registerOrUpdateAccount(profile changes)
+            Account->>DB: Save profile
+            App-->>User: Apply language now and after login on another device
+        end
+    else UC-05 Privacy and consent
+        User->>App: Open Privacy
+        App->>Account: getStoredDataSummary(user)
+        Account->>DB: Read stored categories and Reader consent dates
+        Account-->>App: Summary, visibility and two Reader purposes
+        App-->>User: Show what is stored and who can see it
+        alt Reader grants or regrants a purpose
+            User->>App: Grant recitation or teacher sharing
+            App->>Account: grantOrWithdrawConsent(grant, purpose)
+            Account->>DB: Insert new dated ConsentRecord
+            Note over DB: One active grant per Reader and purpose, keep withdrawn history
+        else Reader withdraws recitation consent
+            User->>App: Withdraw recitation consent
+            App->>Account: grantOrWithdrawConsent(withdraw, recitation)
+            Account->>DB: Date withdrawal, block new sessions, keep results
+        else Reader withdraws teacher-sharing consent
+            User->>App: Withdraw teacher-sharing consent
+            App->>Account: grantOrWithdrawConsent(withdraw, teacher sharing)
+            Account->>Class: Apply effect to every active Enrolment
+            Account->>DB: Atomically date withdrawal and end active Enrolments
+            Note over DB: End reason consent withdrawn, Teacher access stops
+        else Profile correction or deletion requested
+            App-->>User: Profile correction via UC-04 or deletion via UC-06 / SEQ-06
+            Note over App: System-generated Sessions and Mistakes cannot be edited
+        end
+        App-->>User: Show updated status and dates
+    else UC-03 Logout
+        alt User chooses Logout
+            User->>App: Logout
+        else Inactivity timeout outside recitation
+            App->>App: Expire login session
+        end
+        opt Explicit logout during active recitation
+            App->>App: End Session interrupted via SEQ-02
+        end
+        App->>IdP: Logout
+        App-->>User: Show login screen, deny protected data
+    end

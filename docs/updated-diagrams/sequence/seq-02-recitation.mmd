@@ -1,5 +1,5 @@
 ---
-title: SEQ-03 — Recite Surah (UC-07–UC-11, UC-28)
+title: SEQ-02 — Recite Surah (UC-07–UC-11, UC-28)
 config:
   theme: neutral
 ---
@@ -109,7 +109,7 @@ sequenceDiagram
             DB-->>Progress: Session summaries
             Progress-->>RS: Derived values
             RS-->>App: Result or no-score summary
-            App-->>Reader: Show results (UC-12 / SEQ-04)
+            App-->>Reader: Show results (UC-12 / SEQ-03)
             opt Mushajji mode
                 App-->>Reader: Show end-of-session praise
             end

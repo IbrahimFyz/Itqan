@@ -1,0 +1,114 @@
+---
+title: SEQ-04 — Classes, enrolment and Teacher access (UC-17, UC-18, UC-26, UC-27)
+config:
+  theme: neutral
+---
+sequenceDiagram
+    actor Teacher as Teacher
+    actor Reader as Quran Reader
+    participant App as Itqan App
+    participant Class as Class Service
+    participant Account as Account Service
+    participant DB as Database
+    alt UC-17 Create or rename Class
+        Teacher->>App: Enter Class name
+        alt Name empty
+            App-->>Teacher: Refuse change
+        else Create new Class
+            App->>Class: createOrRenameClass(create, name)
+            Class->>DB: Store Teacher-owned Class with unique join code
+            Class-->>App: Class and permanent code
+            App-->>Teacher: Show code to share outside app
+        else Rename owned Class
+            App->>Class: createOrRenameClass(rename, Class, name)
+            Class->>DB: Check ownership, update name only
+            Class-->>App: Renamed Class with unchanged code
+        end
+        Note over Class,DB: Names may repeat, no Class status or single-Class deletion
+    else UC-26 Join Class via code
+        Reader->>App: Enter join code
+        App->>Class: Find Class and check active membership
+        Class->>DB: Read Class, Teacher name and active Enrolment
+        alt Code invalid or Class erased
+            Class-->>App: Code not found
+            App-->>Reader: No Enrolment created
+        else Already actively enrolled
+            Class-->>App: Already in this Class
+            App-->>Reader: No new Enrolment
+        else Valid code and no active Enrolment
+            Class-->>App: Class and Teacher display name
+            App-->>Reader: Ask for teacher-sharing consent
+            alt Reader declines
+                App-->>Reader: Do not join
+            else Reader grants or already has active grant
+                App->>Account: grantOrWithdrawConsent if no active grant
+                Account->>DB: Record new dated grant only when needed
+                App->>Class: joinOrLeaveClass(join, Reader, Class)
+                Class->>DB: Recheck code and consent, insert active Enrolment
+                Note over DB: One active row per Reader/Class, rejoin gets new date
+                Class-->>App: Joined with new join date
+                App-->>Reader: Show Class in My Classes
+            end
+        end
+        Note over Reader,DB: Reader may join several Classes
+    else UC-27 Leave Class
+        Reader->>App: Open My Classes and choose Leave
+        App->>Class: List active Classes
+        Class->>DB: Read active Enrolments
+        alt No active Classes
+            App-->>Reader: Empty state
+        else Class selected
+            App-->>Reader: Ask for confirmation
+            alt Reader cancels
+                App-->>Reader: Nothing changes
+            else Reader confirms
+                App->>Class: joinOrLeaveClass(leave, Reader, Class)
+                Class->>DB: Set leftAt and end reason left
+                App-->>Reader: Leave confirmed
+                Note over DB: Teacher access stops, delivered Messages remain
+            end
+        end
+    else UC-18 Teacher dashboard
+        Teacher->>App: Open dashboard
+        App->>Class: Get Teacher's Classes
+        Class->>DB: Read owned Classes
+        alt No Classes
+            App-->>Teacher: Prompt Create Class
+        else Class selected
+            Teacher->>App: Select Class
+            App->>Class: Get Class dashboard
+            Class->>DB: Verify ownership and active Readers
+            alt No active Readers
+                App-->>Teacher: Show join code
+            else Active Readers
+                Class->>DB: Derive activity, full mastery and average from visible Sessions
+                Note over Class: Activity includes Session count and last practice date
+                Note over DB: Earliest active join date across this Teacher's Classes
+                Class-->>App: Class view with filtered Reader summaries
+                Teacher->>App: Select Reader
+                App->>Class: getVisibleSessions(Teacher, Class, Reader)
+                Class->>DB: Recheck ownership and active Enrolment
+                alt Reader left or withdrew consent
+                    Class-->>App: Access denied
+                    App-->>Teacher: Return to Class view
+                else Access valid
+                    Class->>DB: Read Sessions ended on or after earliest active join date
+                    alt No visible Sessions
+                        App-->>Teacher: Empty Session list
+                    else Sessions exist
+                        Class-->>App: Surah, date, mode and score per Session
+                        Teacher->>App: Select Session
+                        App->>Class: getVisibleSessions(Teacher, Class, Reader, Session)
+                        Class->>DB: Recheck active access and Session date
+                        alt Access changed
+                            App-->>Teacher: Do not show Session
+                        else Access valid
+                            Class->>DB: Read Mistakes with Word and Tajweed Rule
+                            App-->>Teacher: Show Word, error type and Rule, never audio
+                        end
+                    end
+                end
+            end
+        end
+    end
+    Note over Teacher,Class: Teachers cannot add or remove Readers
