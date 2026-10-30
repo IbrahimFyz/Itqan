@@ -1,19 +1,19 @@
 # Itqan Task 5 — Sequence diagram coverage and review
 
-**Sources of truth:** [final requirements](../../../Itqan_Requirements.md), [reviewed Task 1 scenarios](../scenarios/USE_CASE_SCENARIOS.md), [Task 4 architecture](../architecture/ARCHITECTURE.md), [approved ERD](../erd/itqan-erd.mmd), [Task 7 schema](../../../itqan-relational-schema.md), and [Task 8 class diagram](../class/itqan-class-diagram.mmd). Older `docs/diagrams/sequence/` drawings are historical and were not copied. These eight diagrams cover separate interactions.
+**Sources of truth:** [final requirements](../../../Itqan_Requirements.md), [reviewed Task 1 scenarios](../scenarios/USE_CASE_SCENARIOS.md), [Task 4 architecture](../architecture/ARCHITECTURE.md), [approved ERD](../erd/itqan-erd.mmd), [Task 7 schema](../../../itqan-relational-schema.md), and [Task 8 class diagram](../class/itqan-class-diagram.mmd). Older `docs/diagrams/sequence/` drawings are historical and were not copied. These eight diagrams cover separate interactions. Their SVG exports are at the repository root; editable Mermaid sources and this coverage list stay in this folder.
 
 ## Diagrams
 
 | View | Editable source | SVG | Coverage |
 |---|---|---|---|
-| SEQ-01 Account | [Mermaid](seq-01-account.mmd) | [SVG](seq-01-account.svg) | Register, login, logout, profile. |
-| SEQ-02 Consent | [Mermaid](seq-02-consent.mmd) | [SVG](seq-02-consent.svg) | Stored-data summary, grant, withdrawal, correction/deletion handoff. |
-| SEQ-03 Recitation | [Mermaid](seq-03-recitation.mmd) | [SVG](seq-03-recitation.svg) | Offline browsing, mode selection, consent/permission, per-verse analysis, feedback, hints/audio, all endings, failures and scoring. |
-| SEQ-04 Results and progress | [Mermaid](seq-04-results-progress.mmd) | [SVG](seq-04-results-progress.svg) | Results, history, mastery and streak. |
-| SEQ-05 Classes and enrolment | [Mermaid](seq-05-class-enrolment.mmd) | [SVG](seq-05-class-enrolment.svg) | Class creation/rename, code-based join, consent, leave and rejoin rules. |
-| SEQ-06 Teacher dashboard | [Mermaid](seq-06-teacher-dashboard.mmd) | [SVG](seq-06-teacher-dashboard.svg) | Class → Reader → Session with access rechecks and join-date filter. |
-| SEQ-07 Messaging | [Mermaid](seq-07-messaging.mmd) | [SVG](seq-07-messaging.svg) | Single/whole-class sends, recipient snapshot, inbox and read status. |
-| SEQ-08 Deletion | [Mermaid](seq-08-deletion.mmd) | [SVG](seq-08-deletion.svg) | Reader and Teacher deletion, anonymous audit, provider removal and logout. |
+| SEQ-01 Account | [Mermaid](seq-01-account.mmd) | [SVG](../../../seq-01-account.svg) | Register, login, logout, profile. |
+| SEQ-02 Consent | [Mermaid](seq-02-consent.mmd) | [SVG](../../../seq-02-consent.svg) | Stored-data summary, grant, withdrawal, correction/deletion handoff. |
+| SEQ-03 Recitation | [Mermaid](seq-03-recitation.mmd) | [SVG](../../../seq-03-recitation.svg) | Offline browsing, mode selection, consent/permission, per-verse analysis, feedback, hints/audio, all endings, failures and scoring. |
+| SEQ-04 Results and progress | [Mermaid](seq-04-results-progress.mmd) | [SVG](../../../seq-04-results-progress.svg) | Results, history, mastery and streak. |
+| SEQ-05 Classes and enrolment | [Mermaid](seq-05-class-enrolment.mmd) | [SVG](../../../seq-05-class-enrolment.svg) | Class creation/rename, code-based join, consent, leave and rejoin rules. |
+| SEQ-06 Teacher dashboard | [Mermaid](seq-06-teacher-dashboard.mmd) | [SVG](../../../seq-06-teacher-dashboard.svg) | Class → Reader → Session with access rechecks and join-date filter. |
+| SEQ-07 Messaging | [Mermaid](seq-07-messaging.mmd) | [SVG](../../../seq-07-messaging.svg) | Single/whole-class sends, recipient snapshot, inbox and read status. |
+| SEQ-08 Deletion | [Mermaid](seq-08-deletion.mmd) | [SVG](../../../seq-08-deletion.svg) | Reader and Teacher deletion, anonymous audit, provider removal and logout. |
 
 ## Use-case coverage
 
