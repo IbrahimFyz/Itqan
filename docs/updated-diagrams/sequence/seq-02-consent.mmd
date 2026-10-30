@@ -1,0 +1,49 @@
+---
+title: SEQ-02 — Consent and privacy (UC-05)
+config:
+  theme: neutral
+---
+sequenceDiagram
+    actor User as Reader or Teacher
+    participant App as Itqan App
+    participant Account as Account Service
+    participant Class as Class Service
+    participant DB as Database
+    User->>App: Open Privacy
+    App->>Account: getStoredDataSummary(user)
+    Account->>DB: Read stored-data categories and Reader consent history
+    DB-->>Account: Summary, two purposes with dates for Reader
+    Account-->>App: Data summary and visibility information
+    App-->>User: Show stored data and who can see it
+    alt Reader grants recitation or teacher-sharing consent
+        User->>App: Grant selected purpose
+        App->>Account: grantOrWithdrawConsent(grant, purpose)
+        Account->>DB: Insert new dated ConsentRecord
+        Note over DB: At most one active grant per Reader and purpose, keep withdrawn history
+        DB-->>Account: Grant recorded
+        Account-->>App: Active consent and date
+    else Reader withdraws recitation consent
+        User->>App: Withdraw recitation consent
+        App->>Account: grantOrWithdrawConsent(withdraw, recitation)
+        Account->>DB: Date active grant withdrawal
+        Note over DB: Block new sessions, keep past results
+        DB-->>Account: Withdrawal recorded
+        Account-->>App: Recitation consent inactive
+    else Reader withdraws teacher-sharing consent
+        User->>App: Withdraw teacher-sharing consent
+        App->>Account: grantOrWithdrawConsent(withdraw, teacher sharing)
+        Account->>Class: Apply withdrawal effect to active Reader enrolments
+        Class-->>Account: Enrolments to end
+        Account->>DB: Atomically date withdrawal and end all active enrolments
+        Note over DB: End reason is consent withdrawn, teachers immediately lose access
+        DB-->>Account: Withdrawal and enrolment endings committed
+        Account-->>App: Consent inactive and classes left
+    else User requests profile correction
+        User->>App: Correct profile data
+        App-->>User: Continue in UC-04 / SEQ-01
+        Note over App: System-generated sessions and mistakes are not editable
+    else User requests deletion
+        User->>App: Delete account
+        App-->>User: Continue in UC-06 / SEQ-08
+    end
+    App-->>User: Refresh status and dated consent history

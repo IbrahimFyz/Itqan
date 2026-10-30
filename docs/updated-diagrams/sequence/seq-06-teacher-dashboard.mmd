@@ -1,0 +1,68 @@
+---
+title: SEQ-06 — Teacher dashboard and access (UC-18)
+config:
+  theme: neutral
+---
+sequenceDiagram
+    actor Teacher as Teacher
+    participant App as Itqan App
+    participant Class as Class Service
+    participant DB as Database
+    Teacher->>App: Open dashboard
+    App->>Class: Get Teacher's Classes
+    Class->>DB: Read Classes owned by Teacher
+    alt No Classes
+        DB-->>Class: Empty
+        Class-->>App: No Classes
+        App-->>Teacher: Prompt Create Class (UC-17)
+    else Classes exist
+        DB-->>Class: Owned Classes
+        Class-->>App: Class list
+        Teacher->>App: Select Class
+        App->>Class: Get Class dashboard
+        Class->>DB: Verify Teacher owns Class and list active Readers
+        alt No active Readers
+            DB-->>Class: No active Enrolments
+            Class-->>App: Empty Class with join code
+            App-->>Teacher: Show join code
+        else Active Readers
+            DB-->>Class: Active Readers and enrolment dates
+            Class->>DB: Derive activity, full mastery and average from visible Sessions
+            Note over Class,DB: Only Sessions ended on or after earliest active join date across this Teacher's Classes
+            DB-->>Class: Filtered Reader summaries
+            Class-->>App: Activity, completion and average per Reader
+            App-->>Teacher: Show Class view
+            Teacher->>App: Select Reader
+            App->>Class: getVisibleSessions(Teacher, Class, Reader)
+            Class->>DB: Recheck Class ownership and active enrolment
+            alt Reader left or withdrew consent
+                DB-->>Class: No active access
+                Class-->>App: Deny Reader drill-down
+                App-->>Teacher: Return to Class view
+            else Access still active
+                DB-->>Class: Earliest active join date for this Teacher and Reader
+                Class->>DB: Read Sessions ended on or after join date
+                DB-->>Class: Visible Surah, date, mode and score
+                Class-->>App: Reader Session list
+                alt No visible Sessions
+                    App-->>Teacher: Empty Session list
+                else Sessions exist
+                    App-->>Teacher: Show Reader Sessions
+                    Teacher->>App: Select Session
+                    App->>Class: getVisibleSessions(Teacher, Class, Reader, Session)
+                    Class->>DB: Recheck active access and Session end date
+                    alt Access no longer valid
+                        DB-->>Class: Denied
+                        Class-->>App: Denied
+                        App-->>Teacher: Do not show Session
+                    else Access valid
+                        DB-->>Class: Permitted Session
+                        Class->>DB: Read Mistakes with Word and Tajweed Rule
+                        DB-->>Class: Word, error type and Rule
+                        Class-->>App: Permitted mistake details
+                        App-->>Teacher: Show Session view without audio
+                    end
+                end
+            end
+        end
+    end
