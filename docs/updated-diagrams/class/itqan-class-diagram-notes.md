@@ -114,4 +114,4 @@ The §9 state machines remain separate diagrams. This class diagram holds the fi
 
 ## Review status
 
-The single root SVG is rendered from the Mermaid source in this folder. Task 8 was marked Done at Abdulaziz Alfarhood's request on 2026-10-29. Task 5 sequence diagrams are still Open; their eventual message names should be checked against these operations. The device-local practice-day ambiguity flagged in the schema remains: §8.1 stores no historical device time zone. No extra field or product decision is introduced here.
+The single root SVG is rendered from the Mermaid source in this folder. Task 8 was marked Done at Abdulaziz Alfarhood's request on 2026-10-29. The [Task 5 sequence diagrams](../sequence/SEQUENCE_COVERAGE.md) are in Review and use these service responsibilities. The device-local practice-day ambiguity flagged in the schema remains: §8.1 stores no historical device time zone. No extra field or product decision is introduced here.

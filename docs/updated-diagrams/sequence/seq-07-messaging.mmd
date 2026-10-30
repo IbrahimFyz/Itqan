@@ -1,0 +1,57 @@
+---
+title: SEQ-07 — One-way class messaging (UC-16, UC-19)
+config:
+  theme: neutral
+---
+sequenceDiagram
+    actor Teacher as Teacher
+    actor Reader as Quran Reader
+    participant App as Itqan App
+    participant Class as Class Service
+    participant DB as Database
+    alt UC-19 Send to one Reader or whole Class
+        Teacher->>App: Select own Class and audience, enter text
+        alt Text empty
+            App-->>Teacher: Refuse message
+        else Text present
+            App->>Class: sendAndReadMessages(Teacher, Class, audience, text)
+            Class->>DB: Verify Teacher owns Class and read active recipients
+            alt Single Reader no longer enrolled
+                DB-->>Class: No active recipient
+                Class-->>App: Refuse send, store nothing
+                App-->>Teacher: Reader unavailable
+            else Whole Class has no active Readers
+                DB-->>Class: Empty active recipient set
+                Class-->>App: Refuse send, store nothing
+                App-->>Teacher: Class has no Readers yet
+            else Valid recipients
+                DB-->>Class: One active Reader or active Class snapshot
+                Class->>DB: Atomically store Message and one unread MessageRecipient per Reader
+                Note over DB: Audience is one Reader or whole Class, recipients fixed at send time
+                DB-->>Class: Sent Message and recipient statuses
+                Class-->>App: Sent list with per-recipient read state
+                App-->>Teacher: Show sent Message
+            end
+        end
+    else UC-16 Reader opens inbox
+        Reader->>App: Open in-app inbox
+        App->>Class: sendAndReadMessages(list received, Reader)
+        Class->>DB: Read delivered Messages, Teacher display name, Class and unread count
+        alt No Messages
+            DB-->>Class: Empty inbox
+            Class-->>App: Empty state
+            App-->>Reader: Show no Messages
+        else Messages exist
+            DB-->>Class: Newest-first inbox and unread count
+            Class-->>App: Inbox
+            App-->>Reader: Show Messages without reply control
+            Reader->>App: Open Message
+            App->>Class: sendAndReadMessages(mark read, Reader, Message)
+            Class->>DB: Set this recipient's readAt once
+            DB-->>Class: Read date
+            Class-->>App: Message text and read state
+            App-->>Reader: Show Message
+            Note over Class,DB: Teacher's sent view reads the same recipient read date
+        end
+    end
+    Note over Reader,DB: Delivered Messages remain after leaving Class and disappear if Teacher account is deleted

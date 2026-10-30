@@ -1,0 +1,67 @@
+---
+title: SEQ-04 — Results, history, progress and streak (UC-12–UC-15)
+config:
+  theme: neutral
+---
+sequenceDiagram
+    actor Reader as Quran Reader
+    participant App as Itqan App
+    participant Progress as Progress Service
+    participant DB as Database
+    alt UC-12 View Session Results
+        Reader->>App: Open ended or past session
+        App->>Progress: getResultsAndHistory(Reader, Session ID)
+        Progress->>DB: Read owned ended Session and Mistakes with Word and Rule
+        DB-->>Progress: Surah, date, mode, end reason, score, mistakes
+        Progress-->>App: Session results
+        alt Counted Words are zero
+            App-->>Reader: Show no score
+        else Scored session
+            App-->>Reader: Show Mastery Score and mistaken Words
+        end
+        opt Ended early or interrupted
+            App-->>Reader: Explain score covers analysed Words only
+        end
+        opt No mistakes
+            App-->>Reader: Show none detected
+        end
+    else UC-13 View Session History
+        Reader->>App: Open History
+        App->>Progress: getResultsAndHistory(Reader)
+        Progress->>DB: Read Reader Sessions, newest first
+        DB-->>Progress: Surah, date, mode and score per Session
+        Progress-->>App: History list
+        alt No Sessions
+            App-->>Reader: Empty state with Start reciting action
+        else Sessions exist
+            App-->>Reader: List Sessions
+            opt Reader opens a Session
+                App->>Progress: getResultsAndHistory(Reader, Session ID)
+                Progress->>DB: Read owned summary and Mistakes
+                DB-->>Progress: Stored results
+                Progress-->>App: Session results (UC-12)
+            end
+        end
+    else UC-14 View User Progress
+        Reader->>App: Open Progress
+        App->>Progress: getMasteryAndStreak(Reader)
+        Progress->>DB: Read Reader's ended scored Sessions
+        DB-->>Progress: Scores and whole-Surah flags
+        Progress->>Progress: Best score per Surah, full mastery if whole Surah and score at least 90 percent
+        Progress->>Progress: Average of best scores for practised Surahs
+        alt No scored Sessions
+            Progress-->>App: Empty progress
+        else Scored Sessions exist
+            Progress-->>App: Full-mastery count, average and best per Surah
+        end
+        App-->>Reader: Show progress
+    else UC-15 View Practice Streak
+        Reader->>App: Open streak
+        App->>Progress: getMasteryAndStreak(Reader, device-local calendar)
+        Progress->>DB: Read ended scored Session dates
+        DB-->>Progress: End instants and scores
+        Progress->>Progress: Count consecutive local practice days to today or yesterday
+        Progress-->>App: Streak days (0 if missed or none)
+        App-->>Reader: Show streak
+    end
+    Note over Progress,DB: Progress values are derived, no required progress table or audio read

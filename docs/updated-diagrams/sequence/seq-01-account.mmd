@@ -1,0 +1,83 @@
+---
+title: SEQ-01 — Account access and profile (UC-01–UC-04)
+config:
+  theme: neutral
+---
+sequenceDiagram
+    actor User as Reader or Teacher
+    participant App as Itqan App
+    participant IdP as Identity Provider
+    participant Account as Account Service
+    participant DB as Database
+    alt UC-01 Register
+        User->>App: Choose Reader or Teacher, enter name and email
+        opt Teacher
+            User->>App: Enter required school name
+        end
+        alt Required field missing
+            App-->>User: Show field error, no account created
+        else Valid fields
+            App->>IdP: Register credentials
+            alt Email already used or provider unavailable
+                IdP-->>App: Reject or unavailable
+                App-->>User: Explain failure, no account created
+            else Identity created
+                IdP-->>App: Identity subject
+                App->>Account: registerOrUpdateAccount(type, profile, subject)
+                Account->>DB: Store Account, TeacherDetail only for Teacher
+                Note over DB: Account type is fixed, language defaults to Arabic, no password stored
+                DB-->>Account: Account created
+                Account-->>App: Reader or Teacher account
+                App-->>User: Open account-type area, Teacher gets Al-Mu'allim
+            end
+        end
+    else UC-02 Login
+        User->>App: Sign in
+        App->>IdP: Authenticate credentials
+        alt Wrong credentials or provider unavailable
+            IdP-->>App: Reject or unavailable
+            App-->>User: Stay logged out, explain failure
+        else Authenticated
+            IdP-->>App: Identity subject
+            App->>Account: Get account for subject
+            Account->>DB: Read fixed account type
+            DB-->>Account: Reader or Teacher
+            Account-->>App: Account area and profile
+            App-->>User: Open correct area
+            opt User requests wrong-role screen or data
+                App-->>User: Deny access
+            end
+        end
+    else UC-04 Manage profile
+        User->>App: Open profile
+        App->>Account: Get profile
+        Account->>DB: Read Account and conditional TeacherDetail
+        DB-->>Account: Name, email, language, optional school name
+        Account-->>App: Profile, email read-only here
+        App-->>User: Show profile
+        User->>App: Edit name or language, Teacher may edit school name
+        alt Empty required name
+            App-->>User: Refuse change, nothing saved
+        else Email or credential change
+            App-->>User: Use Identity Provider
+        else Valid profile change
+            App->>Account: registerOrUpdateAccount(profile changes)
+            Account->>DB: Save name, ar/en language, optional school name
+            DB-->>Account: Saved
+            Account-->>App: Updated profile
+            App-->>User: Apply language immediately
+        end
+    else UC-03 Logout
+        alt User chooses Logout
+            User->>App: Choose Logout
+        else Inactivity timeout expires
+            App->>App: Expire login session while no recitation is active
+        end
+        Note over App: Inactivity timeout is suppressed during active recitation
+        opt Explicit logout during recitation
+            App->>App: End session as interrupted via SEQ-03
+        end
+        App->>IdP: Logout
+        IdP-->>App: Login session ended
+        App-->>User: Show login screen, deny protected data
+    end

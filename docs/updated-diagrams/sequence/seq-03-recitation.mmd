@@ -1,0 +1,117 @@
+---
+title: SEQ-03 — Recite Surah (UC-07–UC-11, UC-28)
+config:
+  theme: neutral
+---
+sequenceDiagram
+    actor Reader as Quran Reader
+    participant App as Itqan App
+    participant Account as Account Service
+    participant RS as Recitation Service
+    participant AI as Analysis Service
+    participant CE as Comparison Engine
+    participant DB as Database
+    participant Progress as Progress Service
+    Reader->>App: Browse 37 Juz Amma Surahs and Uthmani verses
+    Note over App: Bundled text works offline, no session required to read
+    Reader->>App: Select Surah, then Mujawwid or Mushajji mode
+    App->>Account: Check active recitation consent
+    Account->>DB: Read Account and active ConsentRecord
+    DB-->>Account: Role and consent status
+    Account-->>App: Consent active or needed
+    alt Consent missing
+        App-->>Reader: Ask for recitation consent
+        alt Reader declines
+            App-->>Reader: No session starts
+        else Reader grants
+            App->>Account: grantOrWithdrawConsent(grant, recitation)
+            Account->>DB: Insert dated grant
+            DB-->>Account: Grant active
+            Account-->>App: Consent recorded
+        end
+    end
+    opt Consent active or newly granted
+        App->>App: Check microphone permission
+        alt Permission denied
+            App-->>Reader: Explain how to grant it, no session starts
+        else Permission granted
+            App->>RS: startSession(Reader, Surah, mode)
+            RS->>Account: Recheck Reader role and active consent
+            Account->>DB: Read role and active recitation grant
+            DB-->>Account: Reader and active grant
+            Account-->>RS: Allowed
+            RS-->>App: Session Started, Surah and mode fixed
+            App-->>Reader: Show first verse, begin capture (Active)
+            Note over App,RS: Capture 16 kHz mono verse segments in memory only
+            loop Each reached verse until ending
+                Reader->>App: Recite verse
+                App->>App: Detect verse end automatically
+                App->>RS: analyseVerse(verse ID, verse audio in memory)
+                RS->>AI: Analyse one verse of audio in memory
+                Note over AI: Stateless obadx/muaalem-model-v3_2 service
+                alt Verse analysis unreliable
+                    AI-->>RS: Could not analyse
+                    RS-->>App: Could not analyse, count no words or mistakes
+                    App-->>Reader: Show failure, continue to next verse
+                else Verse analysed
+                    AI-->>RS: Phonemes in memory
+                    RS->>CE: compareVerse(phonemes, selected Surah and verse)
+                    CE->>DB: Read expected Verse, Word and Tajweed references
+                    DB-->>CE: Read-only text, positions and rule names
+                    CE-->>RS: Located word and Tajweed mistakes
+                    Note over CE: Wrong, skipped or added Word, mispronounced letter, Ghunnah, Qalqalah or Madd
+                    Note over CE: Added Word links to the following expected Word
+                    Note over RS: Tajweed-only penalty is 0.5, whole-word penalty is 1
+                    Note over RS: Same mistakes and score in both modes
+                    RS-->>App: Error types and Word locations for mode-specific feedback
+                    alt Mujawwid mode
+                        App-->>Reader: Highlight errors with direct feedback during the next verse
+                    else Mushajji mode
+                        App-->>Reader: Highlight errors with encouraging feedback and verse praise during the next verse
+                    end
+                end
+                opt Reader taps highlighted or prompted Word
+                    App-->>Reader: Play bundled reference Word audio only on request
+                end
+                opt App detects a pause or hesitation
+                    App-->>Reader: Show next expected Word as a text hint
+                    opt Reader taps hint
+                        App-->>Reader: Play bundled reference Word audio
+                    end
+                end
+            end
+            alt Last verse analysed
+                App->>RS: endAndScoreSession(completed)
+            else Reader ends early
+                Reader->>App: End session
+                App->>RS: endAndScoreSession(ended early)
+            else App closes/backgrounds, call, connection loss, or logout
+                alt App can report interruption now
+                    App->>RS: endAndScoreSession(interrupted)
+                else Contact is unavailable
+                    Note over App,RS: If needed, finalize on the next app open using analysed Words
+                    Reader->>App: Open app again
+                    App->>RS: endAndScoreSession(interrupted)
+                end
+            end
+            RS->>RS: Count reached and reliably analysed Words
+            alt Zero counted Words
+                RS->>RS: Mastery Score is NULL, exclude from averages and mastery
+            else One or more counted Words
+                RS->>RS: Cap each Word at 1 effective error
+                RS->>RS: Score = (counted Words - effective errors) / counted Words * 100, round to 1 decimal
+            end
+            RS->>DB: Atomically store ended Session summary and Mistakes
+            Note over RS,DB: Never store or log audio, phonemes, feedback, prompts or assistance events
+            DB-->>RS: Stored Session ID
+            RS->>Progress: Recalculate progress and streak
+            Progress->>DB: Read ended scored sessions
+            DB-->>Progress: Session summaries
+            Progress-->>RS: Derived values
+            RS-->>App: Result or no-score summary
+            App-->>Reader: Show results (UC-12 / SEQ-04)
+            opt Mushajji mode
+                App-->>Reader: Show end-of-session praise
+            end
+        end
+    end

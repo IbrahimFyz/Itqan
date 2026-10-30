@@ -1,0 +1,36 @@
+---
+title: SEQ-08 — Permanent account deletion (UC-06)
+config:
+  theme: neutral
+---
+sequenceDiagram
+    actor User as Reader or Teacher
+    participant App as Itqan App
+    participant Account as Account Service
+    participant DB as Database
+    participant IdP as Identity Provider
+    User->>App: Choose Delete Account
+    App-->>User: Explain deletion and ask for confirmation
+    alt User cancels
+        User-->>App: Cancel
+        App-->>User: Keep account and data unchanged
+    else User confirms
+        User->>App: Confirm
+        App->>Account: deleteAccount(user)
+        alt Reader account
+            Account->>DB: Delete Reader account, Sessions, Mistakes, Consents, Enrolments and received recipient rows
+            Note over DB: Already delivered Messages for other Readers are unaffected
+        else Teacher account
+            Account->>DB: Delete Teacher account, Classes, join codes, Enrolments and sent Messages with recipients
+            Note over DB: Readers' own Sessions are unaffected
+        end
+        Account->>DB: Commit deletion with anonymous DeletionLog(type, date)
+        Note over DB: Log has no Account ID, identity subject, name or email
+        DB-->>Account: Data erased and anonymous audit written
+        Account->>IdP: Remove identity-provider account
+        IdP-->>Account: Identity removed
+        Account-->>App: Deletion complete
+        App->>IdP: End login session
+        IdP-->>App: Logged out
+        App-->>User: Show login screen, no protected data accessible
+    end
