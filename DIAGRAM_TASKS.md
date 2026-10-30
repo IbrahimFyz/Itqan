@@ -23,7 +23,7 @@ This list covers the diagram and design deliverables explicitly required for Tra
 | 6 | ERD | Required stored data, keys, relationships and cardinalities from §8. Exclude prohibited stored data. | New requirements | Abdulaziz Alfarhood | Done | [editable ERD](docs/updated-diagrams/erd/itqan-erd.mmd) · [SVG](itqan-erd.svg) |
 | 7 | Relational schema | Tables, fields, primary/foreign keys, nullability and constraints matching the ERD. | 6 | Abdulaziz Alfarhood | Done | [schema](itqan-relational-schema.md) |
 | 8 | Class Diagram | All required stored entities and fields, service responsibilities and relationships in one diagram. | 1, 4 | Abdulaziz Alfarhood | Done | [class source](docs/updated-diagrams/class/itqan-class-diagram.mmd) · [SVG](itqan-class-diagram.svg) · [notes](docs/updated-diagrams/class/itqan-class-diagram-notes.md) |
-| 9 | Clickable wireframes / UI prototype | Principal journeys for both roles, including consent, recitation/results, class access, messaging and account controls. Include relevant error and empty states. | 1, 3 | — | Open | |
+| 9 | Clickable wireframes / UI prototype | Principal journeys for both roles, including consent, recitation/results, class access, messaging and account controls. Include relevant error and empty states. | 1, 3 | Abdulaziz Alfarhood | In progress | |
 | 10 | Time and resource schedule | Work packages, owners, durations, dependencies and milestones using a project-management tool. A Gantt chart is an accepted format. | Team-agreed work packages and timing | — | Open | |
 
 ## Starting order
