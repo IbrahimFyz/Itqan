@@ -38,16 +38,23 @@ repeat
   |Itqan System|
 backward:Refuse: message empty;
 repeat while (Message empty?) is (yes) not (no)
-:Check each recipient's active
-enrolment; skip any who left;
-if (Any actively enrolled recipient?) then (no)
-  :Refuse: "this class has no
-  readers yet" (nothing stored);
-  |Teacher|
-  stop
-else (yes)
+if (Message audience?) then (one reader)
+  if (Chosen reader still enrolled?) then (no)
+    :Refuse for that reader
+    (nothing stored);
+    stop
+  else (yes)
+  endif
+else (whole class)
+  if (Any actively enrolled readers?) then (no)
+    :Refuse: "This class has no
+    readers yet" (nothing stored);
+    stop
+  else (yes)
+    :Keep only actively
+    enrolled readers;
+  endif
 endif
-|Itqan System|
 :Store message, one entry per
 recipient, marked unread (BR-12);
 |Teacher|

@@ -58,8 +58,15 @@ repeat
   endif
 repeat while (More verses and session not ended?) is (yes) not (no)
 
-:Calculate Mastery Score
-on counted words (BR-01, BR-02);
+if (Any words counted?) then (yes)
+  :Calculate Mastery Score
+  on counted words (BR-01, BR-02);
+else (no)
+  :No Mastery Score
+  (score stored as NULL);
+endif
+:Store session summary and mistakes,
+discard audio and all other data (BR-05);
 note right
   Reached by every end reason:
   completed (last verse analysed),
@@ -67,8 +74,6 @@ note right
   interrupted (app closed, call,
   connection lost, logout).
 end note
-:Store session summary and mistakes,
-discard audio and all other data (BR-05);
 :Recalculate progress and streak;
 
 |Quran Reader|

@@ -43,16 +43,14 @@ if (Any actively enrolled readers?) then (no)
   stop
 else (yes)
 endif
-:List enrolled readers with summaries
-(sessions from each join date);
-|Teacher|
-:Select reader;
-|Itqan System|
-if (Enrolment still active?) then (no)
-  :Deny access;
-  stop
-else (yes)
-endif
+repeat
+  :List enrolled readers with summaries
+  (sessions from each join date);
+  |Teacher|
+  :Select reader;
+  |Itqan System|
+backward:Deny access (UC-18, 6a);
+repeat while (Enrolment still active?) is (no) not (yes)
 :List sessions ended on or
 after the join date (BR-08);
 note right
