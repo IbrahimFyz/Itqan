@@ -25,7 +25,7 @@ Every part in requirements §10 appears in the diagram.
 | **Recitation Service** | Application backend | Runs each session; **all session traffic goes through it**. Its *session control* part starts the session, sends each verse for analysis, returns feedback, ends the session, calculates the score and stores the results. | FR-11–FR-20 |
 | **Comparison Engine** | Inside the Recitation Service | Aligns the returned phonemes with the expected verse, classifies errors and links each error to a word. | FR-14, FR-15 |
 | **Analysis Service** | Separate stateless Python/GPU service (`obadx/muaalem-model-v3_2`) | Receives one verse's audio and returns phonemes with articulation attributes. Keeps nothing. | FR-13 |
-| **Progress Service** | Application backend | Results, session history, best score per surah, full mastery, average mastery and streak. Recalculated after each session. | FR-20–FR-22 |
+| **Progress Service** | Application backend | Session history, best score per surah, full mastery, average mastery and streak, all derived from stored session records (not stored as separate data). | FR-20–FR-22 |
 | **Class Service** | Application backend | Classes, join codes, enrolments, the teacher dashboard with enrolment and join-date checks, and messages with read status. | FR-23–FR-25 |
 | **Database** | PostgreSQL | Stores only §8.1: accounts, consents, sessions and mistakes, classes, enrolments, messages, the deletion log, and the read-only Juz Amma reference tables. | All stored data |
 
@@ -39,16 +39,16 @@ Every part in requirements §10 appears in the diagram.
 | Account Service → Identity Provider | Remove the account on deletion (FR-28) | HTTPS |
 | Screens → Account Service | Profile, consent, data summary, deletion | HTTPS / REST |
 | Screens → Class Service | Classes, join, leave, dashboard, messages | HTTPS / REST |
-| Screens → Progress Service | Results, history, progress, streak | HTTPS / REST |
+| Screens → Progress Service | History and progress requests | HTTPS / REST |
 | Microphone capture → Recitation Service | One verse's audio + verse ID | HTTPS, **transient** |
-| Recitation Service → Screens | Per-verse feedback | HTTPS / REST |
+| Recitation Service → Screens | Session results and feedback | HTTPS / REST |
 | Recitation Service → Analysis Service → Recitation Service | Verse audio in; phonemes out | **Transient**, in memory |
 | Comparison Engine → Database (Juz Amma reference) | Expected verse and word positions (read-only) | SQL read |
 | Recitation Service → Database | Session summary + mistakes at session end (no audio) | SQL write |
 | Account, Class and Progress Services → Database | Their own data | SQL |
 | Screens ↔ Bundled Juz Amma | Verse text, word reference audio | On the phone, offline |
 
-**Not drawn as an arrow:** at the end of a session, the Recitation Service asks the Progress Service to recalculate (§10 main path). An arrow inside the backend node could not be laid out without crossing other lines, so the Progress Service label says "recalculated after each session" instead. The call is shown step by step in the recitation sequence diagram (Task 5).
+**Not drawn as an arrow:** at the end of a session, the Recitation Service asks the Progress Service to recalculate (§10 main path). An arrow inside the backend node could not be laid out without crossing other lines, so the Progress Service label says "derived from stored session records" instead. The call is shown step by step in the recitation sequence diagram (Task 5).
 
 ## 4. Processing and storage boundaries
 
@@ -58,7 +58,7 @@ Every part in requirements §10 appears in the diagram.
 | Phonemes (analysis output) | Analysis Service → Recitation Service memory | **Never**. Discarded after comparison. |
 | Feedback, praise, hints, audio-assistance requests | Recitation Service → phone screen | **Never** (§8.3). |
 | Session summary + mistakes | Recitation Service → Database | **Stored** (BR-05). |
-| Progress figures (best score, mastery, streak) | Progress Service | **Derived** from stored sessions; may be cached (§8.1). |
+| Progress figures (best score, mastery, streak) | Progress Service | **Derived** from stored session records; not stored as separate data. |
 | Juz Amma text | Phone bundle (offline display) **and** Database (read-only reference for comparison and mistake links) | Read-only reference data. |
 | Reference word audio | Phone bundle only | Bundled with the app, not in the database. |
 | Credentials and passwords | Identity Provider only | Never stored by Itqan. |

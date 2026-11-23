@@ -42,12 +42,12 @@ node "Phone (Android / iOS)" {
 cloud "Managed Identity Provider\n(vendor chosen in IS499)" as IdP
 
 node "Application backend (FastAPI, Python)" {
-  component "Account Service" as Acc
+  component "Account Service\n(profiles, consent,\naccount deletion)" as Acc
   component "Recitation Service" as RecSvc {
     component "Session control\n(start, per verse, score, store)" as Rec
     component "Comparison Engine" as Cmp
   }
-  component "Progress Service\n(recalculated after\neach session)" as Prog
+  component "Progress Service\n(derived from stored\nsession records)" as Prog
   component "Class Service" as Cls
 }
 
@@ -73,8 +73,8 @@ Acc -left-> IdP : remove account
 ' Phone to backend (HTTPS / REST)
 UI --> Acc : profile, consent,\ndeletion
 Mic ..> Rec : verse audio +\nverse ID (in memory)
-Rec --> UI : feedback
-UI --> Prog : results, history,\nprogress
+Rec --> UI : session results\nand feedback
+UI --> Prog : history and\nprogress requests
 UI --> Cls : classes, dashboard,\nmessages
 
 ' Recitation analysis (transient)
