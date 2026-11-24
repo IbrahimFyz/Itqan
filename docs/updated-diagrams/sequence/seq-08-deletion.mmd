@@ -28,6 +28,7 @@ sequenceDiagram
         Note over DB: Log has no Account ID, identity subject, name or email
         DB-->>Account: Data erased and anonymous audit written
         Account->>IdP: Remove identity-provider account
+        Note over Account,IdP: If identity deletion fails after the account data has already been deleted from the database, failure handling is currently unspecified and will be defined in IS499.
         IdP-->>Account: Identity removed
         Account-->>App: Deletion complete
         App->>IdP: End login session

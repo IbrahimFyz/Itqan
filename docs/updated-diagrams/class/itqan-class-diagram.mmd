@@ -10,12 +10,18 @@ direction TB
 class Account {
   +UUID accountId
   +String identitySubject
-  +String accountType
+  +AccountType accountType
   +String displayName
   +String email
   +String language
   +DateTime createdAt
 }
+class AccountType {
+  <<enumeration>>
+  READER
+  TEACHER
+}
+note for Account "accountType is immutable after creation. Teacher accounts have exactly one TeacherDetail; Reader accounts have none."
 class TeacherDetail {
   +UUID teacherId
   +String schoolName
@@ -120,6 +126,7 @@ class ItqanApp {
   +playBundledWordAudio()
   +logout()
 }
+note for ItqanApp "System initiated: Detect Pause/Hesitation → Trigger Smart Prompting → Show Next Word Hint; no user request."
 class IdentityProvider {
   +register()
   +authenticate()
@@ -137,6 +144,7 @@ class RecitationService {
   +analyseVerse()
   +endAndScoreSession()
 }
+note for RecitationService "Audio Recordings, Phonemes, Feedback, Smart Prompts and Pause Events are processed in memory only and never persisted."
 class AnalysisService {
   +analyseVerseAudio()
 }
@@ -155,7 +163,8 @@ class ClassService {
   +sendAndReadMessages()
 }
 
-Account "1" -- "0..1" TeacherDetail : Teacher has exactly one
+Account "1" -- "0..1" TeacherDetail : role dependent, see constraint
+Account ..> AccountType : fixed role
 Account "1" -- "0..*" ConsentRecord : Reader grants
 Account "1" -- "0..*" RecitationSession : Reader owns
 Surah "1" -- "1..*" Verse : contains

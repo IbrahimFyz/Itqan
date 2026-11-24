@@ -17,7 +17,8 @@ erDiagram
     %% QURAN_CLASS is the Class group in section 8.1 (CLASS is a parser keyword).
     %% MESSAGE.teacher_id must own its QURAN_CLASS; each recipient was actively
     %% enrolled when sent. A reader retains received messages after leaving.
-    %% MISTAKE's WORD must belong to its session's SURAH. Added-word mistakes
+    %% MISTAKE.surah_number is shared by composite FKs to WORD and
+    %% RECITATION_SESSION, so both referenced SURAH values must match. Added-word mistakes
     %% point to the following expected WORD. Tajweed-only errors have rule_id
     %% and penalty 0.5; whole-word errors have no rule_id and penalty 1.
     %% No word contributes more than 1 effective error. A zero-word session
@@ -27,7 +28,7 @@ erDiagram
     ACCOUNT {
         uuid account_id PK "non-sequential"
         text identity_subject UK
-        text account_type "Reader or Teacher"
+        text account_type "Reader or Teacher; fixed after registration"
         text display_name
         text email
         text language "ar or en"
@@ -84,7 +85,7 @@ erDiagram
     MISTAKE {
         uuid mistake_id PK
         uuid session_id FK
-        smallint surah_number FK
+        smallint surah_number FK "same SURAH as session and WORD"
         smallint verse_number FK
         smallint word_position FK
         text error_type
@@ -93,7 +94,7 @@ erDiagram
     }
     QURAN_CLASS {
         uuid class_id PK
-        uuid teacher_id FK
+        uuid teacher_id FK "Teacher owns Class for access"
         text name
         text join_code UK "immutable"
         datetime created_at
@@ -102,9 +103,9 @@ erDiagram
         uuid enrolment_id PK
         uuid class_id FK
         uuid reader_id FK
-        datetime joined_at
+        datetime joined_at "session.ended_at >= joined_at in same Class"
         datetime left_at "nullable while active"
-        text status "active or ended"
+        text status "active required for Teacher access"
         text end_reason "left or consent withdrawn"
     }
     MESSAGE {
@@ -126,7 +127,7 @@ erDiagram
         datetime deleted_at
     }
 
-    ACCOUNT ||--o| TEACHER_DETAIL : teacher_has
+    ACCOUNT ||--o| TEACHER_DETAIL : Teacher_exactly_one_Reader_zero
     ACCOUNT ||--o{ CONSENT_RECORD : reader_grants
     ACCOUNT ||--o{ RECITATION_SESSION : reader_owns
     SURAH ||--|{ VERSE : contains

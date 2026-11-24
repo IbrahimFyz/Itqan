@@ -70,14 +70,15 @@ sequenceDiagram
                         App-->>Reader: Highlight errors with encouraging feedback and verse praise during the next verse
                     end
                 end
-                opt Reader taps highlighted or prompted Word
-                    App-->>Reader: Play bundled reference Word audio only on request
-                end
                 opt App detects a pause or hesitation
-                    App-->>Reader: Show next expected Word as a text hint
-                    opt Reader taps hint
-                        App-->>Reader: Play bundled reference Word audio
-                    end
+                    App->>App: Detect Pause/Hesitation
+                    Note over App: Pause Events are processed in memory only, never persisted
+                    App->>App: Trigger Smart Prompting automatically, without Reader request
+                    App-->>Reader: Show Next Word Hint as text
+                end
+                opt Reader requests Audio Assistance
+                    Reader->>App: Request audio for highlighted or hinted Word
+                    App-->>Reader: Play bundled reference Word audio
                 end
             end
             alt Last verse analysed
